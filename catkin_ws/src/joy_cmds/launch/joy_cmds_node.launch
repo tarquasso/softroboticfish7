@@ -1,0 +1,13 @@
+<launch>
+
+  <node pkg="joy_cmds" type="joy_cmds_node.py" name="joy_cmds"/>
+
+
+  <!-- joy node -->
+  <node respawn="true" pkg="joy" type="joy_node" name="joy" output="screen" >
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.1" />
+  </node>
+
+
+</launch>
