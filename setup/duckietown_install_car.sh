@@ -5,7 +5,7 @@ set -x
 START_PATH="$PWD"
 
 # Install raspicam-0.1.3
-cd catkin_ws/external_src/raspicam-0.1.3
+cd ../catkin_ws/external_src/raspicam-0.1.3
 if [ -d "build" ]; then
   rm -rf build
 fi

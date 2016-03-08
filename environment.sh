@@ -7,5 +7,5 @@ echo "Activating development"
 source ~/softroboticfish6/catkin_ws/devel/setup.bash
 echo "Setup ROS_HOSTNAME"
 export ROS_HOSTNAME=$HOSTNAME.local
-export DUCKIETOWN_ROOT=$HOME/softroboticfish6
+export FISHTOWN_ROOT=$HOME/softroboticfish6
 exec "$@" #Passes arguments. Need this for ROS remote launching to work.
