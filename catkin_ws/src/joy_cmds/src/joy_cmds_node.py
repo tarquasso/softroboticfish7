@@ -58,7 +58,7 @@ class JoyMapper(object):
 	cmd_out.header.stamp = self.joy.header.stamp
 	cmd_out.speed_ctrl = int(self.joy.axes[1] * 127)
 	cmd_out.depth_ctrl = int(self.joy.axes[4] * 127)
-	cmd_out.yaw_ctrl = int(self.joy.axes[3] * 127)
+	cmd_out.yaw_ctrl = -1*int(self.joy.axes[3] * 127)
 	
 	self.pub_toSerial.publish(cmd_out)
 

@@ -15,17 +15,17 @@
    (speed_ctrl
     :reader speed_ctrl
     :initarg :speed_ctrl
-    :type cl:integer
+    :type cl:fixnum
     :initform 0)
    (depth_ctrl
     :reader depth_ctrl
     :initarg :depth_ctrl
-    :type cl:integer
+    :type cl:fixnum
     :initform 0)
    (yaw_ctrl
     :reader yaw_ctrl
     :initarg :yaw_ctrl
-    :type cl:integer
+    :type cl:fixnum
     :initform 0))
 )
 
@@ -59,23 +59,14 @@
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <joystick_in>) ostream)
   "Serializes a message object of type '<joystick_in>"
   (roslisp-msg-protocol:serialize (cl:slot-value msg 'header) ostream)
-  (cl:let* ((signed (cl:slot-value msg 'speed_ctrl)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 4294967296) signed)))
+  (cl:let* ((signed (cl:slot-value msg 'speed_ctrl)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 256) signed)))
     (cl:write-byte (cl:ldb (cl:byte 8 0) unsigned) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 8) unsigned) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 16) unsigned) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 24) unsigned) ostream)
     )
-  (cl:let* ((signed (cl:slot-value msg 'depth_ctrl)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 4294967296) signed)))
+  (cl:let* ((signed (cl:slot-value msg 'depth_ctrl)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 256) signed)))
     (cl:write-byte (cl:ldb (cl:byte 8 0) unsigned) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 8) unsigned) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 16) unsigned) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 24) unsigned) ostream)
     )
-  (cl:let* ((signed (cl:slot-value msg 'yaw_ctrl)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 4294967296) signed)))
+  (cl:let* ((signed (cl:slot-value msg 'yaw_ctrl)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 256) signed)))
     (cl:write-byte (cl:ldb (cl:byte 8 0) unsigned) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 8) unsigned) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 16) unsigned) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 24) unsigned) ostream)
     )
 )
 (cl:defmethod roslisp-msg-protocol:deserialize ((msg <joystick_in>) istream)
@@ -83,22 +74,13 @@
   (roslisp-msg-protocol:deserialize (cl:slot-value msg 'header) istream)
     (cl:let ((unsigned 0))
       (cl:setf (cl:ldb (cl:byte 8 0) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 8) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 16) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 24) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:slot-value msg 'speed_ctrl) (cl:if (cl:< unsigned 2147483648) unsigned (cl:- unsigned 4294967296))))
+      (cl:setf (cl:slot-value msg 'speed_ctrl) (cl:if (cl:< unsigned 128) unsigned (cl:- unsigned 256))))
     (cl:let ((unsigned 0))
       (cl:setf (cl:ldb (cl:byte 8 0) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 8) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 16) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 24) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:slot-value msg 'depth_ctrl) (cl:if (cl:< unsigned 2147483648) unsigned (cl:- unsigned 4294967296))))
+      (cl:setf (cl:slot-value msg 'depth_ctrl) (cl:if (cl:< unsigned 128) unsigned (cl:- unsigned 256))))
     (cl:let ((unsigned 0))
       (cl:setf (cl:ldb (cl:byte 8 0) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 8) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 16) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 24) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:slot-value msg 'yaw_ctrl) (cl:if (cl:< unsigned 2147483648) unsigned (cl:- unsigned 4294967296))))
+      (cl:setf (cl:slot-value msg 'yaw_ctrl) (cl:if (cl:< unsigned 128) unsigned (cl:- unsigned 256))))
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<joystick_in>)))
@@ -109,22 +91,22 @@
   "fish_msgs/joystick_in")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<joystick_in>)))
   "Returns md5sum for a message object of type '<joystick_in>"
-  "18a51ec5fe003c70a52cc607ca16726f")
+  "635ac2b1c0cef964ac25ac7ddf7e60e4")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'joystick_in)))
   "Returns md5sum for a message object of type 'joystick_in"
-  "18a51ec5fe003c70a52cc607ca16726f")
+  "635ac2b1c0cef964ac25ac7ddf7e60e4")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<joystick_in>)))
   "Returns full string definition for message of type '<joystick_in>"
-  (cl:format cl:nil "Header header~%int32 speed_ctrl~%int32 depth_ctrl~%int32 yaw_ctrl~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "Header header~%int8 speed_ctrl~%int8 depth_ctrl~%int8 yaw_ctrl~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'joystick_in)))
   "Returns full string definition for message of type 'joystick_in"
-  (cl:format cl:nil "Header header~%int32 speed_ctrl~%int32 depth_ctrl~%int32 yaw_ctrl~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "Header header~%int8 speed_ctrl~%int8 depth_ctrl~%int8 yaw_ctrl~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <joystick_in>))
   (cl:+ 0
      (roslisp-msg-protocol:serialization-length (cl:slot-value msg 'header))
-     4
-     4
-     4
+     1
+     1
+     1
 ))
 (cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <joystick_in>))
   "Converts a ROS message object to a list"

@@ -42,13 +42,13 @@ struct joystick_in_
    typedef  ::std_msgs::Header_<ContainerAllocator>  _header_type;
   _header_type header;
 
-   typedef int32_t _speed_ctrl_type;
+   typedef int8_t _speed_ctrl_type;
   _speed_ctrl_type speed_ctrl;
 
-   typedef int32_t _depth_ctrl_type;
+   typedef int8_t _depth_ctrl_type;
   _depth_ctrl_type depth_ctrl;
 
-   typedef int32_t _yaw_ctrl_type;
+   typedef int8_t _yaw_ctrl_type;
   _yaw_ctrl_type yaw_ctrl;
 
 
@@ -128,12 +128,12 @@ struct MD5Sum< ::fish_msgs::joystick_in_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "18a51ec5fe003c70a52cc607ca16726f";
+    return "635ac2b1c0cef964ac25ac7ddf7e60e4";
   }
 
   static const char* value(const ::fish_msgs::joystick_in_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x18a51ec5fe003c70ULL;
-  static const uint64_t static_value2 = 0xa52cc607ca16726fULL;
+  static const uint64_t static_value1 = 0x635ac2b1c0cef964ULL;
+  static const uint64_t static_value2 = 0xac25ac7ddf7e60e4ULL;
 };
 
 template<class ContainerAllocator>
@@ -153,9 +153,9 @@ struct Definition< ::fish_msgs::joystick_in_<ContainerAllocator> >
   static const char* value()
   {
     return "Header header\n\
-int32 speed_ctrl\n\
-int32 depth_ctrl\n\
-int32 yaw_ctrl\n\
+int8 speed_ctrl\n\
+int8 depth_ctrl\n\
+int8 yaw_ctrl\n\
 \n\
 ================================================================================\n\
 MSG: std_msgs/Header\n\
@@ -218,11 +218,11 @@ struct Printer< ::fish_msgs::joystick_in_<ContainerAllocator> >
     s << std::endl;
     Printer< ::std_msgs::Header_<ContainerAllocator> >::stream(s, indent + "  ", v.header);
     s << indent << "speed_ctrl: ";
-    Printer<int32_t>::stream(s, indent + "  ", v.speed_ctrl);
+    Printer<int8_t>::stream(s, indent + "  ", v.speed_ctrl);
     s << indent << "depth_ctrl: ";
-    Printer<int32_t>::stream(s, indent + "  ", v.depth_ctrl);
+    Printer<int8_t>::stream(s, indent + "  ", v.depth_ctrl);
     s << indent << "yaw_ctrl: ";
-    Printer<int32_t>::stream(s, indent + "  ", v.yaw_ctrl);
+    Printer<int8_t>::stream(s, indent + "  ", v.yaw_ctrl);
   }
 };
 
