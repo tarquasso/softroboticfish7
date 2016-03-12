@@ -14,12 +14,14 @@ namespace fish_msgs
   {
     public:
       std_msgs::Header header;
+      int8_t freq_ctrl;
       int8_t speed_ctrl;
       int8_t depth_ctrl;
       int8_t yaw_ctrl;
 
     joystick_in():
       header(),
+      freq_ctrl(0),
       speed_ctrl(0),
       depth_ctrl(0),
       yaw_ctrl(0)
@@ -30,6 +32,13 @@ namespace fish_msgs
     {
       int offset = 0;
       offset += this->header.serialize(outbuffer + offset);
+      union {
+        int8_t real;
+        uint8_t base;
+      } u_freq_ctrl;
+      u_freq_ctrl.real = this->freq_ctrl;
+      *(outbuffer + offset + 0) = (u_freq_ctrl.base >> (8 * 0)) & 0xFF;
+      offset += sizeof(this->freq_ctrl);
       union {
         int8_t real;
         uint8_t base;
@@ -61,6 +70,14 @@ namespace fish_msgs
       union {
         int8_t real;
         uint8_t base;
+      } u_freq_ctrl;
+      u_freq_ctrl.base = 0;
+      u_freq_ctrl.base |= ((uint8_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      this->freq_ctrl = u_freq_ctrl.real;
+      offset += sizeof(this->freq_ctrl);
+      union {
+        int8_t real;
+        uint8_t base;
       } u_speed_ctrl;
       u_speed_ctrl.base = 0;
       u_speed_ctrl.base |= ((uint8_t) (*(inbuffer + offset + 0))) << (8 * 0);
@@ -86,7 +103,7 @@ namespace fish_msgs
     }
 
     const char * getType(){ return "fish_msgs/joystick_in"; };
-    const char * getMD5(){ return "635ac2b1c0cef964ac25ac7ddf7e60e4"; };
+    const char * getMD5(){ return "4129a0c180f571940a0bb7c31e5402a4"; };
 
   };
 

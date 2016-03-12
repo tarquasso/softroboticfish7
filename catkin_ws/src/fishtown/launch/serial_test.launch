@@ -1,7 +1,7 @@
 <launch>
 
-  <arg name="baud" default="9600"/>
-  <arg name="port" default="/dev/ttyAMA0"/>
+  <arg name="baud" default="57600"/>
+  <arg name="port" default="/dev/ttyACM0"/>
 
   <!-- joy node -->
   <node respawn="true" pkg="joy" type="joy_node" name="joy" output="screen" >
@@ -15,10 +15,12 @@
 
 
   <!-- add serial communication node -->
-  <!-- <remap to="serial_comm" from="joy_cmds/to_serial" />
-  <node respawn="true" pkg="rosserial_python" type="serial_node.py" name="serial_comm">
+  <node respawn="true" pkg="rosserial_python" type="serial_node.py" name="serial_node">
     <param name="port" value="$(arg port)"/>
     <param name="baud" value="$(arg baud)"/>
-  <node/> -->
+  </node>
+
+<!--  <remap to="serial_node/from_serial" from="joy_cmds/to_serial" /> -->
+  
 
 </launch>

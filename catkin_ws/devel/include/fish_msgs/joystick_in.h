@@ -26,12 +26,14 @@ struct joystick_in_
 
   joystick_in_()
     : header()
+    , freq_ctrl(0)
     , speed_ctrl(0)
     , depth_ctrl(0)
     , yaw_ctrl(0)  {
     }
   joystick_in_(const ContainerAllocator& _alloc)
     : header(_alloc)
+    , freq_ctrl(0)
     , speed_ctrl(0)
     , depth_ctrl(0)
     , yaw_ctrl(0)  {
@@ -41,6 +43,9 @@ struct joystick_in_
 
    typedef  ::std_msgs::Header_<ContainerAllocator>  _header_type;
   _header_type header;
+
+   typedef int8_t _freq_ctrl_type;
+  _freq_ctrl_type freq_ctrl;
 
    typedef int8_t _speed_ctrl_type;
   _speed_ctrl_type speed_ctrl;
@@ -128,12 +133,12 @@ struct MD5Sum< ::fish_msgs::joystick_in_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "635ac2b1c0cef964ac25ac7ddf7e60e4";
+    return "4129a0c180f571940a0bb7c31e5402a4";
   }
 
   static const char* value(const ::fish_msgs::joystick_in_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x635ac2b1c0cef964ULL;
-  static const uint64_t static_value2 = 0xac25ac7ddf7e60e4ULL;
+  static const uint64_t static_value1 = 0x4129a0c180f57194ULL;
+  static const uint64_t static_value2 = 0x0a0bb7c31e5402a4ULL;
 };
 
 template<class ContainerAllocator>
@@ -153,6 +158,7 @@ struct Definition< ::fish_msgs::joystick_in_<ContainerAllocator> >
   static const char* value()
   {
     return "Header header\n\
+int8 freq_ctrl\n\
 int8 speed_ctrl\n\
 int8 depth_ctrl\n\
 int8 yaw_ctrl\n\
@@ -193,6 +199,7 @@ namespace serialization
     template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
     {
       stream.next(m.header);
+      stream.next(m.freq_ctrl);
       stream.next(m.speed_ctrl);
       stream.next(m.depth_ctrl);
       stream.next(m.yaw_ctrl);
@@ -217,6 +224,8 @@ struct Printer< ::fish_msgs::joystick_in_<ContainerAllocator> >
     s << indent << "header: ";
     s << std::endl;
     Printer< ::std_msgs::Header_<ContainerAllocator> >::stream(s, indent + "  ", v.header);
+    s << indent << "freq_ctrl: ";
+    Printer<int8_t>::stream(s, indent + "  ", v.freq_ctrl);
     s << indent << "speed_ctrl: ";
     Printer<int8_t>::stream(s, indent + "  ", v.speed_ctrl);
     s << indent << "depth_ctrl: ";
