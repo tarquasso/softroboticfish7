@@ -22,8 +22,8 @@ msg/_*.py
 *.wikidoc
 
 # eclipse stuff
-.project
-.cproject
+#.project
+#.cproject
 
 # qcreator stuff
 CMakeLists.txt.user
