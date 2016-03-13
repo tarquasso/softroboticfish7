@@ -1,0 +1,38 @@
+#include "AcousticController.h"
+
+// Autonomous mode definition
+uint16_t autoModeCommands[] = {0x05B6 /* forward */, 0x05BC /*down*/, 0x05B6 /* forward */, 0x0586 /* left */,
+								0x05B6 /* forward */, 0x05E6 /* right */,  0x05B6 /* forward */,  0x05B0 /* up */,
+								0x05B6 /* forward */, 0x0236 /* stopped */};
+uint32_t autoModeDurations[] = {30000, 60000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 10000}; // durations in ms, corresponds to autoModeCommands
+//uint32_t autoModeDurations[] = {6000, 12000, 6000, 6000, 6000, 6000, 6000, 6000, 6000, 10000};
+const uint8_t autoModeLength = 10;
+volatile uint32_t autoModeCount;
+volatile uint32_t autoModeIndex;
+
+// Constructor
+AcousticController::AcousticController() :
+    // Initialize variables
+    bufferCount(0),
+	lastDataWord(0),
+	timeSinceGoodWord(0),
+	lowBatteryVoltage(lowBatteryVoltagePin)
+{
+
+}
+
+// Initialization
+void AcousticController::init(usbSerialObject* /* = NULL */)
+{
+	// Create usb serial object or use provided one
+	if(usbSerialObject == NULL)
+	{
+		usbSerialObject = new Serial(USBTX, USBRX);
+		usbSerialObject->baud(defaultBaudUSB);
+	}
+	usbSerial = usbSerialObject;
+	// Miscellaneous
+	bufferCount = 0;
+	lastDataWord = 0;
+	timeSinceGoodWord = 0;
+}

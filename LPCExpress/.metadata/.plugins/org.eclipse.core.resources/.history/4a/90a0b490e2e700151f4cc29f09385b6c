@@ -1,0 +1,19 @@
+/*
+ * JoystickController.h
+ *
+ *  Created on: Mar 11, 2016
+ *      Author: Joseph
+ */
+
+#ifndef SERIALCONTROL_JOYSTICKCONTROLLER_H_
+#define SERIALCONTROL_JOYSTICKCONTROLLER_H_
+
+#include "FishController.h"
+#include "mbed.h"
+
+#define defaultBaudUSB 115200
+#define printStatus // whether to print what's going on (i.e. when it gets commands, etc.)
+
+
+
+#endif /* SERIALCONTROL_JOYSTICKCONTROLLER_H_ */

@@ -1,0 +1,71 @@
+/*
+ * Author: Joseph DelPreto
+ */
+
+#include "SerialController.h"
+
+// The static instance
+SerialController serialController;
+
+// Initialization
+SerialController::SerialController(Serial* serialObject = NULL, Serial* usbSerialObject = NULL):
+		terminated(false)
+{
+
+}
+
+void SerialController::init(Serial* serialObject = NULL, Serial* usbSerialObject = NULL)
+{
+	// Create serial object or use provided one
+	if(serialObject == NULL)
+	{
+		serialObject = new Serial(defaultTX, defaultRX);
+		serialObject->baud(defaultBaud);
+	}
+	serial = serialObject;
+	// Create usb serial object or use provided one
+	if(usbSerialObject == NULL)
+	{
+		usbSerialObject = new Serial(USBTX, USBRX);
+		usbSerialObject->baud(defaultBaudUSB);
+	}
+	usbSerial = usbSerialObject;
+
+	// Will periodically check for low battery
+	lowBatteryVoltageInput->mode(PullUp);
+}
+
+// Stop the controller (will also stop the fish controller)
+//
+void SerialController::stop()
+{
+	terminated = true;
+}
+
+// Main loop
+// This is blocking - will not return until terminated by timeout or by calling stop() in another thread
+void SerialController::run()
+{
+	if(lowBatteryVoltageInput == 0)
+	{
+		lowBatteryCallback();
+		return;
+	}
+}
+
+
+void SerialController::lowBatteryCallback()
+{
+    // Stop the tone detector
+    // This will end the main call to start, causing main to terminate
+    // Main will also stop the fish controller once this method ends
+    toneDetector.stop();
+    // Also force the pin low to signal the Pi
+    // (should have already been done, but just in case)
+    // TODO check that this really forces it low after this method ends and the pin object may be deleted
+    DigitalOut simBatteryLow(lowBatteryVoltagePin);
+    simBatteryLow = 0;
+}
+
+
+

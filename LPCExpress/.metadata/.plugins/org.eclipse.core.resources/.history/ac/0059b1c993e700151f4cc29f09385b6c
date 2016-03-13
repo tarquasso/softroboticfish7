@@ -1,0 +1,16 @@
+
+
+
+#include "mbed.h"
+#include "Acoustic/AcousticController.h"
+#include "FishController.h"
+
+Serial pc(USBTX, USBRX);
+
+int main()
+{
+	pc.baud(115200);
+	// Initialize the acoustic controller
+	acousticController.init(&pc); // if no serial object is provided, it will create one on the USB pins
+	acousticController.run();
+}

@@ -1,0 +1,60 @@
+/*
+ * Author: Joseph DelPreto
+ */
+
+#include "SerialController.h"
+
+// The static instance
+SerialController serialController;
+
+// Initialization
+SerialController::SerialController(Serial* serialObject = NULL, Serial* usbSerialObject = NULL):
+		terminated(false)
+{
+
+}
+
+void SerialController::init(Serial* serialObject = NULL, Serial* usbSerialObject = NULL)
+{
+	// Create serial object or use provided one
+	if(serialObject == NULL)
+	{
+		serialObject = new Serial(defaultTX, defaultRX);
+		serialObject->baud(defaultBaud);
+	}
+	serial = serialObject;
+	// Create usb serial object or use provided one
+	if(usbSerialObject == NULL)
+	{
+		usbSerialObject = new Serial(USBTX, USBRX);
+		usbSerialObject->baud(defaultBaudUSB);
+	}
+	usbSerial = usbSerialObject;
+
+	// Will periodically check for low battery
+	lowBatteryVoltageInput->mode(PullUp);
+}
+
+// Stop the controller (will also stop the fish controller)
+//
+void SerialController::stop()
+{
+	terminated = true;
+}
+
+// Main loop
+// This is blocking - will not return until terminated by timeout or by calling stop() in another thread
+void SerialController::run()
+{
+	if(lowBatteryVoltageInput == 0)
+	{
+		lowBatteryCallback();
+		return;
+	}
+}
+
+
+
+
+
+
