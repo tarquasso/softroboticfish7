@@ -45,9 +45,9 @@ int main()
 
 	/* ROS CONTROL */
 	#ifdef rosControl
-	pc.baud(115200);
+//	pc.baud(115200);
 	// Initialize the ROS controller
-	rosController.init(NULL, &pc);
+	rosController.init();
 	// Start the controller
 	// NOTE this is a blocking method, and if infiniteLoopSerial is defined it will run forever (or until low battery callback or button board reset command)
 	// It can be stopped by the rosController.stop() method, but you have to

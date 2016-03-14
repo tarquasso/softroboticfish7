@@ -1,0 +1,2 @@
+LPC1768/ros_lib/MODSERIAL/Device/MODSERIAL_KL05Z.o: \
+ ros_lib/MODSERIAL/Device/MODSERIAL_KL05Z.cpp

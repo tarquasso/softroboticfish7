@@ -139,6 +139,7 @@
 //			stop();
 //		#endif
 //		// TODO delete this? it was in the example
+//		// don't need
 //		wait_ms(1);
 //	}
 //	programTimer.stop();
@@ -150,6 +151,7 @@
 //	#endif
 //
 //	// TODO stop the ROS node handle / unsubscribe
+//      // don't need to unsubscribe. all of it is handled by stopping roslaunch with a (artificial) keyboard interrupt on the rpi
 //
 //	// Stop the fish controller
 //	#ifdef rosControllerControlFish

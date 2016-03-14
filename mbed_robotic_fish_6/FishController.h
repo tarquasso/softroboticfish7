@@ -3,13 +3,25 @@
  * Author: Joseph DelPreto
  */
 
+#define FISH6
+//#define FISH4
+
+
 #ifndef FISH_CONTROLLER_H
 #define FISH_CONTROLLER_H
 
 #include "mbed.h"
-#include "Servo.h"
 #include "ButtonBoard.h"
+
+#ifdef FISH4
+#include "Servo.h"
 #include "esc.h" // brushless motor controller
+#endif
+
+#ifdef FISH6
+#include "Valve.h"
+#include "BCU.h"
+#endif
 
 // Control
 #define fishControllerTickerInterval 1000 // how often to call the control ticker, in microseconds
@@ -23,8 +35,9 @@
 #define resetThrustValue       0
 #define resetFrequencyValue    0.0000012 // cycles/us
 #define resetPeriodHalfValue   416666    // 1/(2*frequency) -> us
+
 // Value ranges
-#define fishMinPitch     ((float)(0.2))
+#define fishMinPitch     ((float)(0.2)) // will want to redefine for fish 6 based on depth instead
 #define fishMaxPitch     ((float)(0.8))
 #define fishMinYaw       ((float)(-1.0))
 #define fishMaxYaw       ((float)(1.0))
@@ -32,6 +45,7 @@
 #define fishMaxThrust    ((float)(0.75))
 #define fishMinFrequency ((float)(0.0000009))
 #define fishMaxFrequency ((float)(0.0000016))
+
 // Preset states for auto mode definition
 // Each one is pitch, yaw, thrust, frequency
 #define FISH_STRAIGHT 	{resetPitchValue, resetYawValue	, (fishMaxThrust + fishMinThrust)/2.0	, (fishMaxFrequency + fishMinFrequency)/2.0}
@@ -44,11 +58,25 @@
 // Pins
 #define lowBatteryVoltagePin p26
 
+#ifdef FISH4
 #define motorPWMPin   p23
 #define motorOutAPin  p11
 #define motorOutBPin  p12
 #define servoLeftPin  p21
 #define servoRightPin p24
+#endif
+
+/* now defined in BCU & valve classes; left here for reference
+#ifdef FISH6
+#define bcuPin p22
+#define valvePin p21
+#define pumpPin p23
+#define hallPin p33
+#define encoderPinA p25
+#define encoderPinB p24
+#define valveCurrentPin p19
+#define bcuCurrentPin p20
+#endif*/
 
 #define buttonBoardSDAPin  p9
 #define buttonBoardSCLPin  p10
@@ -93,7 +121,7 @@ class FishController
         void start();
         void stop();
         // Processing
-        void processAcousticWord(uint16_t word);
+        // void processAcousticWord(uint16_t word);
         void tickerCallback();
         // Debug / Logging
         volatile uint8_t streamFishStateEventController; // will indicate the last button board event - up to the caller to reset it if desired
@@ -151,6 +179,7 @@ class FishController
         const float raiser;
         volatile bool inTickerCallback;
 
+	#ifdef FISH4
         // Outputs for motor and servos
         PwmOut motorPWM;
         DigitalOut motorOutA;
@@ -159,6 +188,12 @@ class FishController
         Servo servoRight;
         //PwmOut brushlessMotor;
         const uint32_t brushlessOffTime;
+	#endif
+
+	#ifdef FISH6
+	BCU bcu;
+	Valve valve;
+	#endif
 
         // Button control
         ButtonBoard buttonBoard;

@@ -26,6 +26,7 @@ FishController::FishController() :
     fullCycle(true),
     raiser(3.5),
 	inTickerCallback(false),
+    #ifdef FISH4
     // Outputs for motor and servos
     motorPWM(motorPWMPin),
     motorOutA(motorOutAPin),
@@ -34,6 +35,7 @@ FishController::FishController() :
     servoRight(servoRightPin),
     //brushlessMotor(p25),
     brushlessOffTime(30000),
+    #endif
     // Button board
     buttonBoard(buttonBoardSDAPin, buttonBoardSCLPin, buttonBoardInt1Pin, buttonBoardInt2Pin) // sda, scl, int1, int2
 {
@@ -50,11 +52,14 @@ FishController::FishController() :
     pitch = newPitch;
     yaw = newYaw;
     thrust = newThrust;
-    thrustCommand = 0;
     frequency = newFrequency;
     periodHalf = newPeriodHalf;
+
+    #ifdef FISH4
+    thrustCommand = 0;
     dutyCycle = 0;
     brushlessOff = false;
+    #endif
 
     buttonBoard.registerCallback(&FishController::buttonCallback);
     buttonBoard.setLEDs(255, false);
@@ -144,6 +149,11 @@ void FishController::start()
 //    #ifdef debugFishState
 //    printf("Starting...\n");
 //    #endif
+
+    #ifdef FISH6
+    bcu.start();
+    valve.start();
+    #endif
 }
 
 void FishController::stop()
@@ -169,9 +179,11 @@ void FishController::stop()
     // Make sure commands are sent to motors and applied
     wait(1);
 
+    #ifdef FISH4
     // Put dive planes in a weird position to indicate stopped
     servoLeft = 0.3;
     servoRight = 0.3;
+    #endif
 
     // Light the LEDs to indicate termination
     buttonBoard.setLEDs(255, true);
@@ -180,6 +192,7 @@ void FishController::stop()
 //============================================
 // Processing
 //============================================
+#ifdef FISH4
 void FishController::tickerCallback()
 {
     inTickerCallback = true; // so we don't asynchronously stop the controller in a bad point of the cycle
@@ -219,11 +232,9 @@ void FishController::tickerCallback()
             	thrustCommand = -thrust;
             fullCycle = true;
         }
-
         // Reset time
         curTime = 0;
     }
-
     // Update the servos
     pitch = newPitch;
     servoLeft = pitch - 0.05; // The 0.03 calibrates the angles of the servo
@@ -266,6 +277,24 @@ void FishController::tickerCallback()
     //printf("%f %f\r\n", pitch, servoLeft.read());
     inTickerCallback = false;
 }
+#endif
+
+#ifdef FISH6
+void FishController::tickerCallback()
+{
+    inTickerCallback = true; // so we don't asynchronously stop the controller in a bad point of the cycle
+
+    frequency = newFrequency;
+    yaw = newYaw;
+    thrust = newThrust;
+    pitch = newPitch;
+
+    valve.set(frequency, yaw, thrust);
+    bcu.set(pitch);
+
+    inTickerCallback = false;
+}
+#endif
 
 // button will be mask indicating which button triggered this interrupt
 // pressed will indicate whether that button was pressed or released
