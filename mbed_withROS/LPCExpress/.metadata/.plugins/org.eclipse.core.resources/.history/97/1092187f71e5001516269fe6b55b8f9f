@@ -1,0 +1,242 @@
+
+
+
+#include "mbed.h"
+#include "Acoustic/Controller.h"
+#include "FishController.h"
+
+// Main loop
+int main() 
+{
+    lowBatteryVoltage.mode(PullUp);
+    //lowBatteryInterrupt.fall(&lowBatteryCallback);
+    
+    wait(0.5);
+    pc.baud(115200);
+
+    //printf("\n===== Hello 16 =====\n");
+    //printf("(ToneDetector test)\n");
+    //printf("\n");
+    wait(1);
+    
+    // Create file for logging data words
+	#ifdef saveData
+    LocalFileSystem local("local");
+    FILE* foutDataWords;
+    int fileNum = -1;
+    char filename[25];
+    foutDataWords = NULL;
+    do
+    {
+    	fileNum++;
+    	fclose(foutDataWords);
+    	sprintf(filename, "/local/%d.txt", fileNum);
+    	foutDataWords = fopen(filename, "r");
+    	printf("%d\n", fileNum);
+    } while(foutDataWords != NULL);
+    foutDataWords = fopen(filename, "w");
+    /*Timer t1;
+    t1.start();
+    uint32_t test[5] = {123000, 122000, 121000, 1, 119};
+    for(uint32_t i = 0; i < 1000; i++)
+    	printf("%ld %ld %ld %d %d\n", test[0], test[1], test[2], test[3], test[4]);
+    	//fwrite(test, 4, 3, foutDataWords);
+    t1.stop();
+    fclose(foutDataWords);
+    printf("time:%d\n", t1.read_us());
+    while(true);*/
+	#endif
+
+    // Configure the tone detector
+    toneDetector.setCallback(&processTonePowers);
+    toneDetector.init();
+    
+    // Clear detection arrays
+    #if defined(threshold2)
+    for(int t = 0; t < numTones; t++)
+    {
+        detectSums[t] = 0;
+        for(uint8_t p = 0; p < detectWindow; p++)
+            tonesPresent[p][t] = 0;
+    }
+    detectWindowIndex = 0;
+    readyToThreshold = false;
+    powerHistoryIndex = 0;
+    powerHistoryDetectIndex = (powerHistoryLength - 1) - (powerHistoryDetectWindow-1) + 1; // assumes powerHistoryLength >= detectWindow > 1
+    for(uint8_t t = 0; t < numTones; t++)
+    {
+        powerHistorySumDetect[t] = 0;
+        powerHistorySumNoDetect[t] = 0;
+        powerHistoryMaxDetect[t] = 0;
+        powerHistoryMaxNoDetect[t] = 0;
+        for(uint16_t p = 0; p < powerHistoryLength; p++)
+        {
+            powerHistory[p][t] = 0;
+        }
+    }
+    #elif defined(threshold1)
+    for(int t = 0; t < numTones; t++)
+    {
+        detectSums[t] = 0;
+    }
+    powerHistoryIndex = 0;
+    powerHistoryDetectIndex = (powerHistoryLength - 1) - (detectWindow-1) + 1; // assumes powerHistoryLength >= detectWindow > 1
+    for(uint8_t t = 0; t < numTones; t++)
+    {
+        powerHistorySum[t] = 0;
+        powerHistoryMax[t] = 0;
+        for(uint16_t p = 0; p < powerHistoryLength; p++)
+        {
+            powerHistory[p][t] = 0;
+        }
+    }
+    readyToThreshold = false;
+    #endif
+    #ifdef singleDataStream
+        #ifdef saveData
+        dataIndex = 0;
+        #endif
+    #else
+        #ifdef saveData
+        dataWordIndex = 0;
+        #endif
+        dataBitIndex = 0;
+        interWord = false;
+    #endif
+    waitingForEnd = false;
+    periodIndex = 0;
+    fskIndex = 0;
+
+    // Initialize adjustable gain control
+    signalLevelBufferIndex = 0;
+    signalLevelSum = 0;
+    currentGainIndex = 4;
+    for(uint8_t i = 0; i < sizeof(agc)/sizeof(agc[0]); i++)
+    {
+        agc[i].write(currentGainIndex & (1 << i));
+        #ifdef AGCLeds
+        agcLEDs[i].write(currentGainIndex & (1 << i));
+        #endif
+    }
+
+    #ifdef controlFish
+    // Start the fish controller
+    fishController.start();
+    #endif
+    
+    #ifndef artificialPowers
+    // Start listening for tones
+    timer.start();
+    toneDetector._run();
+    timer.stop();
+    toneDetector.finish(); // we won't include the time this takes to write files in the elapsed time
+    #else
+    // Read powers from file
+    printf("newPower[0] \tnewPower[1] \tdetectSums[0] \tdetectSums[1] \tsum[0] \tsum[1] \tmax[0] \tmax[1] \tfskIndex \twaiting \tperiodIndex \n");
+    int32_t maxSignalValTemp = 0;
+    int res = fscanf(finPowers, "%ld\t%ld\n", &nextPowers[0], &nextPowers[1]);
+    while(res > 0)
+    {
+        processTonePowers(nextPowers, maxSignalValTemp);
+        res = fscanf(finPowers, "%ld\t%ld\n", &nextPowers[0], &nextPowers[1]);
+    }
+    fclose(finPowers);
+    #endif
+    
+    #ifdef controlFish
+    // Stop the fish controller
+    fishController.stop();
+    #endif
+    
+    // Print results
+    int elapsed = timer.read_us();
+    printf("\n");
+    printf("Buffers processed: %ld\n", count);
+    printf("Elapsed time  : %d us\n", elapsed);
+    printf("Per-sample time : %f us\n", (double)elapsed/(double)count/(double)sampleWindow);
+    printf("  Sample frequency: %f kHz\n", (double)count*(double)sampleWindow/(double)elapsed*1000.0);
+    printf("Per-buffer time : %f us\n", (double)elapsed/(double)count);
+    printf("  Buffer-processing frequency: %f kHz\n", (double)count/(double)elapsed*1000.0);
+    
+    printf("\nComputed powers from last buffer: \n");
+    int32_t* lastTonePowers = toneDetector.getTonePowers();
+    for(int i = 0; i < numTones; i++)
+        printf("  Tone %d: %f Hz -> %f\n", i, targetTones[i], toFloat(lastTonePowers[i]));
+        
+    #if defined(singleDataStream) && defined(saveData)
+    printf("\nData received (%d bits):\n", dataIndex);
+    fprintf(foutDataWords, "\nData received (%d bits):\n", dataIndex);
+    long errors = 0;
+    for(int d = 5; d < dataIndex; d++)
+    {
+        printf("%d", data[d]);
+        fprintf(foutDataWords, "%d", data[d]);
+        if(d > 0 && data[d] == data[d-1])
+            errors++;
+    }
+    printf("\n");
+    printf("errors: %ld\n", errors);
+    fprintf(foutDataWords, "\n");
+	fprintf(foutDataWords, "errors: %ld\n", errors);
+	fclose(foutDataWords);
+    #ifdef debugLEDs
+    if(errors > 0)
+        led1 = 1;
+    #endif
+    #elif defined(saveData)
+    printf("\nData received (%d words):\n", dataWordIndex);
+    fprintf(foutDataWords, "\nData received (%d words):\n", dataWordIndex);
+    long errors = 0;
+    long badWords = 0;
+    for(int w = 0; w < dataWordIndex; w++)
+    {
+        errors = 0;
+        printf("  ");
+        fprintf(foutDataWords, "  ");
+        for(int b = 0; b < dataWordLength; b++)
+        {
+            printf("%d", data[w][b]);
+            fprintf(foutDataWords, "%d", data[w][b]);
+            if(b > 0 && data[w][b-1] == data[w][b])
+                errors++;
+        }
+        if(errors > 0)
+        {
+            printf(" X");
+            fprintf(foutDataWords, " X");
+            badWords++;
+        }
+        printf("\n");
+        fprintf(foutDataWords, "\n");
+    }
+    printf("\nbad words: %d\n", badWords);
+    fprintf(foutDataWords, "\nbad words: %d\n", badWords);
+    fclose(foutDataWords);
+    #ifdef debugLEDs
+    if(badWords > 0)
+        led1 = 1;
+    #endif
+    #endif
+    wait(1);
+    printf("\nDone!");
+    wait(3);
+    printf("\n");
+}
+
+void lowBatteryCallback()
+{
+    // Stop the tone detector
+    // This will end the main call to start, causing main to terminate
+    // Main will then also stop the fish controller
+    toneDetector.stop();
+    printf("Low battery!\n");
+    // Also force the pin low to signal the Pi
+    // (should have already been done, but just in case)
+    DigitalOut simBatteryLow(p26);
+    simBatteryLow = 0;
+}
+
+
+
+
+

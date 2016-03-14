@@ -1,0 +1,179 @@
+/*
+ * Author: Joseph DelPreto
+ */
+
+#include "ROSController.h"
+
+// The static instance
+ROSController rosController;
+
+void lowBatteryCallbackROSStatic()
+{
+	rosController.lowBatteryCallback();
+}
+
+// Initialization
+ROSController::ROSController(Serial* serialObject /* = NULL */, Serial* usbSerialObject /* = NULL */):
+		terminated(false)
+{
+	#ifdef debugLEDsROS
+	rosLEDs[0] = new DigitalOut(LED1);
+	rosLEDs[1] = new DigitalOut(LED2);
+	rosLEDs[2] = new DigitalOut(LED3);
+	rosLEDs[3] = new DigitalOut(LED4);
+	#endif
+	init(serialObject, usbSerialObject);
+}
+
+void ROSController::init(Serial* serialObject /* = NULL */, Serial* usbSerialObject /* = NULL */)
+{
+	// Create serial object or use provided one
+	if(serialObject == NULL)
+	{
+		serialObject = new Serial(serialDefaultTX, serialDefaultRX);
+		serialObject->baud(serialDefaultBaud);
+	}
+	serial = serialObject;
+	// Create usb serial object or use provided one
+	if(usbSerialObject == NULL)
+	{
+		usbSerialObject = new Serial(USBTX, USBRX);
+		usbSerialObject->baud(serialDefaultBaudUSB);
+	}
+	usbSerial = usbSerialObject;
+
+	// Will check for low battery at startup and using an interrupt
+	lowBatteryVoltageInput = new DigitalIn(lowBatteryVoltagePin);
+	lowBatteryVoltageInput->mode(PullUp);
+	lowBatteryInterrupt = new InterruptIn(lowBatteryVoltagePin);
+	lowBatteryInterrupt->fall(lowBatteryCallbackSerialStatic);
+
+	#ifdef debugLEDsROS
+	rosLEDs[0]->write(1);
+	rosLEDs[1]->write(0);
+	rosLEDs[2]->write(0);
+	rosLEDs[3]->write(0);
+	#endif
+}
+
+// Process a received ROS message
+void ROSController::processROSMessage(uint8_t* word)
+{
+	// Scale the bytes into the desired ranges for each property
+	bool selectButton = 0;
+	float pitch = 0;
+	float yaw = 0;
+	float thrust = 0;
+	float frequency = 0;
+
+	// Apply the new state to the fish
+	fishController.setSelectButton(selectButton);
+	fishController.setPitch(pitch);
+	fishController.setYaw(yaw);
+	fishController.setThrust(thrust);
+	fishController.setFrequency(frequency);
+
+	#ifdef printStatusROSController
+	//usbSerial->printf("Processed <%s>: ", word);
+	usbSerial->printf("Start %d\t Pitch %f\t Yaw %f\t Thrust %f\t Freq %.8f\r\n", selectButton, pitch, yaw, thrust, frequency);
+	#endif
+}
+
+// Stop the controller (will also stop the fish controller)
+//
+void ROSController::stop()
+{
+	terminated = true;
+}
+
+// Main loop
+// This is blocking - will not return until terminated by timeout or by calling stop() in another thread
+void ROSController::run()
+{
+
+	#ifdef rosControllerControlFish
+    // Start the fish controller
+    fishController.start();
+    #endif
+
+    // Check for low battery voltage (also have the interrupt, but check that we're not starting with it low)
+	if(lowBatteryVoltageInput == 0)
+		lowBatteryCallback();
+
+	#ifdef printStatusROSController
+	usbSerial->printf("\r\nStarting to listen for serial commands 2\r\n");
+	#endif
+
+	#ifdef debugLEDsROS
+	rosLEDs[0]->write(1);
+	rosLEDs[1]->write(1);
+	rosLEDs[2]->write(0);
+	rosLEDs[3]->write(0);
+	#endif
+
+	// Process any incoming ROS messages
+	programTimer.reset();
+	programTimer.start();
+	while(!terminated)
+	{
+		if(serial->readable())
+		{
+			#ifdef debugLEDsROS
+			rosLEDs[2]->write(1);
+			#endif
+		}
+		else
+		{
+			#ifdef debugLEDsROS
+			rosLEDs[2]->write(0);
+			#endif
+		}
+		#ifndef infiniteLoopROS
+		if(programTimer.read_ms() > runTimeROS)
+			stop();
+		#endif
+	}
+	programTimer.stop();
+	#ifdef debugLEDsROS
+	rosLEDs[0]->write(0);
+	rosLEDs[1]->write(0);
+	rosLEDs[2]->write(0);
+	rosLEDs[3]->write(0);
+	#endif
+
+	// Stop the fish controller
+	#ifdef rosControllerControlFish
+    fishController.stop();
+    // If battery died, wait a bit for pi to clean up and shutdown and whatnot
+    if(lowBatteryVoltageInput == 0)
+    {
+		wait(90); // Give the Pi time to shutdown
+		fishController.setLEDs(255, false);
+    }
+    #endif
+
+	#ifdef printStatusROSController
+	usbSerial->printf("\r\nROS controller done!\r\n");
+	#endif
+}
+
+
+void SerialController::lowBatteryCallback()
+{
+//    // Stop the serial controller
+//    // This will end the main loop, causing main to terminate
+//    // Main will also stop the fish controller once this method ends
+//    stop();
+//    // Also force the pin low to signal the Pi
+//    // (should have already been done, but just in case)
+//    // TODO check that this really forces it low after this method ends and the pin object may be deleted
+//    DigitalOut simBatteryLow(lowBatteryVoltagePin);
+//    simBatteryLow = 0;
+//	#ifdef printStatusSerialController
+//    usbSerial->printf("\r\nLow battery! Shutting down.\r\n");
+//    wait(0.5); // wait for the message to actually flush
+//	#endif
+}
+
+
+

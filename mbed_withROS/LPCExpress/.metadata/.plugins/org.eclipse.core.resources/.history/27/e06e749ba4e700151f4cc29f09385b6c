@@ -1,0 +1,87 @@
+/*
+ * AcousticController.h
+ * Author: Joseph DelPreto
+ */
+
+#ifndef FISH_CONTROLLER_H
+#define FISH_CONTROLLER_H
+
+#include "mbed.h"
+#include "Servo.h"
+#include "ButtonBoard.h"
+#include "esc.h" // brushless motor controller
+
+// Constants
+#define PI2 6.2831853  // PI is not included with math.h for some reason
+
+
+#define getCurStateWord (uint16_t)((uint16_t)newSelectButtonIndex + ((uint16_t)newPitchIndex << 1) + ((uint16_t)newYawIndex << 4) + ((uint16_t)newThrustIndex << 7) + ((uint16_t)newFrequencyIndex << 9));
+
+class FishController
+{
+    public:
+        // Initialization
+        FishController();
+        void start();
+        void stop();
+        // Processing
+        void processAcousticWord(uint16_t word);
+        void tickerCallback();
+        // Debug
+        #ifdef debugFishState
+        void printDebugState();
+        #endif
+        // LEDs
+        void setLEDs(char mask, bool turnOn);
+        volatile bool autoMode;
+        // State
+		void setSelectButton(bool newSelectButtonValue);
+		void setPitch(float newPitchValue);
+		void setYaw(float newYawValue);
+		void setThrust(float newThrustValue);
+		void setFrequency(float newFrequencyValue);
+    private:
+        // State which will be applied at the next appropriate time in the control cycle
+        volatile bool newSelectButton;
+        volatile float newPitch;
+        volatile float newYaw;
+        volatile float newThrust;
+        volatile float newFrequency;
+        // State currently executing on fish
+        volatile bool selectButton;
+        volatile float pitch;
+        volatile float yaw;
+        volatile float thrust;
+        volatile float thrustCommand;
+        volatile float frequency;
+        volatile float periodHalf;
+        volatile float dutyCycle;
+        volatile bool brushlessOff;
+        // Ticker for controlling tail
+        Ticker ticker;
+        const uint16_t tickerInterval;
+        volatile uint32_t curTime;
+        volatile bool fullCycle;
+        const float raiser;
+        volatile bool inTickerCallback;
+        
+        // Outputs for motor and servos
+        PwmOut motorPWM;
+        DigitalOut motorOutA;
+        DigitalOut motorOutB;
+        Servo servoLeft;
+        Servo servoRight;
+        //PwmOut brushlessMotor;
+        const uint32_t brushlessOffTime;
+        
+        // Button control
+        ButtonBoard buttonBoard;
+        static void buttonCallback(char button, bool pressed, char state);
+};
+
+// Create a static instance of FishController to be used by anyone doing detection
+extern FishController fishController;
+extern volatile uint8_t streamFishStateEvent;
+extern volatile uint16_t streamCurFishState;
+
+#endif // ifndef FISH_CONTROLLER_H
