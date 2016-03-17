@@ -4,6 +4,8 @@
 
 #include "AcousticController.h"
 
+#ifdef acousticControl
+
 // The static instance
 AcousticController acousticController;
 
@@ -899,3 +901,5 @@ void AcousticController::lowBatteryCallback()
     DigitalOut simBatteryLow(lowBatteryVoltagePin);
     simBatteryLow = 0;
 }
+
+#endif // #ifdef acousticControl

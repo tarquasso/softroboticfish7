@@ -4,6 +4,10 @@
  * Author: Joseph DelPreto
  */
 
+//#define serialControl
+
+#ifdef serialControl
+
 #ifndef SERIALCONTROL_SERIALCONTROLLER_H_
 #define SERIALCONTROL_SERIALCONTROLLER_H_
 
@@ -68,3 +72,4 @@ extern SerialController serialController;
 
 #endif /* SERIALCONTROL_SERIALCONTROLLER_H_ */
 
+#endif // #ifdef serialControl

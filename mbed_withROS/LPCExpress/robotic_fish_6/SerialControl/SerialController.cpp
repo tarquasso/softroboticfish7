@@ -4,6 +4,8 @@
 
 #include "SerialController.h"
 
+#ifdef serialControl
+
 // The static instance
 SerialController serialController;
 
@@ -208,5 +210,5 @@ void SerialController::lowBatteryCallback()
 	}
 }
 
-
+#endif // #ifdef serialControl
 

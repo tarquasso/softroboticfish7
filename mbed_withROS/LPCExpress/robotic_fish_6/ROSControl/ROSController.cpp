@@ -4,6 +4,8 @@
 
 #include "ROSController.h"
 
+#ifdef rosControl
+
 // The static instance
 ROSController rosController;
 
@@ -192,5 +194,5 @@ void ROSController::lowBatteryCallback()
 	}
 }
 
-
+#endif // #ifdef rosControl
 

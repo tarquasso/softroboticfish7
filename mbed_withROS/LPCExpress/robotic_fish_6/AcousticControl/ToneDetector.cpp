@@ -4,6 +4,8 @@
 
 #include "ToneDetector.h"
 
+#ifdef acousticControl
+
 // The static instance
 ToneDetector toneDetector;
 #ifdef streamAcousticControlLog
@@ -620,3 +622,5 @@ void ToneDetector::initTestModeSamples()
     #endif // which sample mode
 }
 #endif // artificialSamplesMode
+
+#endif // #ifdef acousticControl

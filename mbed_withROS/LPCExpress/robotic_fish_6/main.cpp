@@ -1,49 +1,10 @@
-//#define COMPILE_BLINK_CODE_ROSSERIAL
-#ifdef COMPILE_BLINK_CODE_ROSSERIAL
 
-/*
- * rosserial Subscriber Example
- * Blinks an LED on callback
- */
-#include "mbed.h"
-#include <ros.h>
-#include <std_msgs/Empty.h>
-
-ros::NodeHandle  nh;
-DigitalOut myled(LED1);
-
-void messageCb( const std_msgs::Empty& toggle_msg) {
-    myled = !myled;   // blink the led
-}
-
-ros::Subscriber<std_msgs::Empty> sub("toggle_led", &messageCb );
-
-int main() {
-    nh.initNode();
-    nh.subscribe(sub);
-
-    while (1) {
-        nh.spinOnce();
-        wait_ms(1);
-    }
-}
-
-#endif
-
-//#define acousticControl
-//#define serialControl
-#define rosControl
+// NOTE look at the below h files to define whether that control mode is enabled
 
 #include "mbed.h"
-#ifdef acousticControl
-#include "AcousticControl/AcousticController.h"
-#endif
-#ifdef serialControl
+#include "AcousticControl/AcousticController.h" // also need to define acousticControl in ToneDetector.h
 #include "SerialControl/SerialController.h"
-#endif
-#ifdef rosControl
 #include "ROSControl/ROSController.h"
-#endif
 
 Serial pc(USBTX, USBRX);
 

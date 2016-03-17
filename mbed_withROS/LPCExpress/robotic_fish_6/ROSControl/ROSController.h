@@ -4,6 +4,10 @@
  * Author: Joseph DelPreto
  */
 
+//#define rosControl
+
+#ifdef rosControl
+
 #ifndef ROSCONTROL_ROSCONTROLLER_H_
 #define ROSCONTROL_ROSCONTROLLER_H_
 
@@ -77,3 +81,4 @@ extern ROSController rosController;
 
 #endif /* ROSCONTROL_ROSCONTROLLER_H_ */
 
+#endif // #ifdef rosControl

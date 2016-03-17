@@ -3,6 +3,10 @@
  * Author: Joseph DelPreto
  */
 
+#define acousticControl
+
+#ifdef acousticControl
+
 #ifndef ACOUSTICCONTROL_ACOUSTICCONTROLLER_H_
 #define ACOUSTICCONTROL_ACOUSTICCONTROLLER_H_
 
@@ -62,7 +66,7 @@ UPDATE:
 //#define streamSignalLevel // stream current signal level to the screen
 
 // ===== EXECUTION =====
-//#define infiniteLoopAcoustic  // if undefined, will stop after loopCount buffers are processed
+#define infiniteLoopAcoustic  // if undefined, will stop after loopCount buffers are processed
 #define loopCount 20000       // number of buffers to process before terminating the program (if infiniteLoopAcoustic is not defined)
 #define fishTimeoutAcoustic   // whether to reset the fish to neutral if an acoustic word hasn't been received in a while.  Not used with singleDataStream.
 #define fishTimeoutAcousticWindow 5000000 // time between good words that cause a timeout (in microseconds)
@@ -248,3 +252,5 @@ class AcousticController
 extern AcousticController acousticController;
 
 #endif
+
+#endif // #ifdef acousticControl

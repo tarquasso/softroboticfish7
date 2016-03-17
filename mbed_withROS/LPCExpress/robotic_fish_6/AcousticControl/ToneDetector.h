@@ -27,6 +27,10 @@
  *
  */
 
+#define acousticControl
+
+#ifdef acousticControl
+
 #ifndef TONE_DETECTOR_H
 #define TONE_DETECTOR_H
 
@@ -173,6 +177,6 @@ extern int32_t acousticControlLogToStream[5]; // goertzel powers f1, goerztel po
 
 #endif // ifndef TONE_DETECTOR_H
 
-
+#endif // #ifdef acousticControl
 
 
