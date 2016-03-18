@@ -92,7 +92,7 @@ class AcousticJoystickController:
       while True:
         # get the appropriate wav file and play it
         stateNum = int(joystickStateNum.value)
-        wavFile = '/home/pi/fish/python/wav_files_20bps/' + '{0:04d}'.format(stateNum) + '.wav'
+        wavFile = '/home/pi/wav_files_20bps/' + '{0:04d}'.format(stateNum) + '.wav'
         if stateNum != acousticStateNum.value:
           print 'playing new state:', stateNum, wavFile
         if os.system("aplay -q " + wavFile) != 0:

@@ -1,7 +1,9 @@
 ***** SETUP *****
 -- Copy contents of rc.local to your /etc/rc.local and make it executable ("sudo chmod +x /etc/rc.local")
 -- Make all scripts in this folder executable ("sudo chmod +x /home/pi/gitRepo/controller/*.sh")
-
+-- Copy files in wav_files_20bps on dropbox into /home/pi/wav_files_20bps 
+     dropbox link: https://www.dropbox.com/sh/vr7yd135xsmb0tj/AACSPx7QN5-gzcLWc9LYIg5Ja?dl=0
+     wanrning: these take up about 1.2 GB
 
 ===== rc.local =====
 -- Put these contents into your /etc/rc.local (and make sure it's executable)
