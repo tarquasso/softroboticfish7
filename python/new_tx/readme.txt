@@ -1,0 +1,1 @@
+copy rc.local into your /etc/rc.local and make sure it's executable
