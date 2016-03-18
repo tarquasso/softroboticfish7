@@ -17,8 +17,8 @@ Valve::Valve() :
     // Initialize variables
     pumpPWM(pumpPin),
     valvePWM(valvePin),
-    valveCurrent(valveCurrentPin),
     valveEncoder(encoderPinA, encoderPinB, NC, count2rev), // use X2 encoding by default
+	valveCurrent(valveCurrentPin),
     hallSignal(hallPin)
 {
     hallSignal.rise(&flipStatic);
