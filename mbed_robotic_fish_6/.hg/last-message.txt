@@ -1,1 +1,0 @@
-Can switch between old and new thresholds (untested).  Updating button mapping, low battery polling, and max thrust setting.

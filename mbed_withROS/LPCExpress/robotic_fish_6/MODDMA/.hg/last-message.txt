@@ -1,1 +1,0 @@
-Copied a different version that has some needed macros public instead of protected

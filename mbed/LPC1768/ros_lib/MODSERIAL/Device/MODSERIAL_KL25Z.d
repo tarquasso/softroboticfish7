@@ -1,2 +1,0 @@
-LPC1768/ros_lib/MODSERIAL/Device/MODSERIAL_KL25Z.o: \
- ros_lib/MODSERIAL/Device/MODSERIAL_KL25Z.cpp
