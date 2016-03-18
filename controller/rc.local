@@ -18,6 +18,6 @@ if [ "$_IP" ]; then
 fi
 
 printf "starting fish processes"
-sudo /home/pi/fish/controller/startup_tx.sh
+sudo /home/pi/gitRepo/controller/startup_tx.sh
 
 exit 0

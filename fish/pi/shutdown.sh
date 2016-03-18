@@ -1,4 +1,4 @@
-sudo /home/pi/fish/mbed/unmountMbed.sh
+sudo /home/pi/gitRepo/fish/pi/unmountMbed.sh
 echo "shutting down"
 sudo shutdown -h now
 

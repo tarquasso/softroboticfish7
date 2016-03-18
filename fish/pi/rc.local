@@ -18,7 +18,7 @@ if [ "$_IP" ]; then
 fi
 
 # Run fish startup script
-sudo /home/pi/fish/pi/startup_rx.sh
+sudo /home/pi/gitRepo/fish/pi/startup_rx.sh
 
 # exit
 exit 0

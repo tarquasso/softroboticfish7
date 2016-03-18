@@ -1,6 +1,6 @@
 ***** SETUP *****
 -- Copy contents of rc.local to your /etc/rc.local and make it executable ("sudo chmod +x /etc/rc.local")
--- Make all scripts in this folder executable ("sudo chmod +x /home/pi/fish/pi/*.sh")
+-- Make all scripts in this folder executable ("sudo chmod +x /home/pi/gitRepo/fish/pi/*.sh")
 
 ===== rx_controller.py =====
   -- This will launch a low battery monitor that shuts down the Pi if a low battery is detected.
