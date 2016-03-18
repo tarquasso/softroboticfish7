@@ -17,7 +17,7 @@ if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
 
-printf "starting fish processes"
+printf "starting controller processes"
 sudo /home/pi/gitRepo/controller/startup_tx.sh
 
 exit 0

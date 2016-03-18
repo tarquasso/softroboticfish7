@@ -2,7 +2,7 @@
 
 echo "*** CONTROLLER STARTUP SCRIPT ***"
 
-echo "--- killing existing fish controller processes"
+echo "--- killing existing joystick control processes"
 sudo ps -ef | grep "AcousticJoystickController.py" | awk '{print $2}' | xargs sudo kill
 
 echo "--- starting transmitter joystick control"
