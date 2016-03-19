@@ -7,7 +7,7 @@
 #define FISH_CONTROLLER_H
 
 // comment out if no debug wanted
-#define debugFishState
+//#define debugFishState
 
 // Fish version (only define one of them)
 #define FISH6
@@ -39,8 +39,16 @@
 #define resetPeriodHalfValue   416666    // 1/(2*frequency) -> us
 
 // Value ranges
+#ifdef FISH4
 #define fishMinPitch     ((float)(0.2)) // will want to redefine for fish 6 based on depth instead
 #define fishMaxPitch     ((float)(0.8))
+#endif
+
+#ifdef FISH6
+#define fishMinPitch     ((float)(-1.0)) // will want to redefine for fish 6 based on depth instead
+#define fishMaxPitch     ((float)(1.0))
+#endif
+
 #define fishMinYaw       ((float)(-1.0))
 #define fishMaxYaw       ((float)(1.0))
 #define fishMinThrust    ((float)(0.0))
@@ -75,6 +83,8 @@
 
 #ifdef FISH6
 // NOTE: FISH6 pins are defined in BCU and Valve classes
+#define imuPressureSensorPinSDA p28
+#define imuPressureSensorPinSCL p27
 #endif
 
 #define buttonBoardSDAPin  p9
@@ -191,6 +201,10 @@ class FishController
         uint32_t autoModeCount;
         uint16_t autoModeIndex;
         bool ignoreExternalCommandsPreAutoMode;
+
+        //TODO: Add Pressure Sensor MS5837
+        //TODO: Add IMU BNO055 bno055(p9, p10) to the class
+
 };
 
 // Create a static instance of FishController to be used by anyone doing detection

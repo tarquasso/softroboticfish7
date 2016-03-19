@@ -37,7 +37,11 @@ FishController::FishController() :
     brushlessOffTime(30000),
 	#endif
     // Button board
-    buttonBoard(buttonBoardSDAPin, buttonBoardSCLPin, buttonBoardInt1Pin, buttonBoardInt2Pin) // sda, scl, int1, int2
+	buttonBoard(buttonBoardSDAPin, buttonBoardSCLPin, buttonBoardInt1Pin, buttonBoardInt2Pin) // sda, scl, int1, int2
+#ifdef FISH6
+	//imuPressureSensor(p9, p10, ms5837_addr_no_CS, imuaddr)
+#endif
+
 {
 	streamFishStateEventController = 0;
 
@@ -65,6 +69,14 @@ FishController::FishController() :
 
     autoModeIndex = 0;
     autoModeCount = 0;
+
+#ifdef FISH6
+    //TODO: init IMU
+    //TODO: init pressure sensor
+    //	temperatureCur = 0;
+    //	pressureCur = 0;
+#endif
+
 }
 
 // Set the desired state
@@ -146,6 +158,9 @@ void FishController::start()
 #ifdef FISH6
     buoyancyControlUnit.start();
     pumpWithValve.start();
+    //TODO: add imu
+    //todo: add pressure sensor
+    //	pressureSensor.MS5837Init();
 #endif
 
     // Start control ticker callback
@@ -287,13 +302,23 @@ void FishController::tickerCallback()
 {
     inTickerCallback = true; // so we don't asynchronously stop the controller in a bad point of the cycle
 
-    //set new command to current command
+    //set current state to newly commanded value
     frequency = newFrequency;
     yaw = newYaw;
     thrust = newThrust;
     pitch = newPitch;
 
     pumpWithValve.set(frequency, yaw, thrust);
+
+	// Update small pressure sensor
+//	pressureSensor.Barometer_MS5837();
+//    pressureCur = pressure_sensor.MS5837_Pressure();
+//    temperatureCur = pressure_sensor.MS5837_Temperature();
+	//pc.printf("Small Sensor Pressure: %f\n", pressure_small);
+    //pc.printf("Small Sensor Temperature: %f\n\n", temp_small);
+    //depth_act = pressureCur;//TODO: some calculation needed here combining pressure value and temperature value...
+    //buoyancyControlUnit.setActualPressure(pitch);
+
     buoyancyControlUnit.set(pitch);
 
 #ifdef debugFishState
