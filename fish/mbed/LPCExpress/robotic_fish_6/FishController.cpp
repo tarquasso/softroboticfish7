@@ -37,9 +37,10 @@ FishController::FishController() :
     brushlessOffTime(30000),
 	#endif
     // Button board
-	buttonBoard(buttonBoardSDAPin, buttonBoardSCLPin, buttonBoardInt1Pin, buttonBoardInt2Pin) // sda, scl, int1, int2
+	buttonBoard(buttonBoardSDAPin, buttonBoardSCLPin, buttonBoardInt1Pin, buttonBoardInt2Pin), // sda, scl, int1, int2
 #ifdef FISH6
-	//imuPressureSensor(p9, p10, ms5837_addr_no_CS, imuaddr)
+	pressureSensor(pressureSensorPinSDA, pressureSensorPinSCL, ms5837_addr_no_CS),
+	imuSensor(imuSensorPinSDA, imuSensorPinSCL)
 #endif
 
 {
@@ -71,10 +72,11 @@ FishController::FishController() :
     autoModeCount = 0;
 
 #ifdef FISH6
-    //TODO: init IMU
-    //TODO: init pressure sensor
-    //	temperatureCur = 0;
-    //	pressureCur = 0;
+    //TODO: add pressure sensor variables
+    temperatureCur = 0;
+    pressureCur = 0;
+    //TODO: add IMU variables
+
 #endif
 
 }
@@ -158,9 +160,16 @@ void FishController::start()
 #ifdef FISH6
     buoyancyControlUnit.start();
     pumpWithValve.start();
+    //TODO: add pressure sensor
+    //pressureSensor.MS5837Init();
     //TODO: add imu
-    //todo: add pressure sensor
-    //	pressureSensor.MS5837Init();
+    //imuSensor.reset();
+    //imuSensor.setmode(OPERATION_MODE_NDOF);
+    //imuSensor.write_calibration_data();
+    //imuSensor.get_calib();
+//    while (imuSensor.calib == 0) {
+//    	imuSensor.get_calib();
+//    }
 #endif
 
     // Start control ticker callback
@@ -310,16 +319,16 @@ void FishController::tickerCallback()
 
     pumpWithValve.set(frequency, yaw, thrust);
 
-	// Update small pressure sensor
-//	pressureSensor.Barometer_MS5837();
-//    pressureCur = pressure_sensor.MS5837_Pressure();
-//    temperatureCur = pressure_sensor.MS5837_Temperature();
+	//TODO: Update small pressure sensor
+    //pressureSensor.Barometer_MS5837();
+    //pressureCur = pressureSensor.MS5837_Pressure();
+    //temperatureCur = pressureSensor.MS5837_Temperature();
 	//pc.printf("Small Sensor Pressure: %f\n", pressure_small);
     //pc.printf("Small Sensor Temperature: %f\n\n", temp_small);
     //depth_act = pressureCur;//TODO: some calculation needed here combining pressure value and temperature value...
     //buoyancyControlUnit.setActualPressure(pitch);
 
-    buoyancyControlUnit.set(pitch);
+    buoyancyControlUnit.set(pitch,pressureCur);
 
 #ifdef debugFishState
     printDebugState();

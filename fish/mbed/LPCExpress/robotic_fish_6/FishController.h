@@ -22,6 +22,8 @@
 #ifdef FISH6
 #include "PumpWithValve/PumpWithValve.h"
 #include "BuoyancyControlUnit/BuoyancyControlUnit.h"
+#include "MS5837/MS5837.h"
+#include "BNO055/BNO055.h"
 #endif
 
 
@@ -83,9 +85,12 @@
 
 #ifdef FISH6
 // NOTE: FISH6 pins are defined in BCU and Valve classes
-#define imuPressureSensorPinSDA p28
-#define imuPressureSensorPinSCL p27
+#define pressureSensorPinSDA p28
+#define pressureSensorPinSCL p27
+#define imuSensorPinSDA p28
+#define imuSensorPinSCL p27
 #endif
+
 
 #define buttonBoardSDAPin  p9
 #define buttonBoardSCLPin  p10
@@ -203,8 +208,11 @@ class FishController
         bool ignoreExternalCommandsPreAutoMode;
 
         //TODO: Add Pressure Sensor MS5837
+        MS5837 pressureSensor;
+    	volatile float temperatureCur;
+    	volatile float pressureCur;
         //TODO: Add IMU BNO055 bno055(p9, p10) to the class
-
+    	BNO055 imuSensor;
 };
 
 // Create a static instance of FishController to be used by anyone doing detection

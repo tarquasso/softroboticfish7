@@ -15,8 +15,8 @@ BuoyancyControlUnit::BuoyancyControlUnit() :
 					bcuDirB(bcuDirBPin),
 					bcuCurrent(bcuCurrentPin)
 {
-	depth_cmd = 0; // input command
-	depth_act = 0; // actual depth based on sensor
+	depthDes = 0; // input command
+	depthMeas = 0; // actual depth based on sensor
 	Vref = 0;
 //	dV_in = 0;
 //	depth_error = depth_cmd - depth_act;
@@ -56,16 +56,17 @@ void BuoyancyControlUnit::stop()
 //	prev_depth_error = depth_error;
 //}
 
-void BuoyancyControlUnit::set(float depth_in)
+void BuoyancyControlUnit::set(float depthDesIn, float depthMeasIn)
 {
 
-	depth_cmd = depth_in;
+	depthDes = depthDesIn;
+	depthMeas = depthMeasIn;
 
-	//ASSUMES that "pitch" signal in is from -1.0 to 1.0
-	if (depth_in < 0.2 && depth_in > -0.2)
+	//ASSUMES that "pitch" signal in called "depthDes" is from -1.0 to 1.0
+	if (depthDes < 0.2 && depthDes > -0.2)
 		Vref = 0;
 	else
-		Vref = depth_in;
+		Vref = depthDes;
 
 	//Reverse the direction of the motor depending on the command
 	if(Vref >= 0)

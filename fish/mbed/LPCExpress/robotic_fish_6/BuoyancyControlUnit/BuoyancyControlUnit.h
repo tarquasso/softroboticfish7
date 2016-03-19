@@ -31,11 +31,11 @@ public:
 	BuoyancyControlUnit();
 	void start();
 	void stop();
-	void set(float depth_in);
+	void set(float depthDesIn, float depthMeasIn);
 
 private:
-	volatile float depth_cmd;
-	volatile float depth_act;
+	volatile float depthDes;
+	volatile float depthMeas;
 //	volatile float depth_error;
 //	volatile float prev_depth_error;
 	volatile float Vref;
@@ -45,9 +45,6 @@ private:
 	DigitalOut bcuDirA;
 	DigitalOut bcuDirB;
 	AnalogIn bcuCurrent; // actually is a voltage value proportional to current
-	//MS5837 pressureSensor;
-	//volatile float temperatureCur;
-	//volatile float pressureCur;
 };
 
 // Create a static instance of BuoyancyControlUnit to be used by anyone controlling the Buoyancy Control Unit
