@@ -22,7 +22,7 @@
 #define valveMotorGearRatio 297.92
 #define freq_PGain 			0.05 // random dummy number
 #define freq_DGain 			0.01 // dummy val
-#define valveOffsetGain 	0.05
+#define valveOffsetGain 	0.7
 
 class PumpWithValve
 {
@@ -35,6 +35,9 @@ public:
 	void flipFlowDirection();
 	void set(float freq_in, float yaw_in, float thrust_in);
 
+protected:
+	void calculateYawMethod1();
+	void calculateYawMethod2();
 
 private:
 
@@ -46,6 +49,7 @@ private:
 	volatile float 	valveV1;
 	volatile float 	valveV2;
 	volatile float 	Vfreq;
+	volatile float 	VfreqAdjusted;
 
 //	volatile float dt;
 //	volatile float rot;

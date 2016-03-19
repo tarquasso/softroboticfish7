@@ -31,6 +31,7 @@ PumpWithValve::PumpWithValve() :
 	valveV1 = 0;
 	valveV2 = 0;
 	Vfreq = 0;
+	VfreqAdjusted = 0;
 //	dV_freq = 0;
 //	freq_error = 0;
 //	prev_freq_error = 0;
@@ -82,12 +83,20 @@ void PumpWithValve::set(float freq_in, float yaw_in, float thrust_in)
 	//    Vfreq += dV_freq;
 	Vfreq = frequency; //just setting directly the voltage
 
+	yaw = yaw_in; //update yaw state using input
+	//this->calculateYawMethod1();
+	this->calculateYawMethod2();
+}
+
+
+void PumpWithValve::calculateYawMethod1()
+{
 	// split tail frequency voltage into voltage on either side of the valve
 	// TODO figure out ideal relationship between yaw and offset between V1 and V2
 	// is it additive or multiplicative? start with super simple math
 
-	valveV1 = Vfreq + valveOffsetGain * yaw;
-	valveV2 = Vfreq - valveOffsetGain * yaw;
+	valveV1 = (1 + valveOffsetGain * yaw) * Vfreq;
+	valveV2 = (1 - valveOffsetGain * yaw) * Vfreq;
 
 	// TODO need to decide whether to give up frequency or yaw when we are at input limits
 	if (valveV1 > 1.0) {valveV1 = 1.0;}
@@ -104,4 +113,15 @@ void PumpWithValve::set(float freq_in, float yaw_in, float thrust_in)
 
 }
 
+void PumpWithValve::calculateYawMethod2()
+{
 
+		if(yaw < 0.0 && !valve_side)
+			VfreqAdjusted = (1.0 + valveOffsetGain*yaw)*Vfreq; // 0.7 can be adjusted to a power of 2 if needed
+		else if(yaw > 0.0 && valve_side)
+			VfreqAdjusted = (1.0 - valveOffsetGain*yaw)*Vfreq; // 0.7 can be adjusted to a power of 2 if needed
+		else
+			VfreqAdjusted = Vfreq;
+		valvePWM.write(VfreqAdjusted);
+
+}
