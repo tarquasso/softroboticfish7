@@ -4,7 +4,7 @@
  * Author: Joseph DelPreto
  */
 
-//#define serialControl
+#define serialControl
 
 #ifdef serialControl
 
