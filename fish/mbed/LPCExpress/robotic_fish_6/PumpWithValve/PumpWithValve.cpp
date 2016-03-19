@@ -1,11 +1,11 @@
-
 #include <PumpWithValve/PumpWithValve.h>
 
 // The static instance
-PumpWithValve valve;
-void flipStatic()
+PumpWithValve pumpWithValve;
+
+void flipFlowDirectionStatic()
 {
-	valve.flip();
+	pumpWithValve.flipFlowDirection();
 }
 
 //============================================
@@ -14,49 +14,47 @@ void flipStatic()
 
 // Constructor
 PumpWithValve::PumpWithValve() :
-    // Initialize variables
-    pumpPWM(pumpPin),
-    valvePWM(valvePin),
-    valveEncoder(encoderPinA, encoderPinB, NC, count2rev), // use X2 encoding by default
-	valveCurrent(valveCurrentPin),
-    hallSignal(hallPin)
+    		// Initialize variables
+    		pumpPWM(pumpPwmPin),
+			valvePWM(valvePwmPin),
+			//valveEncoder(encoderPinA, encoderPinB, NC, count2rev), // use X2 encoding by default
+			//valveCurrent(valveCurrentPin),
+			hallSignal(hallInterruptPin)
 {
-    hallSignal.rise(&flipStatic);
+	hallSignal.rise(&flipFlowDirectionStatic); //TODO: check if that is how the hall sensor is used by Alex
 
-    frequency = 0;
-    thrust = 0;
-    yaw = 0;
+	frequency = 0;
+	thrust = 0;
+	yaw = 0;
 
-    Vthrust = 0;
-
-    valve_side = 0;
-    valveV1 = 0;
-    valveV2 = 0;
-    Vfreq = 0;
-    dV_freq = 0;
-    freq_error = 0;
-    prev_freq_error = 0;
+	valve_side = true; //true is the first side
+	valveV1 = 0;
+	valveV2 = 0;
+	Vfreq = 0;
+//	dV_freq = 0;
+//	freq_error = 0;
+//	prev_freq_error = 0;
 }
 
 
 void PumpWithValve::start()
 {
-    valvePWM.write(0.0); // apply nothing to start
-    pumpPWM.write(0.0);
-    timer.start();
+	valvePWM.write(0.0); // apply nothing to start
+	pumpPWM.write(0.0);
+	timer.start();
 }
 
 void PumpWithValve::stop()
 {
-    valvePWM.write(0.0);
-    pumpPWM.write(0.0);
+	valvePWM.write(0.0);
+	pumpPWM.write(0.0);
 }
 
-void PumpWithValve::flip()
+void PumpWithValve::flipFlowDirection()
 {
-    // when the hall sensor sees a rising edge, we have rotated 180 degrees
-    // --> want to adjust the applied voltage based on the side we are on
-    valve_side = !valve_side;
+	// when the hall sensor sees a rising edge, we have rotated 180 degrees
+	// --> want to adjust the applied voltage based on the side we are on
+	valve_side = !valve_side; //change boolean state, keeps track of which half of the rotation we are on
 }
 
 //============================================
@@ -64,42 +62,46 @@ void PumpWithValve::flip()
 //============================================
 void PumpWithValve::set(float freq_in, float yaw_in, float thrust_in)
 {
-    Vthrust = thrust_in; // not sure if more conversions are required
-    pumpPWM.write(Vthrust);
+	//Centrifugal Pump
+	thrust = thrust_in; //thrust comes in as float from 0.0-1.0
+	pumpPWM.write(thrust);
 
-    // measure current tail frequency
-    dt = timer.read_us();
-    rot = valveEncoder.getPulses()/count2rev; // TODO also need to divide by gear ratio if encoder is attached directly to motor
-    freq_act = rot/dt;
-    freq_error = frequency - freq_act;
+	// set speed of the valve motor through the frequency value
+	frequency = freq_in;
+	//   TODO: NOT YET CONTROLLING ACTUAL FREQUENCY - JUST SET VOLTAGE
+	//    // measure current tail frequency
+	//    dt = timer.read_us();
+	//    timer.reset();
+	//    rot = valveEncoder.getPulses()/count2rev; // TODO also need to divide by gear ratio if encoder is attached directly to motor
+	//	  valveEncoder.reset();
+	//    freq_act = rot/dt;
+	//    freq_error = frequency - freq_act;
+	//    // update tail frequency
+	//    dV_freq = freq_PGain * freq_error + freq_DGain * (freq_error - prev_freq_error);
+	//    prev_freq_error = freq_error; //reset previous frequency error
+	//    Vfreq += dV_freq;
+	Vfreq = frequency; //just setting directly the voltage
 
-    // update tail frequency
-    dV_freq = freq_PGain * freq_error + freq_DGain * (freq_error - prev_freq_error);
-    Vfreq += dV_freq;
+	// split tail frequency voltage into voltage on either side of the valve
+	// TODO figure out ideal relationship between yaw and offset between V1 and V2
+	// is it additive or multiplicative? start with super simple math
 
-    // split tail frequency voltage into voltage on either side of the valve
-    // TODO figure out ideal relationship between yaw and offset between V1 and V2
-    // is it additive or multiplicative? start with super simple math
-    
-    valveV1 = Vfreq + valveOffsetGain * yaw;
-    valveV2 = Vfreq - valveOffsetGain * yaw;
+	valveV1 = Vfreq + valveOffsetGain * yaw;
+	valveV2 = Vfreq - valveOffsetGain * yaw;
 
+	// TODO need to decide whether to give up frequency or yaw when we are at input limits
+	if (valveV1 > 1.0) {valveV1 = 1.0;}
+	else if (valveV1 < 0.0) {valveV1 = 0.0;}
+	if (valveV2 > 1.0) {valveV2 = 1.0;}
+	else if (valveV2 < 0.0) {valveV2 = 0.0;}
 
-    // TODO need to decide whether to give up frequency or yaw when we are at input limits
-    if (valveV1 > 1.0) {valveV1 = 1.0;}
-    else if (valveV1 < 0.0) {valveV1 = 0.0;}
+	// write valve voltage based on which side the hall sensor says we are on
+	// TODO: directions are arbitrary at the moment, yaw is depending on hall sensor initial input
+	if (valve_side)
+		valvePWM.write(valveV1);
+	else
+		valvePWM.write(valveV2);
 
-    if (valveV2 > 1.0) {valveV2 = 1.0;}
-    else if (valveV2 < 0.0) {valveV1 = 0.0;}
-
-
-    // write valve voltage based on which side the hall sensor says we are on
-    if (valve_side) {valvePWM.write(valveV1);} // directions are slightly arbitrary at the moment
-    else {valvePWM.write(valveV2);}
-
-    prev_freq_error = freq_error;
-    valveEncoder.reset();
-    timer.reset();
 }
 
 

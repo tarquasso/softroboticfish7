@@ -1,15 +1,15 @@
 
-#include "BCU.h"
+#include <BuoyancyControlUnit/BuoyancyControlUnit.h>
 
 // The static instance
-BCU bcu;
+BuoyancyControlUnit buoyancyControlUnit;
 
 //============================================
 // Initialization
 //============================================
 
 // Constructor
-BCU::BCU() :
+BuoyancyControlUnit::BuoyancyControlUnit() :
     // Initialize variables
     bcuPWM(bcuPin),
     bcuCurrent(bcuCurrentPin) 
@@ -24,12 +24,12 @@ BCU::BCU() :
 }
 
 
-void BCU::start()
+void BuoyancyControlUnit::start()
 {
     bcuPWM.write(0.0); // apply nothing to start
 }
 
-void BCU::stop()
+void BuoyancyControlUnit::stop()
 {
     bcuPWM.write(0.0);
 }
@@ -37,7 +37,7 @@ void BCU::stop()
 //============================================
 // Processing
 //============================================
-void BCU::set(float depth_in)
+void BuoyancyControlUnit::set(float depth_in)
 {
     depth_cmd = depth_in;
     depth_act = 0; // TODO update value from sensor

@@ -144,7 +144,7 @@ void FishController::start()
     }
 
 #ifdef FISH6
-    bcu.start();
+    buoyancyControlUnit.start();
     pumpWithValve.start();
 #endif
 
@@ -294,7 +294,7 @@ void FishController::tickerCallback()
     pitch = newPitch;
 
     pumpWithValve.set(frequency, yaw, thrust);
-    bcu.set(pitch);
+    buoyancyControlUnit.set(pitch);
 
 #ifdef debugFishState
     printDebugState();

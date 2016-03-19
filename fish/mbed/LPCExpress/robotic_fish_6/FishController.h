@@ -20,8 +20,8 @@
 #include "esc.h" // brushless motor controller
 #endif
 #ifdef FISH6
-#include <PumpWithValve/PumpWithValve.h>
-#include "BCU/BCU.h"
+#include "PumpWithValve/PumpWithValve.h"
+#include "BuoyancyControlUnit/BuoyancyControlUnit.h"
 #endif
 
 
@@ -44,7 +44,12 @@
 #define fishMinYaw       ((float)(-1.0))
 #define fishMaxYaw       ((float)(1.0))
 #define fishMinThrust    ((float)(0.0))
+#ifdef FISH4
 #define fishMaxThrust    ((float)(0.75))
+#endif
+#ifdef FISH6
+#define fishMaxThrust    ((float)(1.0))
+#endif
 #define fishMinFrequency ((float)(0.0000009))
 #define fishMaxFrequency ((float)(0.0000016))
 
@@ -175,11 +180,6 @@ class FishController
         Servo servoRight;
         //PwmOut brushlessMotor;
         const uint32_t brushlessOffTime;
-#endif
-
-#ifdef FISH6
-        BCU bcu;
-        PumpWithValve pumpWithValve;
 #endif
 
         // Button control

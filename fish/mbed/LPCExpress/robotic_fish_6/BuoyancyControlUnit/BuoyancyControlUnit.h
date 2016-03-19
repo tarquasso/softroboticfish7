@@ -1,3 +1,13 @@
+
+/*
+ * BuoyancyControlUnit.h
+ *
+ * Author: Cyndia Cao, Robert Katzschmann
+ */
+
+#ifndef BUOYANCYCONTROLUNIT_H_
+#define BUOYANCYCONTROLUNIT_H_
+
 #include "mbed.h"
 
 #define bcuPin p22
@@ -9,11 +19,11 @@
 #define depth_PGain 0.5 // random dummy val
 #define depth_DGain 0.0 // ignore for now; start with P control
 
-class BCU
+class BuoyancyControlUnit
 {
     public:
         // Initialization
-        BCU();
+        BuoyancyControlUnit();
         void start();
         void stop();
         void set(float depth_in);
@@ -31,4 +41,7 @@ class BCU
 
 };
 
+// Create a static instance of BuoyancyControlUnit to be used by anyone controlling the Buoyancy Control Unit
+extern BuoyancyControlUnit buoyancyControlUnit;
 
+#endif /* BUOYANCYCONTROLUNIT_H_ */
