@@ -158,7 +158,7 @@ void ButtonBoard::_fall_handler(char board)
         if (masked_port & (1<<i))
         {
             // Call corresponding callback
-            char cb_i = i+board_offset;
+            int cb_i = i+board_offset;
             if (_callback_table_valid[cb_i] == true)
             {
                 _callback_table[cb_i].call();
