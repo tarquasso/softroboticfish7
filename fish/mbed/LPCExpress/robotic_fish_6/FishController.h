@@ -7,8 +7,8 @@
 #define FISH_CONTROLLER_H
 
 // Fish version (only define one of them)
-//#define FISH6
-#define FISH4
+#define FISH6
+//#define FISH4
 
 #include "mbed.h"
 #include "ButtonBoard.h"
@@ -137,6 +137,11 @@ class FishController
     private:
 		// Misc State
 		volatile bool ignoreExternalCommands;
+		// Ticker for controlling tail
+		Ticker ticker;
+		const uint16_t tickerInterval;
+		volatile bool inTickerCallback;
+
 		// State which will be applied at the next appropriate time in the control cycle
 		volatile bool newSelectButton;
 		volatile float newPitch;
@@ -149,20 +154,16 @@ class FishController
         volatile float pitch;
         volatile float yaw;
         volatile float thrust;
-        volatile float thrustCommand;
         volatile float frequency;
+
+#ifdef FISH4
+        volatile float thrustCommand;
         volatile float periodHalf;
         volatile float dutyCycle;
         volatile bool brushlessOff;
-        // Ticker for controlling tail
-        Ticker ticker;
-        const uint16_t tickerInterval;
         volatile uint32_t curTime;
         volatile bool fullCycle;
         const float raiser;
-        volatile bool inTickerCallback;
-
-		#ifdef FISH4
         // Outputs for motor and servos
         PwmOut motorPWM;
         DigitalOut motorOutA;
@@ -171,12 +172,12 @@ class FishController
         Servo servoRight;
         //PwmOut brushlessMotor;
         const uint32_t brushlessOffTime;
-		#endif
+#endif
 
-		#ifdef FISH6
+#ifdef FISH6
         BCU bcu;
         Valve valve;
-		#endif
+#endif
 
         // Button control
         ButtonBoard buttonBoard;

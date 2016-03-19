@@ -22,11 +22,11 @@ FishController::FishController() :
 	autoMode(false),
 	ignoreExternalCommands(false),
     tickerInterval(fishControllerTickerInterval),
+	inTickerCallback(false),
+	#ifdef FISH4
     curTime(0),
     fullCycle(true),
     raiser(3.5),
-	inTickerCallback(false),
-	#ifdef FISH4
     // Outputs for motor and servos
     motorPWM(motorPWMPin),
     motorOutA(motorOutAPin),
@@ -53,12 +53,12 @@ FishController::FishController() :
     yaw = newYaw;
     thrust = newThrust;
     frequency = newFrequency;
+#ifdef FISH4
     periodHalf = newPeriodHalf;
-	#ifdef FISH4
     thrustCommand = 0;
     dutyCycle = 0;
     brushlessOff = false;
-	#endif
+#endif
 
     buttonBoard.registerCallback(&FishController::buttonCallback);
     buttonBoard.setLEDs(255, false);
