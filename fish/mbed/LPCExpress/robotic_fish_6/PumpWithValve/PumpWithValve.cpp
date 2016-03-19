@@ -1,8 +1,8 @@
 
-#include "Valve.h"
+#include <PumpWithValve/PumpWithValve.h>
 
 // The static instance
-Valve valve;
+PumpWithValve valve;
 void flipStatic()
 {
 	valve.flip();
@@ -13,7 +13,7 @@ void flipStatic()
 //============================================
 
 // Constructor
-Valve::Valve() :
+PumpWithValve::PumpWithValve() :
     // Initialize variables
     pumpPWM(pumpPin),
     valvePWM(valvePin),
@@ -39,20 +39,20 @@ Valve::Valve() :
 }
 
 
-void Valve::start()
+void PumpWithValve::start()
 {
     valvePWM.write(0.0); // apply nothing to start
     pumpPWM.write(0.0);
     timer.start();
 }
 
-void Valve::stop()
+void PumpWithValve::stop()
 {
     valvePWM.write(0.0);
     pumpPWM.write(0.0);
 }
 
-void Valve::flip()
+void PumpWithValve::flip()
 {
     // when the hall sensor sees a rising edge, we have rotated 180 degrees
     // --> want to adjust the applied voltage based on the side we are on
@@ -62,7 +62,7 @@ void Valve::flip()
 //============================================
 // Processing
 //============================================
-void Valve::set(float freq_in, float yaw_in, float thrust_in)
+void PumpWithValve::set(float freq_in, float yaw_in, float thrust_in)
 {
     Vthrust = thrust_in; // not sure if more conversions are required
     pumpPWM.write(Vthrust);

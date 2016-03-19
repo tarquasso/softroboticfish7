@@ -6,6 +6,9 @@
 #ifndef FISH_CONTROLLER_H
 #define FISH_CONTROLLER_H
 
+// comment out if no debug wanted
+#define debugFishState
+
 // Fish version (only define one of them)
 #define FISH6
 //#define FISH4
@@ -17,7 +20,7 @@
 #include "esc.h" // brushless motor controller
 #endif
 #ifdef FISH6
-#include "Valve/Valve.h"
+#include <PumpWithValve/PumpWithValve.h>
 #include "BCU/BCU.h"
 #endif
 
@@ -176,7 +179,7 @@ class FishController
 
 #ifdef FISH6
         BCU bcu;
-        Valve valve;
+        PumpWithValve pumpWithValve;
 #endif
 
         // Button control

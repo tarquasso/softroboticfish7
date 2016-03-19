@@ -143,16 +143,18 @@ void FishController::start()
         wait_ms(500);
     }
 
+#ifdef FISH6
+    bcu.start();
+    pumpWithValve.start();
+#endif
+
     // Start control ticker callback
     ticker.attach_us(&fishController, &FishController::tickerCallback, tickerInterval);
-//    #ifdef debugFishState
-//    printf("Starting...\n");
-//    #endif
+#ifdef debugFishState
+    printf("Starting...\n");
+#endif
 
-	#ifdef FISH6
-    bcu.start();
-    valve.start();
-	#endif
+
 }
 
 void FishController::stop()
@@ -271,9 +273,9 @@ void FishController::tickerCallback()
     //brushlessMotor();
 
 
-//    #ifdef debugFishState
-//    //printDebugState();
-//    #endif
+#ifdef debugFishState
+    printDebugState();
+#endif
     //printf("%f\n", dutyCycle);
     //printf("%f %f\r\n", pitch, servoLeft.read());
     inTickerCallback = false;
@@ -285,13 +287,18 @@ void FishController::tickerCallback()
 {
     inTickerCallback = true; // so we don't asynchronously stop the controller in a bad point of the cycle
 
+    //set new command to current command
     frequency = newFrequency;
     yaw = newYaw;
     thrust = newThrust;
     pitch = newPitch;
 
-    valve.set(frequency, yaw, thrust);
+    pumpWithValve.set(frequency, yaw, thrust);
     bcu.set(pitch);
+
+#ifdef debugFishState
+    printDebugState();
+#endif
 
     inTickerCallback = false;
 }
@@ -434,13 +441,13 @@ void FishController::autoModeCallback()
 	}
 }
 
-//#ifdef debugFishState
-//void FishController::printDebugState()
-//{
-//    printf("\npitch: %f\nyaw: %f\nthrust: %f\nfrequency: %f\nservoLeft: %f\nservoRight: %f\ndutyCycle: %f\n",
-//            pitch, yaw, thrust, frequency, servoLeft.read(), servoRight.read(), dutyCycle);
-//}
-//#endif
+#ifdef debugFishState
+void FishController::printDebugState()
+{
+    printf("pitch: %2.2f yaw: %2.2f thrust: %2.2f frequency: %2.2f\n",
+            pitch, yaw, thrust, frequency);
+}
+#endif
 
 void FishController::setLEDs(char mask, bool turnOn)
 {

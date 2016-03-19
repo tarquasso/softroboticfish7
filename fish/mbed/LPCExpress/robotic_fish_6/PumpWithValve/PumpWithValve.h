@@ -14,11 +14,11 @@
 #define freq_DGain 0.01 // dummy val
 #define valveOffsetGain 0.05
 
-class Valve
+class PumpWithValve
 {
     public:
         // Initialization
-        Valve();
+        PumpWithValve();
         void start();
         void stop();
 	void flip();
