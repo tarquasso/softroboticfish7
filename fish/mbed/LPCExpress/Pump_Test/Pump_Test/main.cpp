@@ -22,7 +22,7 @@ float thrust = 0;
 
 void run_func() {
 	pumpWithValve.set(freq, yaw, thrust);
-	pc.printf("Valve side: %d\n", pumpWithValve.getVside());
+//	pc.printf("Valve side: %d\n", pumpWithValve.getVside());
 	pc.printf("Valve Vset: %f\n\n", pumpWithValve.getVset());
 //	valveSideLED = pumpWithValve.getVside();
 }
@@ -43,8 +43,8 @@ int main() {
 		//pc.scanf("%d %d %d", &input_freq); // if just testing hall sensor interrupt
 		
 		// figure out why these interpolation functions are different in actual FishController
-		//freq = (input_freq * (fishMaxFrequency - fishMinFrequency) / 255.0) + fishMinFrequency;
-		freq = input_freq/256.0;
+		freq = (input_freq * (fishMaxFrequency - fishMinFrequency) / 255.0) + fishMinFrequency;
+		//freq = input_freq/256.0;
 		yaw = (input_yaw * (fishMaxYaw - fishMinYaw) / 256.0) + fishMinYaw;
 //		thrust = (input_thrust * (fishMaxThrust - fishMinThrust) / 255.0) + fishMinThrust;
 	}	

@@ -35,15 +35,18 @@ PumpWithValve::PumpWithValve() :
 	thrust = 0;
 	yaw = 0;
 
+	period_side1 = 0;
+	period_side2 = 0;
+
 	valve_side = true;
 	valveV1 = 0;
 	valveV2 = 0;
 	Vfreq = 0;
 	VfreqAdjusted = 0;
 	Vset = 0;
-//	dV_freq = 0;
-//	freq_error = 0;
-//	prev_freq_error = 0;
+	dV_freq = 0;
+	freq_error = 0;
+	prev_freq_error = 0;
 }
 
 
@@ -66,12 +69,18 @@ void PumpWithValve::flipFlowUp()
 	// --> want to adjust the applied voltage based on the side we are on
 	valve_side = true; //change boolean state, keeps track of which half of the rotation we are on
 	valveLED = 1;
+	period_side1 = timer.read_us();
+	timer.reset();
+	freq_act = 1/(period_side1 + period_side2);
 }
 
 void PumpWithValve::flipFlowDown()
 {
 	valve_side = false;
 	valveLED = 0;
+	period_side2 = timer.read_us();
+	timer.reset();
+	freq_act = 1/(period_side1 + period_side2);
 }
 
 //============================================
@@ -85,20 +94,14 @@ void PumpWithValve::set(float freq_in, float yaw_in, float thrust_in)
 
 	// set speed of the valve motor through the frequency value
 	frequency = freq_in;
-	//   TODO: NOT YET CONTROLLING ACTUAL FREQUENCY - JUST SET VOLTAGE
-	//		   If trying to measure frequency, must use data over longer period
-	//    // measure current tail frequency
-	//    dt = timer.read_us();
-	//    timer.reset();
-	//    rot = valveEncoder.getPulses()/count2rev; // TODO also need to divide by gear ratio if encoder is attached directly to motor
-	//	  valveEncoder.reset();
-	//    freq_act = rot/dt;
-	//    freq_error = frequency - freq_act;
-	//    // update tail frequency
-	//    dV_freq = freq_PGain * freq_error + freq_DGain * (freq_error - prev_freq_error);
-	//    prev_freq_error = freq_error; //reset previous frequency error
-	//    Vfreq += dV_freq;
-	Vfreq = frequency; //just setting directly the voltage
+	if(period_side1 != 0 && period_side2 != 0){ // don't be fooled by initialization values
+		freq_error = frequency - freq_act;
+	    dV_freq = freq_PGain * freq_error + freq_DGain * (freq_error - prev_freq_error);
+	    prev_freq_error = freq_error; //reset previous frequency error
+	    Vfreq += dV_freq;
+	} else {
+		Vfreq = frequency * 300000; //just setting directly the voltage, scaled up; need to tune this value
+	}
 
 	yaw = yaw_in; //update yaw state using input
 	this->calculateYawMethod1();
@@ -122,15 +125,10 @@ void PumpWithValve::calculateYawMethod1()
 	else if (valveV2 < 0.0) {valveV2 = 0.05;}
 
 	// write valve voltage based on which side the hall sensor says we are on
-	// TODO: directions are arbitrary at the moment, yaw is depending on hall sensor initial input
-	if (valve_side) {
-		Vset = valveV1;
-		valvePWM.write(valveV1);
-	}
-	else {
-		Vset = valveV2;
-		valvePWM.write(valveV2);
-	}
+	if (valve_side) { Vset = valveV1; }
+	else { Vset = valveV2; }
+
+	valvePWM.write(Vset);
 }
 
 void PumpWithValve::calculateYawMethod2()

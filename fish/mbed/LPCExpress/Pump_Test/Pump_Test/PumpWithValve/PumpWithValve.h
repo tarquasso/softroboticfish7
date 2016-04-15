@@ -20,9 +20,9 @@
 
 #define count2rev 			12
 #define valveMotorGearRatio 297.92
-#define freq_PGain 			0.05 // random dummy number
-#define freq_DGain 			0.01 // dummy val
-#define valveOffsetGain 	1.5
+#define freq_PGain 			5000.0 // frequency on the order of 10^-7
+#define freq_DGain 			0.00
+#define valveOffsetGain 	0.25
 
 class PumpWithValve
 {
@@ -48,6 +48,8 @@ private:
 	volatile float frequency;
 	volatile float yaw;
 	volatile float thrust;
+	volatile float period_side1;
+	volatile float period_side2;
 
 	volatile bool 	valve_side;
 	volatile float 	valveV1;
@@ -56,12 +58,10 @@ private:
 	volatile float 	VfreqAdjusted;
 	volatile float  Vset;
 
-//	volatile float dt;
-//	volatile float rot;
-//	volatile float freq_act;
-//	volatile float freq_error;
-//	volatile float prev_freq_error;
-//	volatile float dV_freq;
+	volatile float freq_act;
+	volatile float freq_error;
+	volatile float prev_freq_error;
+	volatile float dV_freq;
 
 	PwmOut pumpPWM;
 	PwmOut valvePWM;
