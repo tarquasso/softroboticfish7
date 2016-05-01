@@ -9,7 +9,6 @@
 #define PUMPWITHVALVE_H_
 
 #include "mbed.h"
-//#include "../QEI/QEI.h"
 
 #define valvePwmPin 		p21
 #define pumpPwmPin 			p23
@@ -20,8 +19,8 @@
 
 #define count2rev 			12
 #define valveMotorGearRatio 297.92
-#define freq_PGain 			5000.0 // frequency on the order of 10^-7
-#define freq_DGain 			0.00
+#define KpFreq	 			6000.0 // frequency on the order of 10^-7
+#define KdFreq	 			0.00
 #define valveOffsetGain 	0.25
 
 class PumpWithValve
@@ -31,6 +30,7 @@ public:
 	PumpWithValve();
 	void start();
 	void stop();
+	bool checkRunState();
 
 	void flipFlowUp();
 	void flipFlowDown();
@@ -45,23 +45,25 @@ protected:
 
 private:
 
+	volatile bool running;
+
 	volatile float frequency;
 	volatile float yaw;
 	volatile float thrust;
-	volatile float period_side1;
-	volatile float period_side2;
+	volatile float periodSide1;
+	volatile float periodSide2;
 
-	volatile bool 	valve_side;
+	volatile bool 	valveSide;
 	volatile float 	valveV1;
 	volatile float 	valveV2;
 	volatile float 	Vfreq;
 	volatile float 	VfreqAdjusted;
 	volatile float  Vset;
 
-	volatile float freq_act;
-	volatile float freq_error;
-	volatile float prev_freq_error;
-	volatile float dV_freq;
+	volatile float freqAct;
+	volatile float freqErr;
+	volatile float prevFreqErr;
+	volatile float dVFreq;
 
 	PwmOut pumpPWM;
 	PwmOut valvePWM;

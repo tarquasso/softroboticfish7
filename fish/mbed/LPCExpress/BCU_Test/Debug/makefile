@@ -9,6 +9,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR/subdir.mk
+-include BCU_Test/QEI/subdir.mk
 -include BCU_Test/MS5837/subdir.mk
 -include BCU_Test/BuoyancyControlUnit/subdir.mk
 -include BCU_Test/BNO055/subdir.mk

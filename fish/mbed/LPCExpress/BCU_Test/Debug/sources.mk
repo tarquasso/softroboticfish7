@@ -27,6 +27,7 @@ SUBDIRS := \
 BCU_Test/BNO055 \
 BCU_Test/BuoyancyControlUnit \
 BCU_Test/MS5837 \
+BCU_Test/QEI \
 BCU_Test \
 mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR \
 

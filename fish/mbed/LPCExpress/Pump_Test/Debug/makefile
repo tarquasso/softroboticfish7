@@ -9,7 +9,6 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR/subdir.mk
--include Pump_Test/QEI/subdir.mk
 -include Pump_Test/PumpWithValve/subdir.mk
 -include Pump_Test/subdir.mk
 -include subdir.mk
@@ -47,7 +46,7 @@ all: Pump_Test.axf
 Pump_Test.axf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU C++ Linker'
-	arm-none-eabi-c++ -nostdlib -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\Pump_Test" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\Pump_Test\PumpWithValve" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\Pump_Test\QEI" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768\TARGET_NXP" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768\TARGET_NXP\TARGET_LPC176X" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768\TARGET_NXP\TARGET_LPC176X\TARGET_MBED_LPC1768" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768\TOOLCHAIN_GCC_CR" -Xlinker -Map="Pump_Test.map" -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T "C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768\TOOLCHAIN_GCC_CR\LPC1768.ld" -o "Pump_Test.axf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-c++ -nostdlib -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\Pump_Test" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\Pump_Test\PumpWithValve" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768\TARGET_NXP" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768\TARGET_NXP\TARGET_LPC176X" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768\TARGET_NXP\TARGET_LPC176X\TARGET_MBED_LPC1768" -L"C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768\TOOLCHAIN_GCC_CR" -Xlinker -Map="Pump_Test.map" -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T "C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\Pump_Test\mbed\TARGET_LPC1768\TOOLCHAIN_GCC_CR\LPC1768.ld" -o "Pump_Test.axf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build

@@ -25,7 +25,6 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 Pump_Test/PumpWithValve \
-Pump_Test/QEI \
 Pump_Test \
 mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR \
 
