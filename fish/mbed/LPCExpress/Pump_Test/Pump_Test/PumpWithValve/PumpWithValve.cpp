@@ -28,17 +28,13 @@ PumpWithValve::PumpWithValve() :
 			hallSignal(hallInterruptPin),
 			valveLED(LED2)
 {
-	running = false;
-
 	hallSignal.rise(&flipFlowUpStatic);
 	hallSignal.fall(&flipFlowDownStatic);
+	timer.start();
 
-	frequency = 0;
+	frequency = 0.0000009;
 	thrust = 0;
 	yaw = 0;
-
-	periodSide1 = 0;
-	periodSide2 = 0;
 
 	valveSide = true;
 	valveV1 = 0;
@@ -49,22 +45,33 @@ PumpWithValve::PumpWithValve() :
 	dVFreq = 0;
 	freqErr = 0;
 	prevFreqErr = 0;
+
+	running = false;
 }
 
 
 void PumpWithValve::start()
 {
-	running = true;
 	valvePWM.write(0.0); // apply nothing to start
 	pumpPWM.write(0.0);
-	timer.start();
+	periodSide1 = 0;
+	periodSide2 = 0;
+
+	timer.reset();
+	valveControl.attach(&pumpWithValve, &PumpWithValve::setVoid, 0.08);
+
+	running = true;
 }
 
 void PumpWithValve::stop()
 {
-	running = false;
+	valveControl.detach();
+	thrust = 0;
+	Vfreq = 0;
 	valvePWM.write(0.0);
 	pumpPWM.write(0.0);
+
+	running = false;
 }
 
 void PumpWithValve::flipFlowUp()
@@ -90,32 +97,31 @@ void PumpWithValve::flipFlowDown()
 //============================================
 // Processing
 //============================================
-void PumpWithValve::set(float freq_in, float yaw_in, float thrust_in)
-{
-	if(running == true){
-		// Failure mode - if it has been a full (desired) period since a hall sensor has been read
-		if(timer.read_us() > 1 / frequency){
-			pumpWithValve.stop(); // may have to add a condition that allows for sudden input changes
-		}
+void PumpWithValve::set(float freq_in, float yaw_in, float thrust_in){
+	thrust = thrust_in;
+	yaw = yaw_in;
+	frequency = freq_in;
+}
 
-		//Centrifugal Pump
-		thrust = thrust_in; //thrust comes in as float from 0.0-1.0
-		pumpPWM.write(thrust);
+void PumpWithValve::setVoid(){
+	//Centrifugal Pump
+	pumpPWM.write(thrust);
 
-		// set speed of the valve motor through the frequency value
-		frequency = freq_in;
-		if(periodSide1 != 0 && periodSide2 != 0){ // don't be fooled by initialization values
-			freqErr = frequency - freqAct;
-			dVFreq = KpFreq * freqErr + KdFreq * (freqErr - prevFreqErr);
-			prevFreqErr = freqErr; //reset previous frequency error
-			Vfreq += dVFreq;
-		} else {
-			Vfreq = frequency * 300000; //just setting directly the voltage, scaled up; need to tune this value
-		}
-
-		yaw = yaw_in; //update yaw state using input
+	// set speed of the valve motor through the frequency value
+	if(periodSide1 == 0 || periodSide2 == 0) {
+		Vfreq = frequency * 400000; //just setting directly the voltage, scaled up; need to tune this value
 		this->calculateYawMethod1();
-		//this->calculateYawMethod2();
+	} else { // don't be fooled by initialization values
+		// Failure mode - if it has been a full (desired) period since a hall sensor has been read
+		if(timer.read_us() > 1.0 / frequency){
+			pumpWithValve.stop(); // may have to add a condition that allows for sudden input changes
+		} else {
+		freqErr = frequency - freqAct;
+		dVFreq = KpFreq * freqErr + KdFreq * (freqErr - prevFreqErr);
+		prevFreqErr = freqErr; //reset previous frequency error
+		Vfreq += dVFreq;
+		this->calculateYawMethod1();
+		}
 	}
 }
 
@@ -145,11 +151,11 @@ void PumpWithValve::calculateYawMethod1()
 void PumpWithValve::calculateYawMethod2()
 {
 
-	if (yaw < 0.0 && !valve_side) {
+	if (yaw < 0.0 && !valveSide) {
 		Vset = (1.0 + valveOffsetGain*yaw)*Vfreq; // 0.7 can be adjusted to a power of 2 if needed
 		if (Vset > 1.0) { VfreqAdjusted = 1.0; }
 	} 
-	else if (yaw > 0.0 && valve_side) {
+	else if (yaw > 0.0 && valveSide) {
 		Vset = (1.0 - valveOffsetGain*yaw)*Vfreq; // 0.7 can be adjusted to a power of 2 if needed
 		if (Vset < 0.0) { VfreqAdjusted = 0.05; } // needs to keep turning
 	}
@@ -162,5 +168,10 @@ void PumpWithValve::calculateYawMethod2()
 }
 
 float PumpWithValve::getVset() { return Vset;}
-bool PumpWithValve::getVside() { return valve_side; }
-bool PumpWithValve::checkRunState() { return running; }
+bool PumpWithValve::getVside() { return valveSide; }
+bool PumpWithValve::getRunState() { return running; }
+float PumpWithValve::getSensorTime() { return timer.read(); }
+int PumpWithValve::getPeriod1() { return periodSide1; }
+int PumpWithValve::getPeriod2() { return periodSide2; }
+float PumpWithValve::getCurFreq() { return freqAct * 1000000; }
+float PumpWithValve::getSetFreq() { return frequency * 1000000; }

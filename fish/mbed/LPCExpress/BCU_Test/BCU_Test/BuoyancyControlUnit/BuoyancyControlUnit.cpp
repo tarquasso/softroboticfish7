@@ -30,8 +30,8 @@ BuoyancyControlUnit::BuoyancyControlUnit() :
 	VRef = 0;
 
 	resetFlag = 0;
-	pressureReadings = 0;
-	encoderLoops = 0;
+//	pressureReadings = 0;
+//	encoderLoops = 0;
 
 	inDepthLoop = 0;
 	inPosLoop = 0;
@@ -103,14 +103,14 @@ void BuoyancyControlUnit::setEncoderPosVoid(){
 }
 
 void BuoyancyControlUnit::setDepthFunc(float depthDesIn){
-	setDepth = depthDesIn;
+//	setDepth = depthDesIn;
 //	pressureSensor.Barometer_MS5837();
 //	curDepth = pressureSensor.MS5837_Pressure();
 
 	curDepth = (curPos/10000)*(400)+1000; // fake depth readings
-	pressureReadings += 1;
+//	pressureReadings += 1;
 
-	depthErr = setDepth - curDepth;
+	depthErr = depthDesIn - curDepth;
 
 /*	float depthdt = timer.read() - depthLastTime;
 
@@ -133,7 +133,7 @@ void BuoyancyControlUnit::setDepthFunc(float depthDesIn){
 
 
 void BuoyancyControlUnit::setEncoderPosition(float setPosIn) {
-	encoderLoops += 1;
+//	encoderLoops += 1;
 
 	setPos = setPosIn;
 	if(setPos < 0){ setPos = 0; }

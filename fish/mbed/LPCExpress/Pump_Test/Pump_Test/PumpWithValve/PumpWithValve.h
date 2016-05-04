@@ -19,9 +19,9 @@
 
 #define count2rev 			12
 #define valveMotorGearRatio 297.92
-#define KpFreq	 			6000.0 // frequency on the order of 10^-7
+#define KpFreq	 			10000.0 // frequency on the order of 10^-7
 #define KdFreq	 			0.00
-#define valveOffsetGain 	0.25
+#define valveOffsetGain 	0.5
 
 class PumpWithValve
 {
@@ -30,14 +30,20 @@ public:
 	PumpWithValve();
 	void start();
 	void stop();
-	bool checkRunState();
 
 	void flipFlowUp();
 	void flipFlowDown();
 	void set(float freq_in, float yaw_in, float thrust_in);
+	void setVoid();
 
 	float getVset();
 	bool getVside();
+	bool getRunState();
+	float getSensorTime();
+	int getPeriod1();
+	int getPeriod2();
+	float getCurFreq();
+	float getSetFreq();
 
 protected:
 	void calculateYawMethod1();
@@ -72,6 +78,8 @@ private:
 	InterruptIn hallSignal;
 	Timer timer;
 	DigitalOut valveLED;
+
+	Ticker valveControl;
 };
 
 // Create a static instance of PumpWithValve to be used by anyone controlling the pump with valve

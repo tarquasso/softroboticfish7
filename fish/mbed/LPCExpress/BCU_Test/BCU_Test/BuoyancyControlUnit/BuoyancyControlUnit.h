@@ -64,8 +64,8 @@ public:
 	float getCurDepth();
 	float getSetDepth();
 
-	int pressureReadings;
-	int encoderLoops;
+//	int pressureReadings;
+//	int encoderLoops;
 
 private:
 	volatile bool resetFlag;

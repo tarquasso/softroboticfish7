@@ -1,4 +1,5 @@
 BCU_Test/main.o BCU_Test/main.d: ../BCU_Test/main.cpp \
+ C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\BCU_Test\MS5837/MS5837.h \
  C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed/mbed.h \
  C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed/platform.h \
  C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed\TARGET_LPC1768\TARGET_NXP\TARGET_LPC176X\TARGET_MBED_LPC1768/device.h \
@@ -73,10 +74,9 @@ BCU_Test/main.o BCU_Test/main.d: ../BCU_Test/main.cpp \
  C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed/gpio_irq_api.h \
  C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed/wait_api.h \
  C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed/sleep_api.h \
- C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed/rtc_time.h \
- C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\BCU_Test\BuoyancyControlUnit/BuoyancyControlUnit.h \
- C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\BCU_Test/MS5837/MS5837.h \
- C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\BCU_Test/QEI/QEI.h
+ C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed/rtc_time.h
+
+C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\BCU_Test\MS5837/MS5837.h:
 
 C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed/mbed.h:
 
@@ -227,9 +227,3 @@ C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed/wait_api.h:
 C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed/sleep_api.h:
 
 C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\mbed/rtc_time.h:
-
-C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\BCU_Test\BuoyancyControlUnit/BuoyancyControlUnit.h:
-
-C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\BCU_Test/MS5837/MS5837.h:
-
-C:\Users\Cyndia\softroboticfish6\fish\mbed\LPCExpress\BCU_Test\BCU_Test/QEI/QEI.h:
