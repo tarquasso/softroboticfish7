@@ -19,7 +19,7 @@
 
 // ROS setup
 // TODO replace this with your topic name
-#define rosTopicName "fish_state_topic"
+#define rosTopicName "to_serial"
 
 // Pins and comm
 #define rosDefaultBaudUSB 115200

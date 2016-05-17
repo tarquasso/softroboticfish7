@@ -22,8 +22,6 @@
 #ifdef FISH6
 #include "PumpWithValve/PumpWithValve.h"
 #include "BuoyancyControlUnit/BuoyancyControlUnit.h"
-#include "MS5837/MS5837.h"
-#include "BNO055/BNO055.h"
 #endif
 
 
@@ -53,6 +51,7 @@
 
 #define fishMinYaw       ((float)(-1.0))
 #define fishMaxYaw       ((float)(1.0))
+
 #define fishMinThrust    ((float)(0.0))
 #ifdef FISH4
 #define fishMaxThrust    ((float)(0.75))
@@ -60,6 +59,7 @@
 #ifdef FISH6
 #define fishMaxThrust    ((float)(1.0))
 #endif
+
 #define fishMinFrequency ((float)(0.0000009))
 #define fishMaxFrequency ((float)(0.0000016))
 
@@ -172,6 +172,7 @@ class FishController
 		volatile float newThrust;
 		volatile float newFrequency;
 		volatile float newPeriodHalf;
+
         // State currently executing on fish
         volatile bool selectButton;
         volatile float pitch;
@@ -206,13 +207,6 @@ class FishController
         uint32_t autoModeCount;
         uint16_t autoModeIndex;
         bool ignoreExternalCommandsPreAutoMode;
-
-        //TODO: Add Pressure Sensor MS5837
-        MS5837 pressureSensor;
-    	volatile float temperatureCur;
-    	volatile float pressureCur;
-        //TODO: Add IMU BNO055 bno055(p9, p10) to the class
-    	BNO055 imuSensor;
 };
 
 // Create a static instance of FishController to be used by anyone doing detection

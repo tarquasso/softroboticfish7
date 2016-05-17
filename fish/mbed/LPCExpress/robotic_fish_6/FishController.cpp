@@ -17,7 +17,7 @@ const uint8_t autoModeLength = sizeof(autoModeDurations)/sizeof(autoModeDuration
 //============================================
 
 // Constructor
-FishController::FishController() :
+FishController::FishController():
     // Initialize variables
 	autoMode(false),
 	ignoreExternalCommands(false),
@@ -36,12 +36,12 @@ FishController::FishController() :
     //brushlessMotor(p25),
     brushlessOffTime(30000),
 	#endif
-    // Button board
-	buttonBoard(buttonBoardSDAPin, buttonBoardSCLPin, buttonBoardInt1Pin, buttonBoardInt2Pin), // sda, scl, int1, int2
-#ifdef FISH6
+/*	#ifdef FISH6 // these are declared in BCU class
 	pressureSensor(pressureSensorPinSDA, pressureSensorPinSCL, ms5837_addr_no_CS),
 	imuSensor(imuSensorPinSDA, imuSensorPinSCL)
-#endif
+	#endif*/
+    // Button board
+	buttonBoard(buttonBoardSDAPin, buttonBoardSCLPin, buttonBoardInt1Pin, buttonBoardInt2Pin) // sda, scl, int1, int2
 
 {
 	streamFishStateEventController = 0;
@@ -70,14 +70,6 @@ FishController::FishController() :
 
     autoModeIndex = 0;
     autoModeCount = 0;
-
-#ifdef FISH6
-    //TODO: add pressure sensor variables
-    temperatureCur = 0;
-    pressureCur = 0;
-    //TODO: add IMU variables
-
-#endif
 
 }
 
@@ -137,17 +129,6 @@ float FishController::getPeriodHalf() {return newPeriodHalf;}
 
 void FishController::start()
 {
-    //printf("Arming brushless motor\n");
-    //wait_ms(3000);
-    //Timer timemotor;
-    //timemotor.start();
-    //brushlessMotor.period_ms(20);
-    //brushlessMotor.pulsewidth_us(1500); // neutral position
-    //brushlessMotor();
-    //timemotor.stop();
-    //printf("Setting took %d us\n", timemotor.read_us());
-    //wait_ms(3000); // to arm brushless motor
-
     // Blink button board LEDs to indicate startup
     for(uint8_t i = 0; i < 3; i++)
     {
@@ -160,16 +141,6 @@ void FishController::start()
 #ifdef FISH6
     buoyancyControlUnit.start();
     pumpWithValve.start();
-    //TODO: add pressure sensor
-    //pressureSensor.MS5837Init();
-    //TODO: add imu
-    //imuSensor.reset();
-    //imuSensor.setmode(OPERATION_MODE_NDOF);
-    //imuSensor.write_calibration_data();
-    //imuSensor.get_calib();
-//    while (imuSensor.calib == 0) {
-//    	imuSensor.get_calib();
-//    }
 #endif
 
     // Start control ticker callback
@@ -209,6 +180,12 @@ void FishController::stop()
     servoLeft = 0.3;
     servoRight = 0.3;
 	#endif
+
+	#ifdef FISH6
+	pumpWithValve.stop();
+	buoyancyControlUnit.stop();
+	#endif // FISH6
+
 
     // Light the LEDs to indicate termination
     buttonBoard.setLEDs(255, true);
@@ -318,17 +295,7 @@ void FishController::tickerCallback()
     pitch = newPitch;
 
     pumpWithValve.set(frequency, yaw, thrust);
-
-	//TODO: Update small pressure sensor
-    //pressureSensor.Barometer_MS5837();
-    //pressureCur = pressureSensor.MS5837_Pressure();
-    //temperatureCur = pressureSensor.MS5837_Temperature();
-	//pc.printf("Small Sensor Pressure: %f\n", pressure_small);
-    //pc.printf("Small Sensor Temperature: %f\n\n", temp_small);
-    //depth_act = pressureCur;//TODO: some calculation needed here combining pressure value and temperature value...
-    //buoyancyControlUnit.setActualPressure(pitch);
-
-    buoyancyControlUnit.set(pitch,pressureCur);
+    buoyancyControlUnit.set(pitch);
 
 #ifdef debugFishState
     printDebugState();

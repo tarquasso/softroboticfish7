@@ -80,10 +80,10 @@ void ROSController::processROSMessage(const fish_msgs::JoystickState& msg)
 	// Extract the desired fish state from msg
 	// TODO check that this matches your message format
 	bool selectButton = 0;
-	float pitch = ((msg.depth_ctrl+127) * (rosMaxPitch - rosMinPitch) / 254.0) + rosMinPitch;
-	float yaw = ((msg.yaw_ctrl+127) * (rosMaxYaw - rosMinYaw) / 254.0) + rosMinYaw;
-	float thrust = ((msg.speed_ctrl+127) * (rosMaxThrust - rosMinThrust) / 254.0) + rosMinThrust;
-	float frequency = ((msg.freq_ctrl+127) * (rosMaxFrequency- rosMinFrequency) / 254.0) + rosMinFrequency;
+	float pitch = ((msg.depth_ctrl+128) * (rosMaxPitch - rosMinPitch) / 255.0) + rosMinPitch;
+	float yaw = ((msg.yaw_ctrl+127) * (rosMaxYaw - rosMinYaw) / 254.0) + rosMinYaw; // 0 MUST map to 0
+	float thrust = ((msg.speed_ctrl+128) * (rosMaxThrust - rosMinThrust) / 255.0) + rosMinThrust;
+	float frequency = ((msg.freq_ctrl+128) * (rosMaxFrequency- rosMinFrequency) / 255.0) + rosMinFrequency;
 
 	// Apply the new state to the fish
 	fishController.setSelectButton(selectButton);

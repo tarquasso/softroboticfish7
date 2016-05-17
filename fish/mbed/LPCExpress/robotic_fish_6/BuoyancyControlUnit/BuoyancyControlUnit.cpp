@@ -13,74 +13,191 @@ BuoyancyControlUnit::BuoyancyControlUnit() :
     				bcuPWM(bcuPwmPin),
 					bcuDirA(bcuDirAPin),
 					bcuDirB(bcuDirBPin),
-					bcuCurrent(bcuCurrentPin)
+					//bcuCurrent(bcuCurrentPin),
+					bcuEncoder(encoderPinA, encoderPinB, NC, count2rev*gearRatio, QEI::X4_ENCODING),
+					pressureSensor(imuTXPin,imuRXPin)
 {
-	depthDes = 0; // input command
-	depthMeas = 0; // actual depth based on sensor
-	Vref = 0;
-//	dV_in = 0;
-//	depth_error = depth_cmd - depth_act;
-//	prev_depth_error = 0; // in case we do PD control
+	setDepth = 0; // input command
+	curDepth = 0; // actual depth based on sensor
 
+	depthLastTime = 0.0;
+	prevDepthErr = 0.0;
+	depthInt = 0.0;
+
+	posLastTime = 0.0;
+	prevPosErr = 0.0;
+	posInt = 0.0;
+	VRef = 0;
+
+	resetFlag = 0;
+	inDepthLoop = 0;
+	inPosLoop = 0;
 }
 
 
 void BuoyancyControlUnit::start()
 {
 	bcuPWM.write(0.0); // apply nothing to start
+	bcuEncoder.reset(); // gives it a reference to return to
+	pressureSensor.MS5837Init();
+	timer.start();
+
+	// pressure sensor takes just over 0.3 seconds to read
+	depthControl.attach(&buoyancyControlUnit, &BuoyancyControlUnit::setDepthFuncVoid, 0.4);
+	posControl.attach(&buoyancyControlUnit, &BuoyancyControlUnit::setEncoderPosVoid, 0.1);
 }
 
 void BuoyancyControlUnit::stop()
 {
-	bcuPWM.write(0.0);
+	//bcuPWM.write(0.0);
+	// return bcu back to start position
+	// have to rethink how to call this because we don't want the while loop stopping everything else
+//	while(curPos > 15){
+//		this->setEncoderPosition(0);
+//	}
+
+	depthControl.detach();
+	posControl.detach();
+
+	bcuPWM = 0.0;
+}
+
+void BuoyancyControlUnit::returnToZero()
+{
+	depthControl.detach();
+	resetFlag = 1;
 }
 
 //============================================
 // Processing
 //============================================
-//void BuoyancyControlUnit::set(float depth_in)
-//{
-//	depth_cmd = depth_in;
-//	depth_act = 0; // TODO update value from sensor
-//	depth_error = depth_cmd - depth_act;
-//
-//	dV_in = depth_PGain * depth_error + depth_DGain * (depth_error - prev_depth_error);
-//
-//	if ((dV_in > 0 && bcuCurrent.read() < maxBCUCurrent) || (dV_in < 0 && bcuCurrent.read() > minBCUCurrent))
-//	{
-//		Vref += dV_in;
-//	} // don't update Vref if it requires going over max or under min
-//
-//	bcuPWM.write(Vref);
-//
-//	prev_depth_error = depth_error;
-//}
-
-void BuoyancyControlUnit::set(float depthDesIn, float depthMeasIn)
+void BuoyancyControlUnit::set(float depthDesIn)
 {
+	setDepth = depthDesIn;
+}
 
-	depthDes = depthDesIn;
-	depthMeas = depthMeasIn;
+void BuoyancyControlUnit::setDepthFuncVoid(){
+	while(inPosLoop);
+	inDepthLoop = 1;
+	this->setDepthFunc(setDepth);
+	inDepthLoop = 0;
+}
+void BuoyancyControlUnit::setEncoderPosVoid(){
+	while(inDepthLoop);
+	inPosLoop = 1;
 
-	//ASSUMES that "pitch" signal in called "depthDes" is from -1.0 to 1.0
-	if (depthDes < 0.2 && depthDes > -0.2)
-		Vref = 0;
-	else
-		Vref = depthDes;
-
-	//Reverse the direction of the motor depending on the command
-	if(Vref >= 0)
-	{
-		bcuDirA.write(0);
-		bcuDirB.write(1);
-		bcuPWM.write(Vref);
+	if(resetFlag){
+		posRef = 0;
+	} else {
+		depthErr = setDepth - curDepth;
+		if(depthErr < 10 && depthErr > -10){
+			posRef = curPos;
+		}
 	}
-	else
-	{
-		bcuDirA.write(1);
-		bcuDirB.write(0);
-		bcuPWM.write(-1 * Vref);
+
+	this->setEncoderPosition(posRef);
+	inPosLoop = 0;
+}
+
+void BuoyancyControlUnit::setDepthFunc(float depthDesIn){
+	setDepth = depthDesIn;
+//	pressureSensor.Barometer_MS5837();
+//	curDepth = pressureSensor.MS5837_Pressure();
+
+	curDepth = (curPos/10000)*(400)+1000; // fake depth readings
+
+	depthErr = setDepth - curDepth;
+
+/*	float depthdt = timer.read() - depthLastTime;
+
+	depthInt += depthErr * depthdt;
+	depthDer = (depthErr - prevDepthErr)/depthdt;
+
+	posRef += KpDepth*depthErr + KiDepth*depthInt + KdDepth*depthDer;
+*/
+	posRef += KpDepth * depthErr;
+
+	if(posRef < 0){
+		posRef = 0; // limit position to only values greater than 0
+//		depthInt = 0; // reset these values so they don't build while the bcu can't reach this depth value
+//		depthDer = 0;
+	}
+
+//	depthLastTime = timer.read();
+//	prevDepthErr = depthErr;
+}
+
+
+void BuoyancyControlUnit::setEncoderPosition(float setPosIn) {
+
+	setPos = setPosIn;
+	if(setPos < 0){ setPos = 0; }
+	curPos = bcuEncoder.getPulses();
+	posErr = setPos - curPos;
+	float posdt = timer.read() - posLastTime;
+
+	posInt += posErr * posdt;
+	posDer = (posErr - prevPosErr)/posdt;
+
+	VRef = KpEnc * posErr + KiEnc * posInt + KdEnc * posDer;
+//	VRef = KpEnc * posErr;
+
+	posLastTime = timer.read();
+	prevPosErr = posErr;
+
+	if(resetFlag){
+		if(posErr > 10 || posErr < -10){
+			this->setV(VRef);
+		} else {
+			resetFlag = 0;
+			this->stop();
+		}
+	} else {
+		if(posErr > 30 || posErr < -30) { // TODO: determine appropriate tolerance
+			this->setV(VRef);
+		} else {
+			bcuPWM = 0;
+		}
 	}
 }
 
+void BuoyancyControlUnit::setV(float Vin){
+	float setV;
+
+	if(Vin > 0) {
+		bcuDir = 0;
+		setV = Vin;
+	} else if(Vin < 0) {
+		bcuDir = 1;
+		setV = -1.0*Vin;
+	}
+
+	bcuDirA = bcuDir;
+	bcuDirB = !bcuDir;
+
+	if(setV > 1) {
+		bcuPWM = 1.0;
+	} else if(setV < 0.08) {
+		bcuPWM = 0.08;
+	} else {
+		bcuPWM = setV;
+	}
+}
+
+void BuoyancyControlUnit::runBackwards() {
+	this->stop();
+	this->setV(-0.2);
+}
+
+void BuoyancyControlUnit::runForwards() {
+	this->stop();
+	this->setV(0.2);
+}
+
+bool BuoyancyControlUnit::getBCUdir() { return bcuDir; }
+float BuoyancyControlUnit::getVset() { return VRef; }
+float BuoyancyControlUnit::getSetDepth() { return setDepth; }
+float BuoyancyControlUnit::getCurDepth() { return curDepth; }
+float BuoyancyControlUnit::getSetPos() { return setPos; }
+float BuoyancyControlUnit::getCurPos() { return curPos; }
 
