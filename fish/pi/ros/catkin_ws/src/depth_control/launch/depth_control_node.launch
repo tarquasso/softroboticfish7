@@ -1,0 +1,12 @@
+<launch>
+
+    <node pkg="depth_control" type="depth_control_node.py" name="depth_control" output="screen"/>
+
+
+    <!-- joy node -->
+    <node respawn="true" pkg="joy" type="joy_node" name="joy" output="screen" >
+          <param name="dev" type="string" value="/dev/input/js0" />
+          <param name="deadzone" value="0.1" />
+    </node>
+
+</launch>
