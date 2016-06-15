@@ -1,0 +1,10 @@
+PROJECT := IMU_Test
+DEVICES := LPC1768
+GCC4MBED_DIR := $(GCC4MBEDDIR)
+GCC4MBED_TYPE := Release
+INCDIRS := BNO055 ../mbed
+include $(GCC4MBED_DIR)/build/gcc4mbed.mk
+
+TARGET=main
+
+all: $(TARGET)
