@@ -1,6 +1,6 @@
 <launch>
 
-  <arg name="baud" default="115200"/>
+  <arg name="baud" default="57600"/>
   <arg name="port" default="/dev/ttyACM0"/>
 
   <!-- joy node -->
@@ -21,6 +21,6 @@
   </node>
 
 <!--  <remap to="serial_node/from_serial" from="joy_cmds/to_serial" /> -->
-  
+
 
 </launch>

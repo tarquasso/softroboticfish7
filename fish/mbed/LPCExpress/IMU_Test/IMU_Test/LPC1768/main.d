@@ -1,21 +1,21 @@
 LPC1768/main.o: main.cpp BNO055/BNO055.h ../mbed/mbed.h \
  ../mbed/platform.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768/device.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/objects.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/LPC17xx.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/core_cm3.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/core_cmInstr.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/core_cmFunc.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/system_LPC17xx.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis_nvic.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PortNames.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PeripheralNames.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768/PinNames.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/gpio_object.h \
+ ../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768/device.h \
+ ../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/objects.h \
+ ../../external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis.h \
+ ../../external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/LPC17xx.h \
+ ../../external/mbed/libraries/mbed/targets/cmsis/core_cm3.h \
+ ../../external/mbed/libraries/mbed/targets/cmsis/core_cmInstr.h \
+ ../../external/mbed/libraries/mbed/targets/cmsis/core_cmFunc.h \
+ ../../external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/system_LPC17xx.h \
+ ../../external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis_nvic.h \
+ ../../external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis.h \
+ ../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PortNames.h \
+ ../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PeripheralNames.h \
+ ../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768/PinNames.h \
+ ../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/gpio_object.h \
  ../mbed/mbed_assert.h \
- /home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PeripheralNames.h \
+ ../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PeripheralNames.h \
  ../mbed/mbed_error.h ../mbed/mbed_interface.h ../mbed/DigitalIn.h \
  ../mbed/gpio_api.h ../mbed/DigitalOut.h ../mbed/DigitalInOut.h \
  ../mbed/BusIn.h ../mbed/BusOut.h ../mbed/BusInOut.h ../mbed/PortIn.h \
@@ -41,37 +41,37 @@ BNO055/BNO055.h:
 
 ../mbed/platform.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768/device.h:
+../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768/device.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/objects.h:
+../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/objects.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis.h:
+../../external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/LPC17xx.h:
+../../external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/LPC17xx.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/core_cm3.h:
+../../external/mbed/libraries/mbed/targets/cmsis/core_cm3.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/core_cmInstr.h:
+../../external/mbed/libraries/mbed/targets/cmsis/core_cmInstr.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/core_cmFunc.h:
+../../external/mbed/libraries/mbed/targets/cmsis/core_cmFunc.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/system_LPC17xx.h:
+../../external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/system_LPC17xx.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis_nvic.h:
+../../external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis_nvic.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis.h:
+../../external/mbed/libraries/mbed/targets/cmsis/TARGET_NXP/TARGET_LPC176X/cmsis.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PortNames.h:
+../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PortNames.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PeripheralNames.h:
+../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PeripheralNames.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768/PinNames.h:
+../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768/PinNames.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/gpio_object.h:
+../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/gpio_object.h:
 
 ../mbed/mbed_assert.h:
 
-/home/jtwright/UROP/gcc4mbed/external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PeripheralNames.h:
+../../external/mbed/libraries/mbed/targets/hal/TARGET_NXP/TARGET_LPC176X/PeripheralNames.h:
 
 ../mbed/mbed_error.h:
 
