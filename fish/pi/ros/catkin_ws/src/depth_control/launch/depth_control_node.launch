@@ -9,4 +9,8 @@
           <param name="deadzone" value="0.1" />
     </node>
 
+    <node pkg="rosserial_python" type="serial_node.py" name="serial_node">
+    	  <param name="port" type="string" value="/dev/ttyACM0" />
+    </node>
+
 </launch>
