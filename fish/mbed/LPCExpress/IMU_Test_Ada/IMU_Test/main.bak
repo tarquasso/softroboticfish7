@@ -1,0 +1,60 @@
+#include "BNO055.h"
+#include "mbed.h"
+#include <cmath>
+
+#define imuTXPin p28
+#define imuRXPin p27
+
+PwmOut calibrationLevel(LED1);
+PwmOut pitch(LED2);
+PwmOut roll(LED3);
+PwmOut yaw(LED4);
+BNO055 imu(imuTXPin, imuRXPin);
+Serial pc(USBTX, USBRX);
+
+angles quat_to_euler(quaternion quat) {
+    angles euler = {};
+  euler.roll = atan2(2*(quat.x*quat.y + quat.z*quat.w), 1 - (2*(quat.y*quat.y + quat.z*quat.z)));
+  euler.pitch = asin(2*(quat.x*quat.z - quat.y*quat.w));
+  euler.yaw = atan2(2*(quat.x*quat.w + quat.y*quat.z), 1 - (2*(quat.z*quat.z + quat.w*quat.w)));
+  return euler;
+}
+
+
+int main() {
+  // imu.reset();
+  yaw = 1.0;
+  pc.printf("STARTING\r\n");
+  for(int i = 0; i<256; i+=2) {
+      char addr = BNO055_CHIP_ID_ADDR;
+      imu._i2c.write(i, &addr, 1, true);
+      char tmp;
+      int status = imu._i2c.read(i, &tmp, 1, false);
+      // if(tmp != 0) {
+      pc.printf("id: %d, ret: %d, stat: %d\r\n", i, tmp, status);
+      // }
+  }
+  while(1) {
+      pc.printf("COMM STATUS: %d %d\r\n", imu.address, imu.check());
+      imu.get_calib();
+      imu.get_quat();
+      angles euler = quat_to_euler(imu.quat);
+      roll = abs(euler.roll / (M_PI));
+      pitch = abs(euler.pitch / (M_PI));
+      // yaw = abs(euler.yaw / (M_PI));
+      calibrationLevel = (float) (imu.calib) / 4.0;
+      pc.printf("xquatraw: %d, yquatraw: %d, rawyaw: %d, calibrationLevel: %d\r\n", imu.quat.rawx, imu.quat.rawy, imu.euler.rawyaw, imu.calib);
+      // imu.read_calibration_data();
+      // char calib[22];
+
+      // for(int i = 0; i<22; i++) {
+      //     calib[i] = imu.calibration[i];
+      //     // pc.printf("calib %d: %d\n", i, calib[i]);
+      // }
+
+      // wait(1);
+      wait_ms(50000);
+  }
+
+  return 0;
+}
