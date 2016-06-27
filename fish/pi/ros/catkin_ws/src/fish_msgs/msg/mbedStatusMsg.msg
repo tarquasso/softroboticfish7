@@ -1,3 +1,3 @@
 Header header
-int mode
+int8 mode
 float32 value
