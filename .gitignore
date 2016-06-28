@@ -55,3 +55,4 @@ CATKIN_IGNORE
 *.map
 *.bak
 *.d
+/RemoteSystemsTempFiles/
