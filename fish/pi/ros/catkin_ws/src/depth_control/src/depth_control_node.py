@@ -82,7 +82,7 @@ class DepthJoy(object):
 #            rospy.loginfo("diff: %s", diff[cat])
             for i in range(len(diff[cat])):
                 if diff[cat][i]:
-                    rospy.loginfo("%s %s",i, diff[cat][i])
+                    # rospy.loginfo("%s %s",i, diff[cat][i])
                     return True
         return False
 
