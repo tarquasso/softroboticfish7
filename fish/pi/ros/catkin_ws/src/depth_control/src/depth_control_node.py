@@ -86,10 +86,8 @@ class DepthJoy(object):
                     return True
         return False
 
-    def normalize_axis(self, value, neg):
-        rospy.loginfo("%s", value)
-        if neg:
-            return -(value)
+    def normalize_axis(self, value):
+        # rospy.loginfo("%s", value)
         return value
 
     def clip(self, val, minmax):
@@ -131,7 +129,7 @@ class DepthJoy(object):
 
 
             mbed_msg.mode = self.mode
-            mbed_msg.value = self.desired_number[self.mode_map[self.mode]] + (self.axis_gain_dict[self.mode_map[self.mode]] * self.normalize_axis(joy_msg.axes[vel_ctrl_axis], True))
+            mbed_msg.value = self.clip(self.desired_number[self.mode_map[self.mode]] + (self.axis_gain_dict[self.mode_map[self.mode]] * self.normalize_axis(joy_msg.axes[vel_ctrl_axis]))),  self.minmax_dict[self.mode_map[self.mode]])
             if sendMsg:
                 rospy.loginfo("mode: %s, value: %s", self.mode_map[mbed_msg.mode], mbed_msg.value)
                 self.pub.publish(mbed_msg)
