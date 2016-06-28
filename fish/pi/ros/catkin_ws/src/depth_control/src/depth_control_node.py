@@ -115,7 +115,7 @@ class DepthJoy(object):
             if diff["buttons"][mode1_button] and joy_msg.buttons[mode1_button]:
                 self.mode = 2
                 sendMsg = True
-            if diff["buttons"][mode2_button] and joy_msg.buttons[mode1_button]:
+            if diff["buttons"][mode2_button] and joy_msg.buttons[mode2_button]:
                 self.mode = 3
                 sendMsg = True
             if diff["buttons"][tick_up_button] and joy_msg.buttons[tick_up_button]:
