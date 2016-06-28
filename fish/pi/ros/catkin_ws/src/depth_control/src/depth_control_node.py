@@ -30,7 +30,7 @@ vel_ctrl_axis = l_stick_y_axis
 class DepthJoy(object):
     def __init__(self):
         self.node_name = rospy.get_name()
-        rospy.loginfo("[%s] Initializing " %(self.node_name)) 
+        rospy.loginfo("[%s] Initializing " %(self.node_name))
 
         self.joy = None
 
@@ -108,22 +108,32 @@ class DepthJoy(object):
 
         if self.joy_updated(diff):
             self.joy = joy_msg
+            sendMsg = False
             if diff["buttons"][mode0_button] and joy_msg.buttons[mode0_button]:
                 self.mode = 0
+                sendMsg = True
                 # update msg with new mode
             if diff["buttons"][mode1_button] and joy_msg.buttons[mode1_button]:
                 self.mode = 1
+                sendMsg = True
             if diff["buttons"][mode2_button] and joy_msg.buttons[mode1_button]:
                 self.mode = 2
+                sendMsg = True
             if diff["buttons"][tick_up_button] and joy_msg.buttons[tick_up_button]:
                 self.do_incr(1)
+                sendMsg = True
             if diff["buttons"][tick_down_button] and joy_msg.buttons[tick_down_button]:
                 self.do_incr(-1)
+                sendMsg = True
+            if diff["axes"][vel_ctrl_axis]:
+                sendMsg = True
+
 
             mbed_msg.mode = self.mode
             mbed_msg.value = self.desired_number[self.mode_map[self.mode]] + (self.axis_gain_dict[self.mode_map[self.mode]] * self.normalize_axis(joy_msg.axes[vel_ctrl_axis], True))
-            rospy.loginfo("mode: %s, value: %s", self.mode_map[mbed_msg.mode], mbed_msg.value)
-            self.pub.publish(mbed_msg)
+            if sendMsg:
+                rospy.loginfo("mode: %s, value: %s", self.mode_map[mbed_msg.mode], mbed_msg.value)
+                self.pub.publish(mbed_msg)
 
     def cbMbed(self, mbed_msg):
         rospy.loginfo("mode: %s, value: %s", self.mode_map[mbed_msg.mode], mbed_msg.value)
