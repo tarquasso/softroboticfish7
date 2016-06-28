@@ -45,7 +45,7 @@ float max_pressure = 0;
 float min_pressure = -1;
 float curDepth = 0;
 
-int mode = 0;
+int mode = 1;
 float desiredNumber = 0;
 float mode_min = MIN_DEPTH;
 float mode_max = MAX_DEPTH;
