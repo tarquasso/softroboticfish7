@@ -87,9 +87,10 @@ class DepthJoy(object):
         return False
 
     def normalize_axis(self, value, neg):
+        rospy.loginfo("%s", value)
         if neg:
-            return -(value/32768.0)
-        return value/32768.0
+            return -(value)
+        return value
 
     def clip(self, val, minmax):
         return min(max(val, minmax[0]), minmax[1])
@@ -110,14 +111,14 @@ class DepthJoy(object):
             self.joy = joy_msg
             sendMsg = False
             if diff["buttons"][mode0_button] and joy_msg.buttons[mode0_button]:
-                self.mode = 0
+                self.mode = 1
                 sendMsg = True
                 # update msg with new mode
             if diff["buttons"][mode1_button] and joy_msg.buttons[mode1_button]:
-                self.mode = 1
+                self.mode = 2
                 sendMsg = True
             if diff["buttons"][mode2_button] and joy_msg.buttons[mode1_button]:
-                self.mode = 2
+                self.mode = 3
                 sendMsg = True
             if diff["buttons"][tick_up_button] and joy_msg.buttons[tick_up_button]:
                 self.do_incr(1)
