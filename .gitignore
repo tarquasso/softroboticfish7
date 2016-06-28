@@ -48,3 +48,11 @@ qtcreator-*
 # Catkin custom files
 CATKIN_IGNORE
 /.metadata/
+
+# c++ object files, elf files, etc
+*.o
+*.elf
+*.hex
+*.map
+*.bak
+*.d
