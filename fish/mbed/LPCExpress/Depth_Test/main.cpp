@@ -1,7 +1,6 @@
 #include "MS5837.h"
 #include "mbed.h"
 #include <ros.h>
-#include <std_msgs/Empty.h>
 #include <fish_msgs/DepthTestMsg.h>
 #include <fish_msgs/mbedStatusMsg.h>
 
@@ -10,14 +9,11 @@
 
 #define rosTopicName "joy_control"
 
-#define rosDefaultBaudUSB 115200
-#define rosDefaultBaud 115200
-
 //DepthTestMsg
 // Mode Int8
 // Value Float32
 
-#define TIMESTEP_MS 50
+#define TIMESTEP_MS 500
 #define DEPTH_MODE 3
 #define VOLT_MODE 1
 #define POS_MODE 2
@@ -29,17 +25,18 @@
 #define MAX_POS 1.0
 
 
+ros::NodeHandle nh;
+
+fish_msgs::DepthTestMsg ctrl_msg;
+fish_msgs::mbedStatusMsg stat_msg;
+ros::Publisher statusPub("mbed_stat", &stat_msg);
+
 DigitalOut modeHighOrder(LED1);
 DigitalOut modeLowOrder(LED2);
 PwmOut command(LED3);
 PwmOut pressure(LED4);
 
 MS5837 pressureSensor(imuTXPin, imuRXPin);
-
-ros::NodeHandle nh;
-
-fish_msgs::DepthTestMsg ctrl_msg;
-fish_msgs::mbedStatusMsg stat_msg;
 
 float max_pressure = 0;
 float min_pressure = -1;
@@ -70,7 +67,6 @@ void commandCb(const fish_msgs::DepthTestMsg& ctrl_msg) {
 }
 
 ros::Subscriber<fish_msgs::DepthTestMsg> cmdSub("joy_control", &commandCb);
-ros::Publisher statusPub("mbed_stat", &stat_msg);
 
 void displayMode() {
   modeHighOrder = mode / 2;
@@ -123,11 +119,13 @@ int main() {
   nh.advertise(statusPub);
   initController();
   while(1) {
+    nh.spinOnce();
     runDisplay();
-    curateStatusMsg();
+    // curateStatusMsg();
+    stat_msg.mode = mode;
+    stat_msg.value = desiredNumber;
     statusPub.publish( &stat_msg );
     runController();
-    nh.spinOnce();
     wait_ms(TIMESTEP_MS);
   }
 }
