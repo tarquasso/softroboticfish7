@@ -13,7 +13,7 @@
 // Mode Int8
 // Value Float32
 
-#define TIMESTEP_MS 500
+#define TIMESTEP_MS 100
 #define DEPTH_MODE 3
 #define VOLT_MODE 1
 #define POS_MODE 2
@@ -44,8 +44,8 @@ float curDepth = 0;
 
 int mode = 1;
 float desiredNumber = 0;
-float mode_min = MIN_DEPTH;
-float mode_max = MAX_DEPTH;
+float mode_min = MIN_VOLT;
+float mode_max = MAX_VOLT;
 
 void commandCb(const fish_msgs::DepthTestMsg& ctrl_msg) {
   mode = ctrl_msg.mode;
@@ -74,6 +74,7 @@ void displayMode() {
 }
 
 void displayPressure() {
+  pressureSensor.Barometer_MS5837();
   float curDepth = pressureSensor.MS5837_Pressure();
   if (min_pressure == -1) {
     min_pressure = curDepth;
@@ -118,6 +119,7 @@ int main() {
   nh.subscribe(cmdSub);
   nh.advertise(statusPub);
   initController();
+  pressureSensor.MS5837Init();
   while(1) {
     nh.spinOnce();
     runDisplay();
