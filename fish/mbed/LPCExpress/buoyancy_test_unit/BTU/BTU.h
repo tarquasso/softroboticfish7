@@ -10,13 +10,13 @@
 #define PULSEPERREV 1786
 // Max pressure to be experienced (mbar); currently at ~5m under water
 #define MAXDEPTH 1516
-// Voltage PID parameters
-#define vKc 0.1
-#define vTaul 0.1
-#define vTauD 0.1
+// Position PID parameters
+#define pKc 1
+#define pTauI 1
+#define pTauD 1
 // Depth PID parameters
 #define dKc 0.1
-#define dTaul 0.1
+#define dTauI 0.1
 #define dTauD 0.1
 #define NA 0.1 // holceholder; rate at which the PID is run is not used here but should be used when BTU::Run() is called. BTU::Run() only computes PID once
 
@@ -36,10 +36,11 @@
 class BTU
 {
 private:
-    PwmOut PWM1;
-    PwmOut PWM2;
+	Serial	pc;
+    PwmOut 	PWM1;
+    PwmOut 	PWM2;
     QEI     motor;
-    PID     voltagePID;
+    PID     posPID;
     PID     depthPID;
     MS5837  pressureSensor;
 

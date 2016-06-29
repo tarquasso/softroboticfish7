@@ -11,14 +11,14 @@ Serial      pc(USBTX, USBRX);
 
 //QEI wheel (p16, p17, NC, 1786); //add: ,QEI::X4_ENCODING
 
-int main() 
+int main()
 {
-    float interval=0.1; //interval between each PID iteration
+    float interval = 2; //interval between each PID iteration
     
     BTU btuobj;
     while(1)
     {
-        btuobj.Run(1,0.1);
+        btuobj.positionControl(180);
         wait(interval);
     }
     return 0;

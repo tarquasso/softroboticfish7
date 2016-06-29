@@ -1,11 +1,12 @@
 #include "BTU.h"
 
 BTU::BTU():
+	pc(USBTX, USBRX),
 	PWM1(pwmOutA),
 	PWM2(pwmOutB),
 	motor(analogInA, analogInB, NC, PULSEPERREV),
-	voltagePID(vKc, vTaul, vTauD, NA),
-    depthPID(dKc, dTaul, dTauD, NA),
+	posPID(pKc, pTauI, pTauD, NA),
+    depthPID(dKc, dTauI, dTauD, NA),
 	pressureSensor(imuTXPin, imuRXPin)
 {
 
@@ -18,6 +19,10 @@ BTU::~BTU(){}
   * This function uses control loops to set the motor position to the desired state
   * @param mode         1 for voltage, 2 for position, or 3 for depth
   * @param setValue     Desired value of voltage, position, or depth
+  * Example A: Run(1,0.75) will set PWM signal to be 75% of the max voltage
+  * Example B: Run(2, 37) will rotate the motor to be 37deg CCW of starting pos
+  * Example C: Run(2, -37) will rotate the motor to be 37deg CW of starting pos
+  * Example D: Run(3,
   */  
 void BTU::Run(int mode, float setValue)
 {
@@ -51,6 +56,7 @@ void BTU::voltageControl(float setDuty, float T)
     if (T != 0)
     {
         PWM1.period(T);
+        PWM2.period(T);
     }
     if (setDuty > 0) //CCW
     {
@@ -62,38 +68,46 @@ void BTU::voltageControl(float setDuty, float T)
         PWM1 = 0; // set duty cycle
         PWM2 = -setDuty;
     }
-
 }
 
 
-// Only work with positive pulse values. When starting, set the initial position to when the BCU is fully untwisted (or even reverse twisted. either way, don't let the pulse count go negative)
 /** 
-  * This function receives a desired position iand tries to go to that position
-  * @param value Desired position in range [0,1)
+  * This function receives a desired position and tries to rotate the motor to that position
+  * @param value desired position, in degrees, in range [-360, 360]
+  * where negative value is CW and positive value is CCW
+  * Note: make sure to set the motor to its rest position before starting
   */
-
-void BTU::positionControl(float setPos)
+void BTU::positionControl(float setDeg)
 {
     // Run PID
-    voltagePID.setMode(1); // AUTO != 0
-    voltagePID.setInputLimits(0.0, PULSEPERREV); // analog input of position to be scaled 0-100%
-    voltagePID.setOutputLimits(0,1); // PWM output from 0 to 1
-    voltagePID.setBias(0.3); // if there is bias
-    voltagePID.setSetPoint(setPos); // we want the process variable to be the desired value
-    
+	//float setPos = setDeg/360; //convert into position in range [-1,1]
+    posPID.setMode(1); // AUTO != 0
+    posPID.setInputLimits(-360, 360); // analog input of position to be scaled 0-100%
+    posPID.setOutputLimits(-1,1); // PWM output from -1 (CW) to 1 (CCW)
+    //posPID.setBias(0.3); // if there is bias
+    posPID.setSetPoint(setDeg); // we want the process variable to be the desired value
+    posPID.setTunings(0.45,0.1,0.1); //Kc, TauI, TauD (0.5,0.1,0.1) is ok
+    posPID.setInterval(0.05);
     float pvPos = 0;
-
+    float pvDeg = 0;
     /**
       *  PID TO BE ITERATED
       */ 
     // Detect the position of motor
+
+    while(1){
     pvPos = motor.getPulses() % PULSEPERREV;
-    
+    pvDeg = pvPos/PULSEPERREV*360;
+
     // Provide appropriate voltage to motor
-    voltagePID.setProcessValue(pvPos); // update the process variable
-    float co = voltagePID.compute(); // set the new output
-    
+    posPID.setProcessValue(pvDeg); // update the process variable
+
+    float co = posPID.compute(); // set the new output
+    pc.printf("setPos: %.1f deg, pvPos: %.1f deg, duty: %.2f \n",setDeg, pvDeg, co*100);
+
     voltageControl(co); // change voltage provided to motor
+    wait(0.1);
+    }
 }
 
 
