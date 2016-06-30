@@ -8,21 +8,24 @@ int main()
 {
 	pc.printf("Start!\n");
 	//BTU m_BTU instance is made in .h .cpp files;
-	int mode;
+	int mode = 2;
 	float input;
-	float Kc = 0;
-	float TauI = 0;
-	float TauD = 0;
-	float setVal = 0;
+	float Kc = 0.0005;
+	float TauI = 0.00003;
+	float TauD = 0.000000000;
+	float setVal = 90;
+
+	m_BTU.init();
+
+	pc.printf("Enter Mode");
+	pc.scanf("%d", &mode);
+	pc.printf("You input: %d", mode);
 
 	while(1)
 	{
-		pc.printf("Enter Mode");
-		pc.scanf("%d", &mode);
-
-		pc.printf("Enter Desired position in degrees, 1000+Kc for Kc value, 2000+TauI for TauI value, 3000+TauD for TauD value, or -1000 to stop motor\n");
+		pc.printf("Enter desired position in degrees, 1000+Kc for Kc value, 2000+TauI for TauI value, 3000+TauD for TauD value, or -1000 to stop motor\n");
 		pc.scanf("%f", &input);
-		// DO MODE AND EVERYTHING
+		pc.printf("You input: %f", input);
 		if (input == -1000)
 		{
 			m_BTU.stop();
@@ -44,9 +47,9 @@ int main()
 			setVal = input; //desired position of motor, in degrees
 		}
 
-		pc.printf("setDeg: %.3f deg, Kc:%.3f, TauI:%.3f, TauD:%.3f \n", mode, setVal, Kc, TauI, TauD);
+		pc.printf("setDeg: %.3f deg, Kc:%f, TauI:%f, TauD:%f \n", mode, setVal, Kc, TauI, TauD);
 		m_BTU.updateParam(mode, setVal, Kc, TauI, TauD);
-		m_BTU.start();
+		m_BTU.run();
 	}
 	return 0;
 }

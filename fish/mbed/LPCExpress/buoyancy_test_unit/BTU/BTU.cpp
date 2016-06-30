@@ -11,12 +11,9 @@ BTU::BTU():
 	posPID(pKc, pTauI, pTauD, NA),
     depthPID(dKc, dTauI, dTauD, NA),
 	pressureSensor(imuTXPin, imuRXPin)
-{
-
-};
+{};
 
 BTU::~BTU(){}
-
 
 /**
  * This function uses control loops to set the motor position to the desired state
@@ -27,23 +24,24 @@ BTU::~BTU(){}
  * Example C: Run(2, -37) will rotate the motor to be 37deg CW of starting pos
  * Example D: Run(3,
  */
-void BTU::Run(int mode, float setValue)
-{
-    switch (mode)
-    {
-        case VOLTAGE:
-        voltageControl(setValue);
-        break;
+//void BTU::Run(int mode, float setValue)
+//{
+//    switch (mode)
+//    {
+//        case VOLTAGE:
+//        voltageControl();
+//        break;
+//
+//        case POSITION:
+//        positionControl();
+//        break;
+//
+//        case DEPTH:
+//        depthControl();
+//        break;
+//    }
+//}
 
-        case POSITION:
-        //positionControl(SETVALue);
-        break;
-
-        case DEPTH:
-        depthControl(setValue);
-        break;
-    }
-}
 
 void BTU::init()
 {
@@ -53,25 +51,41 @@ void BTU::init()
 	SETVAL = 0;
 }
 
-void BTU::start()
+
+void BTU::run()
 {
     voltageDefault();
-	posPID.reset(); // gives it a reference to return to
-	// pressureSensor.MS5837Init();
 
-	posTimer.attach(&m_BTU, &BTU::positionControl,0.05);
-	// depthTimer.attach(&m_BTU, &BTU::positionControl(SETVAL, Kc, TauI, TauD),0.05);
+    switch (MODE)
+    {
+        case VOLTAGE:
+        timer.attach(&m_BTU, &BTU::voltageControl,0.05);
+        break;
+
+        case POSITION:
+		posPID.setMode(1); // AUTO != 0
+		posPID.setInputLimits(-360, 360); // analog input of position to be scaled 0-100%
+		posPID.setOutputLimits(-1,1); // PWM output from -1 (CW) to 1 (CCW)
+        timer.attach(&m_BTU, &BTU::positionControl,0.05);
+        break;
+
+        case DEPTH:
+		depthPID.setMode(1); // nonzero: AUTO
+		depthPID.setInputLimits(0.0, MAXDEPTH); // analog input of position to be scaled 0-100%
+		depthPID.setOutputLimits(-360, 360); // position output from -360 to 360 deg
+		pressureSensor.MS5837Init();
+        timer.attach(&m_BTU, &BTU::depthControl,0.05);
+        break;
+    }
 }
 
 
 void BTU::stop()
 {
-	posTimer.detach();
-	depthTimer.detach();
+	timer.detach();
 	PWM1 = 0;
 	PWM2 = 0;
 }
-
 
 
 /**
@@ -80,13 +94,10 @@ void BTU::stop()
  * @param duty     Desired pwm duty cycle in range [-1,1]; negative for CW, positive for CCW rotation
  * @param T        (Optional arg) change period
  */
-void BTU::voltageControl(float setDuty, float T)
+void BTU::voltageControl()
 {
-    if (T != 0)
-    {
-        PWM1.period(T);
-        PWM2.period(T);
-    }
+	float setDuty = SETVAL;
+
     if (setDuty > 0) //CCW
     {
         PWM1 = setDuty;
@@ -113,67 +124,45 @@ void BTU::updateParam(int M, float A, float B, float C, float D)
 
 /** 
  * This function receives a desired position and tries to rotate the motor to that position
- * @param value desired position, in degrees, in range [-360, 360]
- * where negative value is CW and positive value is CCW
+ * setDeg is in range [-360, 360] where negative value is CW and positive value is CCW
  * Note: make sure to set the motor to its rest position before starting
  */
 void BTU::positionControl()
 {
 	float setDeg = SETVAL;
-
-    posPID.setMode(1); // AUTO != 0
-    posPID.setInputLimits(-360, 360); // analog input of position to be scaled 0-100%
-    posPID.setOutputLimits(-1,1); // PWM output from -1 (CW) to 1 (CCW)
     posPID.setSetPoint(setDeg); // we want the process variable to be the desired value
-    //posPID.setTunings(0.45,0.1,0.1); //Kc, TauI, TauD (0.5,0.1,0.1) is ok
-    posPID.setInterval(0.05);
-    float pvPos = 0;
-    float pvDeg = 0;
 
-    while(1) // PID
-    {
-    // Detect the position of motor
-    pvPos = motor.getPulses() % PULSEPERREV;
-    pvDeg = pvPos/PULSEPERREV*360;
+    // Detect motor position
+    float pvPos = motor.getPulses() % PULSEPERREV;
+    float pvDeg = pvPos/PULSEPERREV*360;
 
-    // Provide appropriate voltage to motor
+    // Set motor voltage
     posPID.setProcessValue(pvDeg); // update the process variable
-    float co = posPID.compute(); // set the new output
-    pc.printf("setPos: %.1f deg, pvPos: %.1f deg, duty: %.2f \n",setDeg, pvDeg, co*100);
-    voltageControl(co); // change voltage provided to motor
-    }
+    SETVAL = posPID.compute(); // set the new value of voltage
+    pc.printf("setPos: %.1f deg, pvPos: %.1f deg, duty: %.2f \n",setDeg, pvDeg, SETVAL*100);
+    voltageControl(); // change voltage provided to motor
 }
 
 
 /** 
- * This function changes the position of the motor to a desired value based on
+ * This function changes the motor position to a desired value based on
  * the readings on the pressure sensor
- * @param value
+ * setDepth is the pressure reading
  */
-void BTU::depthControl(float setDepth)
+void BTU::depthControl()
 {
     // Run PID
-    depthPID.setMode(1); // nonzero: AUTO
-    depthPID.setInputLimits(0.0, MAXDEPTH); // analog input of position to be scaled 0-100%
-    depthPID.setOutputLimits(0,1); // position output from 0 to 1
-    depthPID.setBias(0.3); // if there is bias
+	float setDepth = SETVAL;
     depthPID.setSetPoint(setDepth); // we want the process variable to be the desired value
     
-    float pvDepth = 0;
-    pressureSensor.MS5837Init();
-
-    /**
-     *  PID TO BE ITERATED
-     */
     // Detect depth
-    pvDepth = pressureSensor.MS5837_Pressure();
+    float pvDepth = pressureSensor.MS5837_Pressure();
     
-    // Set position of motor
+    // Set motor position
     depthPID.setProcessValue(pvDepth); // update the process variable
-    //float co = depthPID.compute(); // set the new output
-
-    //positionControl(co); // change position of motor
-
+    SETVAL = depthPID.compute(); // set the new output of position
+    pc.printf("setDepth: %.1f mbar, pvPos: %.1f mbar, setPos: %.2f deg\n",setDepth, pvDepth, SETVAL);
+    positionControl(); // change position of motor
 }
 
 

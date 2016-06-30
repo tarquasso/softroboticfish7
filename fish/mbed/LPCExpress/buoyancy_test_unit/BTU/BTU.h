@@ -10,6 +10,7 @@
 #define PULSEPERREV 1786
 // Max pressure to be experienced (mbar); currently at ~5m under water
 #define MAXDEPTH 1516
+#define T 0.00345 //period of PWM
 // Position PID parameters
 #define pKc 1
 #define pTauI 1
@@ -46,8 +47,7 @@ private:
     PID     posPID;
     PID     depthPID;
     MS5837  pressureSensor;
-    Ticker 	posTimer;
-    Ticker	depthTimer;
+    Ticker  timer;
     int MODE;
     float SETVAL;
     float KC;
@@ -57,14 +57,13 @@ private:
 public:
     BTU();
     ~BTU();
-    void Run(int mode, float setValue);
+    void run();
     void init();
-    void start();
     void stop();
-    void voltageControl(float setDuty, float T = 0);
+    void voltageControl();
     void updateParam(int M, float A, float B, float C, float D);
     void positionControl();
-    void depthControl(float setDepth);
+    void depthControl();
     void voltageDefault();
 };
 
