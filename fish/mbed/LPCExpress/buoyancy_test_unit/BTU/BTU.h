@@ -6,7 +6,7 @@
 #include "PID.h"
 #include "MS5837.h" // pressure sensor
 
-// Encorder number of pulses per revolution
+// Encoder number of pulses per revolution
 #define PULSEPERREV 1786
 // Max pressure to be experienced (mbar); currently at ~5m under water
 #define MAXDEPTH 1516
@@ -18,8 +18,11 @@
 #define dKc 0.1
 #define dTauI 0.1
 #define dTauD 0.1
-#define NA 0.1 // holceholder; rate at which the PID is run is not used here but should be used when BTU::Run() is called. BTU::Run() only computes PID once
+#define NA 0.1 // placeholder;rate at which the PID is run is not used here but should be used when BTU::Run() is called. BTU::Run() only computes PID once
 
+#define VOLTAGE 	1
+#define POSITION	2
+#define DEPTH		3
 
 // Define pinouts from mbed
 #define analogInA p16
@@ -30,9 +33,9 @@
 #define imuRXPin p27
 
 /**
-* This class sets the motor position to the desired state
-* It includes instances of the classes PwmOut, QEI, PID, and MS5837
-*/
+ * This class sets the motor position to the desired state
+ * It includes instances of the classes PwmOut, QEI, PID, and MS5837
+ */
 class BTU
 {
 private:
@@ -43,15 +46,29 @@ private:
     PID     posPID;
     PID     depthPID;
     MS5837  pressureSensor;
+    Ticker 	posTimer;
+    Ticker	depthTimer;
+    int MODE;
+    float SETVAL;
+    float KC;
+    float TAUI;
+    float TAUD;
 
 public:
     BTU();
     ~BTU();
     void Run(int mode, float setValue);
+    void init();
+    void start();
+    void stop();
     void voltageControl(float setDuty, float T = 0);
-    void positionControl(float setPos);
+    void updateParam(int M, float A, float B, float C, float D);
+    void positionControl();
     void depthControl(float setDepth);
     void voltageDefault();
 };
 
 #endif /* BTU_H */
+
+// Create a static instance of BTU to be used by anyone controlling the Buoyancy Test Unit
+extern BTU m_BTU;
