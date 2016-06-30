@@ -4,7 +4,6 @@
 BTU m_BTU;
 
 BTU::BTU():
-	pc(USBTX, USBRX),
 	PWM1(pwmOutA),
 	PWM2(pwmOutB),
 	motor(analogInA, analogInB, NC, PULSEPERREV),
@@ -83,7 +82,7 @@ void BTU::stop()
 
 void BTU::printGlobal()
 {
-	pc.printf("GLOBAL::: mode: %d, Kc:%f, TauI:%f, TauD:%f, SETVAL: %.2f, CURRENTVAL: %.2F, DUTY CYCLE: \n",MODE, KC, TAUI, TAUD, SETVAL, CURRENTVAL, OUTPUT*100);
+	printf("GLOBAL::: mode: %d, Kc:%f, TauI:%f, TauD:%f, SETVAL: %.2f, CURRENTVAL: %.2F, DUTY CYCLE: %f\n",MODE, KC, TAUI, TAUD, SETVAL, CURRENTVAL, OUTPUT*100);
 }
 
 

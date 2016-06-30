@@ -1,15 +1,28 @@
 #include "mbed.h"
-#include "BTU.h"
-#include "Ticker.h"
 
-Serial      pc(USBTX, USBRX);
+//#include "Ticker.h"
+#include "MODSERIAL.h"
+#include "SerialComm.h"
+#include "BTU.h"
+
+
+//MODSERIAL pcSerial(USBTX,USBRX); //serial device
+
+#define NUM_FLOATS 5
+
 AnalogIn	pot1(p15);
 AnalogIn	pot2(p19);
 AnalogIn	pot3(p20);
 
 int main()
 {
-	pc.printf("Start!\n");
+	MODSERIAL* pcSerial = new MODSERIAL(USBTX,USBRX); //dynamic allocation of the serial device
+		
+	pcSerial->printf("Start!\n");
+	
+	//Set up a serial communication object
+    SerialComm serialComm(pcSerial);
+    
 	//BTU m_BTU instance is made in .h .cpp files;
 	int mode = 2;
 	//float input;
@@ -50,8 +63,30 @@ int main()
 		{
 			setVal = input; //desired position of motor, in degrees
 		}*/
+	
+
+
+
 	while (1)
 	{
+		if(serialComm.checkIfNewMessage()) {
+
+            int valueInteger = serialComm.getInt();
+
+            float valueFloat = serialComm.getFloat();
+
+            pcSerial->printf("Int:%d, Float:%f\n",valueInteger,valueFloat);
+            
+            float valueFloats[NUM_FLOATS];
+            
+            serialComm.getFloats(valueFloats,NUM_FLOATS);
+            
+            for (int i = 0; i < NUM_FLOATS; i++)
+            {
+                pcSerial->printf("Val#%d: %f\n",i,valueFloats[i]);    
+            }
+        }
+        
 		Kc = pot2;
 		// scale for range in [a,b]
 		float a1 = 6.8;
@@ -71,5 +106,4 @@ int main()
 		m_BTU.update(mode, setVal, 0.5,0.1,0.1);
 		m_BTU.printGlobal();
 	}
-	return 0;
 }

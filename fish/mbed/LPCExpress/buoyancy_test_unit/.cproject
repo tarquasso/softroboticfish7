@@ -31,8 +31,6 @@
                                     <listOptionValue builtIn="false" value="__CODE_RED"/>
                                     <listOptionValue builtIn="false" value="CPP_USE_HEAP"/>
                                   
-                                    <listOptionValue builtIn="false" value="MBED_BUILD_TIMESTAMP=1467144366.41"/>
-                                  
                                     <listOptionValue builtIn="false" value="__CORTEX_M3"/>
                                   
                                     <listOptionValue builtIn="false" value="TOOLCHAIN_GCC"/>
@@ -57,6 +55,8 @@
                                   
                                     <listOptionValue builtIn="false" value="TARGET_MBED_LPC1768"/>
                                   
+                                    <listOptionValue builtIn="false" value="MBED_BUILD_TIMESTAMP=1467316613.03"/>
+                                  
                                     <listOptionValue builtIn="false" value="__MBED__=1"/>
                                   
                                 </option>
@@ -66,13 +66,17 @@
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
-                                    
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BTU}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/PID}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed}&quot;"/>
                                     
@@ -99,8 +103,6 @@
                                     <listOptionValue builtIn="false" value="__CODE_RED"/>
                                     <listOptionValue builtIn="false" value="CPP_USE_HEAP"/>
                                   
-                                    <listOptionValue builtIn="false" value="MBED_BUILD_TIMESTAMP=1467144366.41"/>
-                                  
                                     <listOptionValue builtIn="false" value="__CORTEX_M3"/>
                                   
                                     <listOptionValue builtIn="false" value="TOOLCHAIN_GCC"/>
@@ -125,6 +127,8 @@
                                   
                                     <listOptionValue builtIn="false" value="TARGET_MBED_LPC1768"/>
                                   
+                                    <listOptionValue builtIn="false" value="MBED_BUILD_TIMESTAMP=1467316613.03"/>
+                                  
                                     <listOptionValue builtIn="false" value="__MBED__=1"/>
                                   
                                 </option>
@@ -134,13 +138,17 @@
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
-                                    
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BTU}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/PID}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed}&quot;"/>
                                     
@@ -184,13 +192,17 @@
                                    
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
-                                    
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BTU}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/PID}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed}&quot;"/>
                                     
@@ -1066,8 +1078,6 @@
                                     <listOptionValue builtIn="false" value="__CODE_RED"/>
                                     <listOptionValue builtIn="false" value="CPP_USE_HEAP"/>
                                   
-                                    <listOptionValue builtIn="false" value="MBED_BUILD_TIMESTAMP=1467144366.41"/>
-                                  
                                     <listOptionValue builtIn="false" value="__CORTEX_M3"/>
                                   
                                     <listOptionValue builtIn="false" value="TOOLCHAIN_GCC"/>
@@ -1092,6 +1102,8 @@
                                   
                                     <listOptionValue builtIn="false" value="TARGET_MBED_LPC1768"/>
                                   
+                                    <listOptionValue builtIn="false" value="MBED_BUILD_TIMESTAMP=1467316613.03"/>
+                                  
                                     <listOptionValue builtIn="false" value="__MBED__=1"/>
                                   
                                 </option>
@@ -1102,13 +1114,17 @@
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
-                                    
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BTU}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/PID}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed}&quot;"/>
                                     
@@ -1135,8 +1151,6 @@
                                     <listOptionValue builtIn="false" value="__CODE_RED"/>
                                     <listOptionValue builtIn="false" value="CPP_USE_HEAP"/>
                                   
-                                    <listOptionValue builtIn="false" value="MBED_BUILD_TIMESTAMP=1467144366.41"/>
-                                  
                                     <listOptionValue builtIn="false" value="__CORTEX_M3"/>
                                   
                                     <listOptionValue builtIn="false" value="TOOLCHAIN_GCC"/>
@@ -1160,6 +1174,8 @@
                                     <listOptionValue builtIn="false" value="TARGET_M3"/>
                                   
                                     <listOptionValue builtIn="false" value="TARGET_MBED_LPC1768"/>
+                                  
+                                    <listOptionValue builtIn="false" value="MBED_BUILD_TIMESTAMP=1467316613.03"/>
                                   
                                     <listOptionValue builtIn="false" value="__MBED__=1"/>
                                   
@@ -1194,13 +1210,17 @@
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
-                                    
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BTU}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/PID}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed}&quot;"/>
                                     
@@ -1247,13 +1267,17 @@
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
-                                    
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BTU}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                    
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/PID}&quot;"/>
                                     
-                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
+                                        <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
                                     
                                         <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed}&quot;"/>
                                     

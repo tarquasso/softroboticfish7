@@ -40,7 +40,6 @@
 class BTU
 {
 private:
-	Serial	pc;
     PwmOut 	PWM1;
     PwmOut 	PWM2;
     QEI     motor;
