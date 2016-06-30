@@ -3,13 +3,16 @@
 #include "Ticker.h"
 
 Serial      pc(USBTX, USBRX);
+AnalogIn	pot1(p15);
+AnalogIn	pot2(p19);
+AnalogIn	pot3(p20);
 
 int main()
 {
 	pc.printf("Start!\n");
 	//BTU m_BTU instance is made in .h .cpp files;
 	int mode = 2;
-	float input;
+	//float input;
 	float Kc = 0.0005;
 	float TauI = 0.00003;
 	float TauD = 0.000000000;
@@ -17,6 +20,7 @@ int main()
 
 	m_BTU.init();
 
+/*
 	pc.printf("Enter Mode");
 	pc.scanf("%d", &mode);
 	pc.printf("You input: %d", mode);
@@ -45,11 +49,27 @@ int main()
 		else
 		{
 			setVal = input; //desired position of motor, in degrees
-		}
+		}*/
+	while (1)
+	{
+		Kc = pot2;
+		// scale for range in [a,b]
+		float a1 = 6.8;
+		float b1 = 7.5;
+		Kc = (b1-a1)*Kc+a1;
 
-		pc.printf("setDeg: %.3f deg, Kc:%f, TauI:%f, TauD:%f \n", mode, setVal, Kc, TauI, TauD);
-		m_BTU.updateParam(mode, setVal, Kc, TauI, TauD);
-		m_BTU.run();
+		TauI = pot1;
+		float a2 = 0;
+		float b2 = 0.0001;
+		TauI = (b2-a2)*TauI+a2;
+
+		TauD = pot3;
+		float a3 = 0;
+		float b3 = 0.0001;
+		TauD = (b3-a3)*TauD+a3;
+
+		m_BTU.update(mode, setVal, 0.5,0.1,0.1);
+		m_BTU.printGlobal();
 	}
 	return 0;
 }

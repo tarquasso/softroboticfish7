@@ -53,6 +53,8 @@ private:
     float KC;
     float TAUI;
     float TAUD;
+    float CURRENTVAL;
+    float OUTPUT;
 
 public:
     BTU();
@@ -60,8 +62,11 @@ public:
     void run();
     void init();
     void stop();
+    void updateMode(int mode);
     void voltageControl();
-    void updateParam(int M, float A, float B, float C, float D);
+    void printGlobal();
+    void update(int M, float A, float B, float C, float D);
+    void voltageControlHelper(float setDuty);
     void positionControl();
     void depthControl();
     void voltageDefault();
