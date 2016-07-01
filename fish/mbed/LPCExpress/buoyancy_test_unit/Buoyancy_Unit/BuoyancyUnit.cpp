@@ -6,7 +6,7 @@ Buoyancy_Unit m_BTU;
 Buoyancy_Unit::Buoyancy_Unit():
 	m_pwm1(PIN_PWM_OUT1),
 	m_pwm2(PIN_PWM_OUT2),
-	m_encoder_bcu_motor(PIN_ENCODER_A, PIN_ENCODER_B, NC, PULSEPERREV),
+	m_encoder_bcu_motor(PIN_ENCODER_A, PIN_ENCODER_B, NC, PULSEPERREV, QEI::X4_ENCODING),
 	m_posPid(POS_K_C, POS_TAU_I, POS_TAU_D, PID_FREQ_NOT_USED),
     m_depthPid(DEP_K_C, DEP_TAU_I, DEP_TAU_D, PID_FREQ_NOT_USED),
 	m_pressureSensor(PIN_IMU_TX, PIN_IMU_RX)
@@ -83,9 +83,9 @@ void Buoyancy_Unit::stop()
 }
 
 
-void Buoyancy_Unit::printGlobal()
+void Buoyancy_Unit::printValues()
 {
-	printf("GLOBAL::: counter: %d, mode: %d, Kc:%f, TauI:%f, TauD:%f, SETVAL: %.2f, CURRENTVAL: %.2f, DUTY CYCLE: %.2f \n",m_counter, m_mode, m_kc, m_taui, m_taud, m_setval, m_currentval, m_output*100);
+	printf("counter: %d, mode: %d, Kc:%f, TauI:%f, TauD:%f, SetVal: %.2f, CurrentVal: %.2f, duty cycle: %.2f \n",m_counter, m_mode, m_kc, m_taui, m_taud, m_setval, m_currentval, m_output*100);
 }
 
 
@@ -127,11 +127,23 @@ void Buoyancy_Unit::positionControl()
 
     // Detect motor position
     float pvPos = m_encoder_bcu_motor.getPulses() % PULSEPERREV;
-    float pvDeg = (pvPos/PULSEPERREV)*360;
+    float pvDeg = pvPos/PULSEPERREV*360;
     m_currentval = pvDeg;
     // Set motor voltage
     m_posPid.setProcessValue(m_currentval); // update the process variable
-    m_output = m_posPid.compute();
+
+    if (m_encoder_bcu_motor.getPulses() > PULSEPERREV) // rotated more than 360deg CW
+    {
+    	m_output = -1;
+    }
+    else if (m_encoder_bcu_motor.getPulses() > -PULSEPERREV) // rotated more than 360deg CCW
+	{
+		m_output = 1;
+	}
+    else
+    {
+    	m_output = m_posPid.compute();
+    }
     voltageControlHelper(m_output); // change voltage provided to motor
 }
 
@@ -167,6 +179,6 @@ void Buoyancy_Unit::voltageDefault()
 {
     m_pwm1.period(0.00345); // 3.45ms period
     m_pwm2.period(0.00345); // 3.45ms period
-    m_pwm1 = 0.5;           // duty cycle of 50%
+    m_pwm1 = 0;           // duty cycle of 50%
     m_pwm2 = 0;
 }

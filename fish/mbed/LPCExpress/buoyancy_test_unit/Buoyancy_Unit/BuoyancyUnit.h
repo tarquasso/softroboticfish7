@@ -7,7 +7,7 @@
 #include "MS5837.h" // pressure sensor
 
 // Encoder number of pulses per revolution
-#define PULSEPERREV 1786
+#define PULSEPERREV 11837 // (pulses per rev * gear ratio)
 // Max pressure to be experienced (mbar); currently at ~5m under water
 #define MAXDEPTH 1516
 #define PERIOD_PWM 0.00345 //period of PWM
@@ -64,7 +64,7 @@ public:
     void stop();
     void updateMode(int mode);
     void voltageControl();
-    void printGlobal();
+    void printValues();
     void update(int M, float A, float B, float C, float D);
     void voltageControlHelper(float setDuty);
     void positionControl();
