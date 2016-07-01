@@ -5,7 +5,7 @@
 #include "SerialComm.h"
 
 #define NUM_FLOATS 4
-
+MODSERIAL pcSerial(USBTX,USBRX); //serial device
 AnalogIn	pot1(p15);
 AnalogIn	pot2(p19);
 AnalogIn	pot3(p20);
@@ -13,7 +13,6 @@ AnalogIn	pot3(p20);
 int main()
 {
 	MODSERIAL* pcSerial = new MODSERIAL(USBTX,USBRX); //dynamic allocation of the serial device
-
 	pcSerial->printf("Start!\n");
 
 	//Set up a serial communication object

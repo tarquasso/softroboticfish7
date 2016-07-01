@@ -128,22 +128,22 @@ void Buoyancy_Unit::positionControl()
     // Detect motor position
     float pvPos = m_encoder_bcu_motor.getPulses() % PULSEPERREV;
     float pvDeg = pvPos/PULSEPERREV*360;
-    m_currentval = pvDeg;
-    // Set motor voltage
-    m_posPid.setProcessValue(m_currentval); // update the process variable
 
-    if (m_encoder_bcu_motor.getPulses() > PULSEPERREV) // rotated more than 360deg CW
+    if (m_encoder_bcu_motor.getPulses() > PULSEPERREV) // rotated more than 360deg CCW
     {
-    	m_output = -1;
+    	m_currentval = 360;
     }
-    else if (m_encoder_bcu_motor.getPulses() > -PULSEPERREV) // rotated more than 360deg CCW
+    else if (m_encoder_bcu_motor.getPulses() > -PULSEPERREV) // rotated more than 360deg CW
 	{
-		m_output = 1;
+		m_currentval = -360;
 	}
     else
     {
-    	m_output = m_posPid.compute();
+    	m_currentval = pvDeg;
     }
+    // Set motor voltage
+    m_posPid.setProcessValue(m_currentval); // update the process variable
+    m_output = m_posPid.compute();
     voltageControlHelper(m_output); // change voltage provided to motor
 }
 
