@@ -326,7 +326,7 @@ void ToneDetector::stop()
     #ifdef artificialSamplesMode
     sampleTicker.detach();
     #else
-    lli[1]->Control = NULL;                        // Make the DMA stop after next time buffer1 is filled
+    lli[1]->Control = 0;                        // Make the DMA stop after next time buffer1 is filled
     while(!(!fillingBuffer0 && transferComplete)); // Wait for buffer1 to be filled
     LPC_TIM1->TCR=0;              // Stop the timer (and thus the ADC)
     LPC_SC->PCONP &= ~(1UL << 2); // Power off the timer
