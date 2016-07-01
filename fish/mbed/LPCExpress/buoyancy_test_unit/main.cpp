@@ -1,4 +1,4 @@
-#include <Buoyancy_Unit/BuoyancyUnit.h>
+#include "Buoyancy_Unit/BuoyancyUnit.h"
 #include "mbed.h"
 
 #include "MODSERIAL.h"
@@ -70,16 +70,17 @@ int main()
 	{
 		if(serialComm.checkIfNewMessage()) {
 
-            int valueInteger = serialComm.getInt();
+            //int valueInteger = serialComm.getInt();
 
-            float valueFloat = serialComm.getFloat();
+            //float valueFloat = serialComm.getFloat();
 
-            pcSerial->printf("Int:%d, Float:%f\n",valueInteger,valueFloat);
+            //pcSerial->printf("Int:%d, Float:%f\n",valueInteger,valueFloat);
             
             float valueFloats[NUM_FLOATS];
             
             serialComm.getFloats(valueFloats,NUM_FLOATS);
             
+            // printing out for debugging
             for (int i = 0; i < NUM_FLOATS; i++)
             {
                 pcSerial->printf("Val#%d: %f\n",i,valueFloats[i]);    
@@ -103,6 +104,6 @@ int main()
 		TauD = (b3-a3)*TauD+a3;
 
 		m_BTU.update(mode, setVal, Kc, TauI, TauD);
-		m_BTU.printGlobal();
+		//m_BTU.printGlobal();
 	}
 }

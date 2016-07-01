@@ -60,15 +60,16 @@ void SerialComm::rxCallback(MODSERIAL_IRQ_INFO *q)
 
 float SerialComm::getFloat()
 {
-    //Conversion From Character Array to Float
+    messageProcessed = false;
+	//Conversion From Character Array to Float
     valueFloats[0] =atof(value[0]);
 
-    messageProcessed = false;
     return valueFloats[0];
 }
 
 void SerialComm::getFloats(float* floats, int howMany)
 {
+	messageProcessed = false;
     if(howMany<NUMBER_COUNT_MAX)
         for(int i = 0; i < howMany; i++) {
             if(i < howMany) {
@@ -82,10 +83,10 @@ void SerialComm::getFloats(float* floats, int howMany)
 
 int SerialComm::getInt()
 {
-    // Conversion From Character Array to Integer
+    messageProcessed = false;
+	// Conversion From Character Array to Integer
     valueInts[0] = atoi(value[0]);
 
-    messageProcessed = false;
     return valueInts[0];
 }
 
