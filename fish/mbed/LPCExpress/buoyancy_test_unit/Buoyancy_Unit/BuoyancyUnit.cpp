@@ -1,9 +1,9 @@
-#include "BTU.h"
+#include <Buoyancy_Unit/BuoyancyUnit.h>
 
 // The static instance
-BTU m_BTU;
+Buoyancy_Unit m_BTU;
 
-BTU::BTU():
+Buoyancy_Unit::Buoyancy_Unit():
 	m_pwm1(PIN_PWM_OUT1),
 	m_pwm2(PIN_PWM_OUT2),
 	m_encoder_bcu_motor(PIN_ENCODER_A, PIN_ENCODER_B, NC, PULSEPERREV),
@@ -12,10 +12,10 @@ BTU::BTU():
 	m_pressureSensor(PIN_IMU_TX, PIN_IMU_RX)
 {};
 
-BTU::~BTU(){}
+Buoyancy_Unit::~Buoyancy_Unit(){}
 
 
-void BTU::init()
+void Buoyancy_Unit::init()
 {
 	m_counter = 0;
 	m_currentval = 555;
@@ -41,7 +41,7 @@ void BTU::init()
 /**
  * Update global variables
  */
-void BTU::update(int M, float A, float B, float C, float D)
+void Buoyancy_Unit::update(int M, float A, float B, float C, float D)
 {
 	if (m_mode != M)
 	{
@@ -55,27 +55,27 @@ void BTU::update(int M, float A, float B, float C, float D)
 }
 
 
-void BTU::updateMode(int mode)
+void Buoyancy_Unit::updateMode(int mode)
 {
 	stop();
     switch (mode)
     {
         case VOLTAGE:
-        m_timer.attach(this, &BTU::voltageControl,0.05);
+        m_timer.attach(this, &Buoyancy_Unit::voltageControl,0.05);
         break;
 
         case POSITION:
-		m_timer.attach(this, &BTU::positionControl,0.05);
+		m_timer.attach(this, &Buoyancy_Unit::positionControl,0.05);
         break;
 
         case DEPTH:
-        m_timer.attach(this, &BTU::depthControl,0.05);
+        m_timer.attach(this, &Buoyancy_Unit::depthControl,0.05);
         break;
     }
 }
 
 
-void BTU::stop()
+void Buoyancy_Unit::stop()
 {
 	m_timer.detach();
 	m_pwm1 = 0;
@@ -83,7 +83,7 @@ void BTU::stop()
 }
 
 
-void BTU::printGlobal()
+void Buoyancy_Unit::printGlobal()
 {
 	printf("GLOBAL::: counter: %d, mode: %d, Kc:%f, TauI:%f, TauD:%f, SETVAL: %.2f, CURRENTVAL: %.2f, DUTY CYCLE: %.2f \n",m_counter, m_mode, m_kc, m_taui, m_taud, m_setval, m_currentval, m_output*100);
 }
@@ -95,7 +95,7 @@ void BTU::printGlobal()
  * @param duty     Desired pwm duty cycle in range [-1,1]; negative for CW, positive for CCW rotation
  * @param T        (Optional arg) change period
  */
-void BTU::voltageControlHelper(float setDuty)
+void Buoyancy_Unit::voltageControlHelper(float setDuty)
 {
     if (setDuty > 0) //CCW
     {
@@ -109,7 +109,7 @@ void BTU::voltageControlHelper(float setDuty)
     }
 }
 
-void BTU::voltageControl()
+void Buoyancy_Unit::voltageControl()
 {
 	voltageControlHelper(m_setval);
 }
@@ -119,7 +119,7 @@ void BTU::voltageControl()
  * setDeg is in range [-360, 360] where negative value is CW and positive value is CCW
  * Note: make sure to set the motor to its rest position before starting
  */
-void BTU::positionControl()
+void Buoyancy_Unit::positionControl()
 {
 	m_counter++;
 	m_posPid.setTunings(m_kc, m_taui, m_taud);
@@ -141,7 +141,7 @@ void BTU::positionControl()
  * the readings on the pressure sensor
  * setDepth is the pressure reading
  */
-void BTU::depthControl()
+void Buoyancy_Unit::depthControl()
 {
 	m_depthPid.setTunings(m_kc, m_taui, m_taud);
     // Run PID
@@ -163,7 +163,7 @@ void BTU::depthControl()
  * This function sets the PWM to the default values
  * to rotate the motor CCW at half the supplied voltage
  */
-void BTU::voltageDefault()
+void Buoyancy_Unit::voltageDefault()
 {
     m_pwm1.period(0.00345); // 3.45ms period
     m_pwm2.period(0.00345); // 3.45ms period

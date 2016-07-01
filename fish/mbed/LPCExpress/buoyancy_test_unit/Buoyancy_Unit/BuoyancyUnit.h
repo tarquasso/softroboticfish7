@@ -37,7 +37,7 @@
  * This class sets the motor position to the desired state
  * It includes instances of the classes PwmOut, QEI, PID, and MS5837
  */
-class BTU
+class Buoyancy_Unit
 {
 private:
     PwmOut 	m_pwm1;
@@ -57,8 +57,8 @@ private:
     int m_counter;
 
 public:
-    BTU();
-    ~BTU();
+    Buoyancy_Unit();
+    ~Buoyancy_Unit();
     void run();
     void init();
     void stop();
@@ -75,4 +75,4 @@ public:
 #endif /* BTU_H */
 
 // Create a static instance of BTU to be used by anyone controlling the Buoyancy Test Unit
-extern BTU m_BTU;
+extern Buoyancy_Unit m_BTU;
