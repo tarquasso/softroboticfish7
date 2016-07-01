@@ -17,6 +17,9 @@ BTU::~BTU(){}
 
 void BTU::init()
 {
+	counter = 0;
+	CURRENTVAL = 555;
+	OUTPUT = 444;
 	MODE = 0;
 	KC = 0;
 	TAUI = 0;
@@ -82,7 +85,7 @@ void BTU::stop()
 
 void BTU::printGlobal()
 {
-	printf("GLOBAL::: mode: %d, Kc:%f, TauI:%f, TauD:%f, SETVAL: %.2f, CURRENTVAL: %.2F, DUTY CYCLE: %f\n",MODE, KC, TAUI, TAUD, SETVAL, CURRENTVAL, OUTPUT*100);
+	pc.printf("GLOBAL::: counter: %d, mode: %d, Kc:%f, TauI:%f, TauD:%f, SETVAL: %.2f, CURRENTVAL: %.2f, DUTY CYCLE: %.2f \n",counter, MODE, KC, TAUI, TAUD, SETVAL, CURRENTVAL, OUTPUT*100);
 }
 
 
@@ -118,17 +121,16 @@ void BTU::voltageControl()
  */
 void BTU::positionControl()
 {
+	counter++;
 	posPID.setTunings(KC, TAUI, TAUD);
-
-	float setDeg = SETVAL;
-    posPID.setSetPoint(setDeg); // we want the process variable to be the desired value
+    posPID.setSetPoint(SETVAL); // we want the process variable to be the desired value
 
     // Detect motor position
     float pvPos = motor.getPulses() % PULSEPERREV;
-    float pvDeg = pvPos/PULSEPERREV*360;
+    float pvDeg = (pvPos/PULSEPERREV)*360;
     CURRENTVAL = pvDeg;
     // Set motor voltage
-    posPID.setProcessValue(pvDeg); // update the process variable
+    posPID.setProcessValue(CURRENTVAL); // update the process variable
     OUTPUT = posPID.compute();
     voltageControlHelper(OUTPUT); // change voltage provided to motor
 }

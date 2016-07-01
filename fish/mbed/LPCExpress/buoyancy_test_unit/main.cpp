@@ -89,8 +89,8 @@ int main()
         
 		Kc = pot2;
 		// scale for range in [a,b]
-		float a1 = 6.8;
-		float b1 = 7.5;
+		float a1 = 0;
+		float b1 = 10;
 		Kc = (b1-a1)*Kc+a1;
 
 		TauI = pot1;
@@ -103,7 +103,7 @@ int main()
 		float b3 = 0.0001;
 		TauD = (b3-a3)*TauD+a3;
 
-		m_BTU.update(mode, setVal, 0.5,0.1,0.1);
+		m_BTU.update(mode, setVal, Kc, TauI, TauD);
 		m_BTU.printGlobal();
 	}
 }
