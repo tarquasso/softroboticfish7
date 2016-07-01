@@ -5,6 +5,7 @@
 #include "QEI.h"
 #include "PID.h"
 #include "MS5837.h" // pressure sensor
+#include "Servo.h"
 
 // Encoder number of pulses per revolution
 #define PULSEPERREV 11837 // (pulses per rev * gear ratio)
@@ -21,6 +22,10 @@
 #define DEP_TAU_D 0.1
 #define PID_FREQ_NOT_USED 0.1 // placeholder;rate at which the PID is run is not used here but should be used when BTU::Run() is called. BTU::Run() only computes PID once
 
+#define SERVO_CONNECTED true
+#define SERVO_PWM_WIDTH 0.0007
+#define SERVO_DEGREE_WIDTH 82.5
+
 #define VOLTAGE 	1
 #define POSITION	2
 #define DEPTH		3
@@ -32,6 +37,7 @@
 #define PIN_PWM_OUT2 p22
 #define PIN_IMU_TX p28
 #define PIN_IMU_RX p27
+#define PIN_PWM_SERVO p23
 
 class BTU {
  /* private: */
@@ -42,7 +48,8 @@ class BTU {
     PID     m_posPid;
     PID     m_depthPid;
     MS5837  m_pressureSensor;
-    Ticker  m_timer;
+    Servo m_motorServo;
+    /* Ticker  m_timer; */
     int m_mode;
     float m_setval;
     float m_kc;

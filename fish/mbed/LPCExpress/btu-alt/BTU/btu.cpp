@@ -6,7 +6,8 @@ BTU::BTU():
 	m_encoder_bcu_motor(PIN_ENCODER_A, PIN_ENCODER_B, NC, PULSEPERREV, QEI::X4_ENCODING),
 	m_posPid(POS_K_C, POS_TAU_I, POS_TAU_D, PID_FREQ_NOT_USED),
     m_depthPid(DEP_K_C, DEP_TAU_I, DEP_TAU_D, PID_FREQ_NOT_USED),
-	m_pressureSensor(PIN_IMU_TX, PIN_IMU_RX)
+	m_pressureSensor(PIN_IMU_TX, PIN_IMU_RX),
+    m_motorServo(PIN_PWM_SERVO)
 {};
 
 BTU::~BTU(){}
@@ -23,9 +24,18 @@ void BTU::init() {
 
     m_posPid.setMode(1);
     m_posPid.setInputLimits(-360, 360);
-    m_posPid.setOutputLimits(-360, 360);
+    m_posPid.setOutputLimits(-1,1);
 
-    m_pressureSensor.MS5837Init();
+	m_depthPid.setMode(1); // nonzero: AUTO
+	m_depthPid.setInputLimits(0.0, MAXDEPTH); // analog input of position to be scaled 0-100%
+    m_depthPid.setOutputLimits(-360, 360);
+
+    if(SERVO_CONNECTED) {
+        m_posPid.setInputLimits(-82.5, 82.5);
+        m_depthPid.setOutputLimits(-82.5, 82.5);
+        m_motorServo.calibrate(SERVO_PWM_WIDTH, SERVO_DEGREE_WIDTH );
+        m_pressureSensor.MS5837Init();
+    }
 }
 
 void BTU::stop() {
@@ -73,7 +83,12 @@ void BTU::updateAndRunCycle(int mode, float value) {
 }
 
 
-
+float depthToMbar(float depth) {
+  float pAtmos = 101000;
+  float pWater =  (9.8 * depth * 1000);
+  float pa_to_mbar = 0.01;
+  return pa_to_mbar * (pAtmos + pWater);
+}
 
 
 void BTU::voltageControl(float setDuty) {
@@ -88,8 +103,12 @@ void BTU::voltageControl(float setDuty) {
 
 
 
-
 void BTU::positionControl(float setPos) {
+    if(SERVO_CONNECTED) {
+        m_motorServo.position(setPos);
+        m_currentval = m_motorServo.read();
+        return;
+    }
     m_posPid.setTunings(m_kc, m_taui, m_taud);
     m_posPid.setSetPoint(setPos);
         // Detect motor position
@@ -117,7 +136,8 @@ void BTU::positionControl(float setPos) {
 void BTU::depthControl(float setDepth) {
     m_depthPid.setTunings(m_kc, m_taui, m_taud);
     // Run PID
-    m_depthPid.setSetPoint(setDepth); // we want the process variable to be the desired value
+    float setPressure = depthToMbar(setDepth);
+    m_depthPid.setSetPoint(setPressure); // we want the process variable to be the desired value
 
     // Detect depth
     m_pressureSensor.Barometer_MS5837();
