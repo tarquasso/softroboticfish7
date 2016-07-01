@@ -45,14 +45,18 @@
 								</option>
 								<option id="gnu.cpp.compiler.option.other.other.1100343989" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.include.paths.1011871574" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Servo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/SerialComm}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/ros_lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/QEI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PID}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MS5837}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL/Device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL/Device}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/PID}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Buoyancy_Unit}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
@@ -89,20 +93,24 @@
 								</option>
 								<option id="gnu.c.compiler.option.misc.other.1521041525" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti" valueType="string"/>
 								<option id="gnu.c.compiler.option.include.paths.1293117680" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Servo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/SerialComm}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/ros_lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/QEI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PID}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MS5837}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL/Device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/PID}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/QEI}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Buoyancy_Unit}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL/Device}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gcc.specs.153435856" name="Specs" superClass="com.crt.advproject.gcc.specs" value="com.crt.advproject.gcc.specs.newlib" valueType="enumerated"/>
 								<inputType id="com.crt.advproject.compiler.input.205113874" superClass="com.crt.advproject.compiler.input"/>
@@ -113,8 +121,18 @@
 								<option id="gnu.both.asm.option.flags.crt.1501250871" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" value="-c -x assembler-with-cpp -D__NEWLIB__ -DDEBUG -D__CODE_RED" valueType="string"/>
 								<option id="com.crt.advproject.gas.hdrlib.473313643" name="Library headers" superClass="com.crt.advproject.gas.hdrlib" value="com.crt.advproject.gas.hdrlib.newlib" valueType="enumerated"/>
 								<option id="com.crt.advproject.gas.specs.1900831147" name="Specs" superClass="com.crt.advproject.gas.specs" value="com.crt.advproject.gas.specs.newlib" valueType="enumerated"/>
-								<option id="gnu.both.asm.option.include.paths.1233873815" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL/Device}&quot;"/>
+								<option id="gnu.both.asm.option.include.paths.1233873815" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Servo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/SerialComm}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/ros_lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/QEI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PID}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MS5837}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL/Device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.assembler.input.910682278" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.608365356" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
@@ -131,6 +149,7 @@
 								</option>
 								<option id="com.crt.advproject.link.cpp.hdrlib.286729066" name="Library" superClass="com.crt.advproject.link.cpp.hdrlib" value="com.crt.advproject.cpp.link.hdrlib.newlib.semihost" valueType="enumerated"/>
 								<option id="gnu.cpp.link.option.paths.504050220" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
@@ -146,6 +165,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR}&quot;"/>
 								</option>
 								<option id="gnu.cpp.link.option.libs.1301785862" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="mbed_libs"/>
 									<listOptionValue builtIn="false" value="mbed"/>
 								</option>
 								<option id="gnu.cpp.link.option.userobjs.433052051" name="Other objects" superClass="gnu.cpp.link.option.userobjs" valueType="userObjs">
@@ -176,7 +196,25 @@
 					</sourceEntries>
 				</configuration>
 			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="mbed_libs;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/mbed_libs"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/Servo"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/SerialComm"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/ros_lib"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/QEI"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/PID"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MS5837"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MODSERIAL/Device"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MODSERIAL"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/."/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/Buoyancy_Unit"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/mbed_libs/Debug"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="mbed_libs" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
+			</storageModule>
 		</cconfiguration>
 		<cconfiguration id="com.crt.advproject.config.exe.release.1977230950">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.exe.release.1977230950" moduleId="org.eclipse.cdt.core.settings" name="Release">
@@ -223,6 +261,17 @@
 								<option id="gnu.cpp.compiler.option.other.other.1338090461" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.optimization.flags.475225500" name="Other optimization flags" superClass="gnu.cpp.compiler.option.optimization.flags" value="-Os" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.include.paths.17539784" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Servo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/SerialComm}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/ros_lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/QEI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PID}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MS5837}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL/Device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
@@ -268,8 +317,18 @@
 								<option id="gnu.c.compiler.option.misc.other.2015545820" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti" valueType="string"/>
 								<option id="gnu.c.compiler.option.optimization.flags.675461365" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" value="-Os" valueType="string"/>
 								<option id="com.crt.advproject.gcc.specs.77691975" name="Specs" superClass="com.crt.advproject.gcc.specs" value="com.crt.advproject.gcc.specs.newlib" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.include.paths.230484653" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL/Device}&quot;"/>
+								<option id="gnu.c.compiler.option.include.paths.230484653" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Servo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/SerialComm}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/ros_lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/QEI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PID}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MS5837}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL/Device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.compiler.input.1938378962" superClass="com.crt.advproject.compiler.input"/>
 							</tool>
@@ -279,7 +338,18 @@
 								<option id="gnu.both.asm.option.flags.crt.637466836" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" value="-c -x assembler-with-cpp -D__NEWLIB__ -DNDEBUG -D__CODE_RED" valueType="string"/>
 								<option id="com.crt.advproject.gas.hdrlib.492600365" name="Library headers" superClass="com.crt.advproject.gas.hdrlib" value="com.crt.advproject.gas.hdrlib.newlib" valueType="enumerated"/>
 								<option id="com.crt.advproject.gas.specs.1447209683" name="Specs" superClass="com.crt.advproject.gas.specs" value="com.crt.advproject.gas.specs.newlib" valueType="enumerated"/>
-								<option id="gnu.both.asm.option.include.paths.1223397554" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+								<option id="gnu.both.asm.option.include.paths.1223397554" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Servo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/SerialComm}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/ros_lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/QEI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PID}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MS5837}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL/Device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MODSERIAL/Device}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.assembler.input.812068162" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
@@ -297,9 +367,11 @@
 								</option>
 								<option id="com.crt.advproject.link.cpp.hdrlib.259007915" name="Library" superClass="com.crt.advproject.link.cpp.hdrlib" value="com.crt.advproject.cpp.link.hdrlib.newlib.semihost" valueType="enumerated"/>
 								<option id="gnu.cpp.link.option.libs.6254811" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="mbed_libs"/>
 									<listOptionValue builtIn="false" value="mbed"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.813959094" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
@@ -335,6 +407,17 @@
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.release" name="ARM-based MCU (Release)" superClass="com.crt.advproject.platform.exe.release"/>
 							<tool id="com.crt.advproject.cpp.exe.release.930589045" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.release.822772966">
 								<option id="gnu.cpp.compiler.option.include.paths.1413630517" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Servo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/SerialComm}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/ros_lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/QEI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PID}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MS5837}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL/Device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SerialComm}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MS5837}&quot;"/>
@@ -368,7 +451,25 @@
 					</sourceEntries>
 				</configuration>
 			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="mbed_libs;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/mbed_libs"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/Servo"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/SerialComm"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/ros_lib"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/QEI"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/PID"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MS5837"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MODSERIAL/Device"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MODSERIAL"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/."/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/Buoyancy_Unit"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/mbed_libs/Debug"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="mbed_libs" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
+			</storageModule>
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
