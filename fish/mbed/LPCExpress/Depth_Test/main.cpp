@@ -4,8 +4,8 @@
 #include <fish_msgs/DepthTestMsg.h>
 #include <fish_msgs/mbedStatusMsg.h>
 
-#define imuTXPin p28
-#define imuRXPin p27
+#define PIN_IMU_TX p28
+#define PIN_IMU_RX p27
 
 #define rosTopicName "joy_control"
 
@@ -36,7 +36,7 @@ DigitalOut modeLowOrder(LED2);
 PwmOut command(LED3);
 PwmOut pressure(LED4);
 
-MS5837 pressureSensor(imuTXPin, imuRXPin);
+MS5837 pressureSensor(PIN_IMU_TX, PIN_IMU_RX);
 
 float max_pressure = 0;
 float min_pressure = -1;

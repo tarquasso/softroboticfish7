@@ -23,8 +23,8 @@
 #define count2rev 12 //https://www.pololu.com/product/3081/blog
 #define gearRatio 75 // need to check
 
-#define imuTXPin p28
-#define imuRXPin p27
+#define PIN_IMU_TX p28
+#define PIN_IMU_RX p27
 
 //#define maxBCUCurrent 0.5 // need to measure
 //#define minBCUCurrent 0.1 // need to measure

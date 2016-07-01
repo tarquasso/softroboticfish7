@@ -15,7 +15,7 @@ BuoyancyControlUnit::BuoyancyControlUnit() :
 					bcuDirB(bcuDirBPin),
 					//bcuCurrent(bcuCurrentPin),
 					bcuEncoder(encoderPinA, encoderPinB, NC, count2rev*gearRatio, QEI::X4_ENCODING),
-					pressureSensor(imuTXPin,imuRXPin)
+					pressureSensor(PIN_IMU_TX,PIN_IMU_RX)
 {
 	setDepth = 0; // input command
 	curDepth = 0; // actual depth based on sensor

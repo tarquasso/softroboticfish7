@@ -2,14 +2,14 @@
 #include "mbed.h"
 #include <cmath>
 
-#define imuTXPin p28
-#define imuRXPin p27
+#define PIN_IMU_TX p28
+#define PIN_IMU_RX p27
 
 PwmOut calibrationLevel(LED1);
 PwmOut pitch(LED2);
 PwmOut roll(LED3);
 PwmOut yaw(LED4);
-BNO055 imu(imuTXPin, imuRXPin);
+BNO055 imu(PIN_IMU_TX, PIN_IMU_RX);
 Serial pc(USBTX, USBRX);
 DigitalOut powerIMU(p5);
 LocalFileSystem local("local");
