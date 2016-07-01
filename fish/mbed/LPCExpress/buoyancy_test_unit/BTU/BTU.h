@@ -10,28 +10,28 @@
 #define PULSEPERREV 1786
 // Max pressure to be experienced (mbar); currently at ~5m under water
 #define MAXDEPTH 1516
-#define T 0.00345 //period of PWM
+#define PERIOD_PWM 0.00345 //period of PWM
 // Position PID parameters
-#define pKc 1
-#define pTauI 1
-#define pTauD 1
+#define POS_K_C 1
+#define POS_TAU_I 1
+#define POS_TAU_D 1
 // Depth PID parameters
-#define dKc 0.1
-#define dTauI 0.1
-#define dTauD 0.1
-#define NA 0.1 // placeholder;rate at which the PID is run is not used here but should be used when BTU::Run() is called. BTU::Run() only computes PID once
+#define DEP_K_C 0.1
+#define DEP_TAU_I 0.1
+#define DEP_TAU_D 0.1
+#define PID_FREQ_NOT_USED 0.1 // placeholder;rate at which the PID is run is not used here but should be used when BTU::Run() is called. BTU::Run() only computes PID once
 
 #define VOLTAGE 	1
 #define POSITION	2
 #define DEPTH		3
 
 // Define pinouts from mbed
-#define analogInA p16
-#define analogInB p17
-#define pwmOutA p21
-#define pwmOutB p22
-#define imuTXPin p28
-#define imuRXPin p27
+#define PIN_ENCODER_A p16
+#define PIN_ENCODER_B p17
+#define PIN_PWM_OUT1 p21
+#define PIN_PWM_OUT2 p22
+#define PIN_IMU_TX p28
+#define PIN_IMU_RX p27
 
 /**
  * This class sets the motor position to the desired state
@@ -40,20 +40,21 @@
 class BTU
 {
 private:
-    PwmOut 	PWM1;
-    PwmOut 	PWM2;
-    QEI     motor;
-    PID     posPID;
-    PID     depthPID;
-    MS5837  pressureSensor;
-    Ticker  timer;
-    int MODE;
-    float SETVAL;
-    float KC;
-    float TAUI;
-    float TAUD;
-    float CURRENTVAL;
-    float OUTPUT;
+    PwmOut 	m_pwm1;
+    PwmOut 	m_pwm2;
+    QEI     m_encoder_bcu_motor;
+    PID     m_posPid;
+    PID     m_depthPid;
+    MS5837  m_pressureSensor;
+    Ticker  m_timer;
+    int m_mode;
+    float m_setval;
+    float m_kc;
+    float m_taui;
+    float m_taud;
+    float m_currentval;
+    float m_output;
+    int m_counter;
 
 public:
     BTU();
