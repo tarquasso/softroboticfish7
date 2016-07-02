@@ -133,7 +133,7 @@ void Buoyancy_Unit::positionControl()
     {
     	m_currentval = 360;
     }
-    else if (m_encoder_bcu_motor.getPulses() > -PULSEPERREV) // rotated more than 360deg CW
+    else if (m_encoder_bcu_motor.getPulses() < -PULSEPERREV) // rotated more than 360deg CW
 	{
 		m_currentval = -360;
 	}
@@ -161,6 +161,7 @@ void Buoyancy_Unit::depthControl()
     m_depthPid.setSetPoint(setDepth); // we want the process variable to be the desired value
     
     // Detect depth
+    m_pressureSensor.Barometer_MS5837();
     float pvDepth = m_pressureSensor.MS5837_Pressure();
     
     // Set motor position
