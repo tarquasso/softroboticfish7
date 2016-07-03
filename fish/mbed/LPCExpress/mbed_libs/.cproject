@@ -147,7 +147,6 @@
 									<listOptionValue builtIn="false" value="c:/nxp/lpcxpresso_8.1.4_606/lpcxpresso/tools/lib/gcc/arm-none-eabi/5.2.1/include"/>
 									<listOptionValue builtIn="false" value="c:/nxp/lpcxpresso_8.1.4_606/lpcxpresso/tools/lib/gcc/arm-none-eabi/5.2.1/include-fixed"/>
 									<listOptionValue builtIn="false" value="c:/nxp/lpcxpresso_8.1.4_606/lpcxpresso/tools/arm-none-eabi/include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BTU}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.830662744" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="com.crt.advproject.assembler.input.1781121010" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
@@ -305,7 +304,6 @@
 									<listOptionValue builtIn="false" value="c:/nxp/lpcxpresso_8.1.4_606/lpcxpresso/tools/lib/gcc/arm-none-eabi/5.2.1/include"/>
 									<listOptionValue builtIn="false" value="c:/nxp/lpcxpresso_8.1.4_606/lpcxpresso/tools/lib/gcc/arm-none-eabi/5.2.1/include-fixed"/>
 									<listOptionValue builtIn="false" value="c:/nxp/lpcxpresso_8.1.4_606/lpcxpresso/tools/arm-none-eabi/include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BTU}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1326535657" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="com.crt.advproject.assembler.input.1755632502" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>

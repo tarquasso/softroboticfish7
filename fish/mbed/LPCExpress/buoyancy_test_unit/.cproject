@@ -6,7 +6,9 @@
 				<macros>
 					<stringMacro name="LibsName" type="VALUE_TEXT" value="mbed_libs"/>
 				</macros>
-				<externalSettings/>
+				<externalSettings>
+					<externalSetting/>
+				</externalSettings>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -161,7 +163,8 @@
 								</option>
 								<option id="com.crt.advproject.link.cpp.hdrlib.286729066" name="Library" superClass="com.crt.advproject.link.cpp.hdrlib" value="com.crt.advproject.cpp.link.hdrlib.newlib.semihost" valueType="enumerated"/>
 								<option id="gnu.cpp.link.option.paths.504050220" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/${ConfigName}}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X}&quot;"/>
@@ -169,8 +172,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/.}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;/${ProjName}/Debug&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;/${ProjName}/.&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/${ConfigName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
 								</option>
 								<option id="gnu.cpp.link.option.libs.1301785862" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="mbed_libs"/>
@@ -205,7 +208,7 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
-				<externalSettings containerId="mbed_libs;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+				<externalSettings containerId="mbed_libs;com.crt.advproject.config.lib.debug.2093569767" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/mbed_libs"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/Servo"/>
@@ -236,7 +239,9 @@
 				<macros>
 					<stringMacro name="LibsName" type="VALUE_TEXT" value="mbed_libs"/>
 				</macros>
-				<externalSettings/>
+				<externalSettings>
+					<externalSetting/>
+				</externalSettings>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -331,23 +336,23 @@
 								<option id="com.crt.advproject.gcc.specs.77691975" name="Specs" superClass="com.crt.advproject.gcc.specs" value="com.crt.advproject.gcc.specs.newlib" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.230484653" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Servo}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/SerialComm}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/ros_lib}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/QEI}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PID}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MS5837}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL/Device}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL/Device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MS5837}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PID}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/QEI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/SerialComm}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Servo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/ros_lib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.compiler.input.1938378962" superClass="com.crt.advproject.compiler.input"/>
@@ -397,20 +402,16 @@
 									<listOptionValue builtIn="false" value="mbed"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.813959094" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/.}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/BTU}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/SerialComm}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/MS5837}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/MODSERIAL}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/PID}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/QEI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/${ConfigName}}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/.}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/${ConfigName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
 								</option>
 								<option id="gnu.cpp.link.option.userobjs.1313579148" name="Other objects" superClass="gnu.cpp.link.option.userobjs" valueType="userObjs">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${LibsName}/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR/board.o}&quot;"/>
@@ -435,28 +436,26 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
-				<externalSettings containerId="mbed_libs;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+				<externalSettings containerId="mbed_libs;com.crt.advproject.config.lib.release.1597262862" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/mbed_libs"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/Servo"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/SerialComm"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/ros_lib"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/QEI"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/PID"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MS5837"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MODSERIAL/Device"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MODSERIAL"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/."/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/Buoyancy_Unit"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/BTU"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MODSERIAL"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MODSERIAL/Device"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/MS5837"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/PID"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/QEI"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/SerialComm"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/Servo"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/ros_lib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed/TARGET_LPC1768"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/mbed_libs/Debug"/>
-						<entry flags="RESOLVED" kind="libraryFile" name="mbed_libs" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/BTU"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/Buoyancy_Unit"/>
 					</externalSetting>
 				</externalSettings>
 			</storageModule>
