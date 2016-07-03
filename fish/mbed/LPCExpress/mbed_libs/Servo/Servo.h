@@ -76,6 +76,12 @@ public:
      */
     void position(float degrees);
     
+    /**  Read the servo motors current position
+     *
+     * @param returns A degree number.
+     */
+    float readPosition();
+
     /**  Allows calibration of the range and angles for a particular servo
      *
      * @param range Pulsewidth range from center (1.5ms) to maximum/minimum position in seconds
