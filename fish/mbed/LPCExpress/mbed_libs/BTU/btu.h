@@ -1,5 +1,5 @@
-#ifndef BuoyancyUnit_H
-#define BuoyancyUnit_H
+#ifndef BTU_H
+#define BTU_H
 
 #include "mbed.h"
 #include "QEI.h"
@@ -43,9 +43,10 @@
  * This class sets the motor position to the desired state
  * It includes instances of the classes PwmOut, QEI, PID, and MS5837
  */
-class Buoyancy_Unit
+class BTU
 {
-private:
+ /* private: */
+ public:
     PwmOut 	m_pwm1;
     PwmOut 	m_pwm2;
     QEI     m_encoder_bcu_motor;
@@ -53,7 +54,7 @@ private:
     PID     m_depthPid;
     MS5837  m_pressureSensor;
     Servo   m_motorServo;
-    Ticker  m_timer;
+    /* Ticker  m_timer; */
     int m_mode;
     float m_setval;
     float m_kc;
@@ -63,23 +64,20 @@ private:
     float m_output;
     int m_counter;
 
-public:
-    Buoyancy_Unit();
-    ~Buoyancy_Unit();
-    void run();
+    BTU();
+    ~BTU();
+    /* void run(); */
     void init();
     void stop();
     void update(int M, float A, float B, float C, float D);
     void updateMode(int mode);
-    void voltageControl();
-    void printValues();
-    void voltageControlHelper(float setDuty);
-    void positionControl();
-    void depthControl();
+    void runCycle();
+    void updateAndRunCycle(int mode, float value);
+    void voltageControl(float setDuty);
+    void positionControl(float setPos);
+    void depthControl(float setDepth);
     void voltageDefault();
+
 };
 
-#endif /* BTU_H */
-
-// Create a static instance of BTU to be used by anyone controlling the Buoyancy Test Unit
-extern Buoyancy_Unit m_BTU;
+#endif
