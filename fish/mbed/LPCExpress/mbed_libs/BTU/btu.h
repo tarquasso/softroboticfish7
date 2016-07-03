@@ -23,8 +23,8 @@
 #define PID_FREQ_NOT_USED 0.1 // placeholder;rate at which the PID is run is not used here but should be used when BTU::Run() is called. BTU::Run() only computes PID once
 
 #define SERVO_CONNECTED true
-#define SERVO_PWM_WIDTH 0.0007
-#define SERVO_DEGREE_WIDTH 82.5
+#define SERVO_PWM_WIDTH 0.0010
+#define SERVO_DEGREE_WIDTH 91.0
 
 #define VOLTAGE 	1
 #define POSITION	2
@@ -69,7 +69,7 @@ class BTU
     /* void run(); */
     void init();
     void stop();
-    void update(int M, float A, float B, float C, float D);
+    void update(int mode, float setVal, float kc, float taui, float taud);
     void updateMode(int mode);
     void runCycle();
     void updateAndRunCycle(int mode, float value);

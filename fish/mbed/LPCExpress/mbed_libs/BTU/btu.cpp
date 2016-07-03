@@ -16,29 +16,29 @@ BTU::BTU():
 BTU::~BTU(){}
 
 void BTU::init() {
-    m_currentval = 555;
-    m_output = 444;
-    m_mode = 0;
-    m_kc = 0;
-    m_taui = 0;
-    m_taud = 0;
-    m_setval = 0;
-    voltageDefault();
-
-    m_posPid.setMode(1);
-    m_posPid.setInputLimits(-360, 360);
-    m_posPid.setOutputLimits(-1,1);
+	m_currentval = 0.0;
+	m_output = 0.0;
+	m_mode = 2; //pos control
+	m_kc = 0;
+	m_taui = 0;
+	m_taud = 0;
+	m_setval = 0;
+	voltageDefault();
 
 	m_depthPid.setMode(1); // nonzero: AUTO
 	m_depthPid.setInputLimits(0.0, MAXDEPTH); // analog input of position to be scaled 0-100%
-    m_depthPid.setOutputLimits(-360, 360);
+	m_depthPid.setOutputLimits(-360, 360);
 
-    if(SERVO_CONNECTED) {
-        m_posPid.setInputLimits(-82.5, 82.5);
-        m_depthPid.setOutputLimits(-82.5, 82.5);
-        m_motorServo.calibrate(SERVO_PWM_WIDTH, SERVO_DEGREE_WIDTH );
-        m_pressureSensor.MS5837Init();
-    }
+	if (SERVO_CONNECTED) {
+
+		m_depthPid.setOutputLimits(-SERVO_DEGREE_WIDTH, SERVO_DEGREE_WIDTH);
+		m_motorServo.calibrate(SERVO_PWM_WIDTH, SERVO_DEGREE_WIDTH);
+		m_pressureSensor.MS5837Init();
+	} else {
+		m_posPid.setMode(1);
+		m_posPid.setInputLimits(-360, 360);
+		m_posPid.setOutputLimits(-1, 1);
+	}
 }
 
 void BTU::stop() {
@@ -107,33 +107,32 @@ void BTU::voltageControl(float setDuty) {
 
 
 void BTU::positionControl(float setPos) {
-    if(SERVO_CONNECTED) {
-        m_motorServo.position(setPos);
-        m_currentval = m_motorServo.read();
-        return;
-    }
-    m_posPid.setTunings(m_kc, m_taui, m_taud);
-    m_posPid.setSetPoint(setPos);
-        // Detect motor position
-    float pvPos = m_encoder_bcu_motor.getPulses() % PULSEPERREV;
-    float pvDeg = pvPos/PULSEPERREV*360;
+	if (SERVO_CONNECTED) {
+		m_motorServo.position(setPos);
+		//m_motorServo.write(1.0);
+		m_currentval = m_motorServo.readPosition();
+		return;
+	} else {
+		m_posPid.setTunings(m_kc, m_taui, m_taud);
+		m_posPid.setSetPoint(setPos);
+		// Detect motor position
+		float pvPos = m_encoder_bcu_motor.getPulses() % PULSEPERREV;
+		float pvDeg = pvPos / PULSEPERREV * 360;
 
-    if (pvPos > PULSEPERREV) // rotated more than 360deg CCW
-    {
-    	m_currentval = 360;
-    }
-    else if (pvPos < -PULSEPERREV) // rotated more than 360deg CW
-	{
-		m_currentval = -360;
+		if (pvPos > PULSEPERREV) // rotated more than 360deg CCW
+		{
+			m_currentval = 360;
+		} else if (pvPos < -PULSEPERREV) // rotated more than 360deg CW
+		{
+			m_currentval = -360;
+		} else {
+			m_currentval = pvDeg;
+		}
+		// Set motor voltage
+		m_posPid.setProcessValue(m_currentval); // update the process variable
+		m_output = m_posPid.compute();
+		voltageControl(m_output); // change voltage provided to motor
 	}
-    else
-    {
-    	m_currentval = pvDeg;
-    }
-    // Set motor voltage
-    m_posPid.setProcessValue(m_currentval); // update the process variable
-    m_output = m_posPid.compute();
-    voltageControl(m_output); // change voltage provided to motor
 }
 
 void BTU::depthControl(float setDepth) {
