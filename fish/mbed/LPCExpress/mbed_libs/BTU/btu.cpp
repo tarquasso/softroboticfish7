@@ -155,9 +155,9 @@ void BTU::depthControl(float setDepthMeters) {
     m_depthPid.setSetPoint(m_setPressure); // we want the process variable to be the desired value
 
     // Detect depth
-    //m_pressureSensor.Barometer_MS5837();
-    //m_pvDepth = m_pressureSensor.MS5837_Pressure();
-    //m_pvDepth = (m_pAtmosMbar + m_pWaterNoDepthMbar * setDepthMeters);
+    m_pressureSensor.Barometer_MS5837();
+    m_pvDepth = m_pressureSensor.MS5837_Pressure();
+   // m_pvDepth = (m_pAtmosMbar + m_pWaterNoDepthMbar * setDepthMeters);
     m_pvDepthMeters = (m_pvDepth-m_pAtmosMbar)/m_pWaterNoDepthMbar;
     // Set motor position
     m_depthPid.setProcessValue(m_pvDepth); // update the process variable

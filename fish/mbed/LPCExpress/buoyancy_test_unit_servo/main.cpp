@@ -52,7 +52,7 @@ int main() {
 	while (1) {
 		pcSerial->printf("m:%d, Kc:%f, TI:%f, TD:%f, S:%.2f, C:%.2f, d: %.2f, pM:%.3f\r\n",
 				m_BTU.m_mode, m_BTU.m_kc, m_BTU.m_taui, m_BTU.m_taud, m_BTU.m_setval,
-				m_BTU.m_currentval, m_BTU.m_cmdVoltage * 100, m_BTU.m_pvDepthMeters);
+				m_BTU.m_currentval, m_BTU.m_cmdPosDeg, m_BTU.m_pvDepthMeters);
 		if (serialComm.checkIfNewMessage()) {
 
 			serialComm.getFloats(valueFloats, NUM_FLOATS);
