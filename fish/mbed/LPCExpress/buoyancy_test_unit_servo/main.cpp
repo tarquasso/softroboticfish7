@@ -20,9 +20,9 @@ BTU m_BTU = BTU();
 int counter = 0;
 
 int mode = 3; //default
-float Kc = 100.0;
-float TauI = 0.00000;
-float TauD = 0.000000000;
+float Kc = 10.0;
+float TauI = 0.0;
+float TauD = 0.0;
 float setVal = 0.7; //meters
 
 void runControl() {

@@ -41,17 +41,19 @@ void BTU::init(float timeStep) {
 	this->voltageDefault();
 
 	m_depthPid.setMode(1); // nonzero: AUTO
-	m_depthPid.setInputLimits(-MAXDEPTH, MAXDEPTH); // analog input of position to be scaled 0-100%
+	m_depthPid.setInputLimits(-MAXDEPTH_M, MAXDEPTH_M); // analog input of position to be scaled 0-100%
 	m_depthPid.setInterval(timeStep);
 
 	if (SERVO_CONNECTED) {
 
 		m_depthPid.setOutputLimits(-SERVO_DEGREE_WIDTH, SERVO_DEGREE_WIDTH);
+		//m_depthPid.setBias(SERVO_DEGREE_WIDTH);
 		m_motorServo.calibrate(SERVO_PWM_WIDTH, SERVO_DEGREE_WIDTH);
 	} else {
 		m_posPid.setMode(1);
 		m_posPid.setInputLimits(-360, 360);
 		m_posPid.setOutputLimits(-1, 1);
+		m_depthPid.setOutputLimits(-90, 90);
 	}
 	m_pressureSensor.MS5837Init();
 	m_pressureSensor.MS5837Start();
@@ -150,15 +152,17 @@ void BTU::depthControl(float setDepthMeters) {
     m_depthPid.setTunings(m_kc, m_taui, m_taud);
 
     // Run PID
-    m_setPressure = (m_pAtmosMbar + m_pWaterNoDepthMbar * setDepthMeters);
-    m_depthPid.setSetPoint(m_setPressure); // we want the process variable to be the desired value
+    m_setDepthMeters = setDepthMeters;
+    m_setPressure = (m_pAtmosMbar + m_pWaterNoDepthMbar * m_setDepthMeters);
+    m_depthPid.setSetPoint(m_setDepthMeters); // we want the process variable to be the desired value
 
     // Read depth value
     m_pvDepth = m_pressureSensor.MS5837_Pressure();
     m_pvDepthMeters = (m_pvDepth-m_pAtmosMbar)/m_pWaterNoDepthMbar;
     // Set motor position
-    m_depthPid.setProcessValue(m_pvDepth); // update the process variable
+    m_depthPid.setProcessValue(m_pvDepthMeters); // update the process variable
     m_cmdPosDeg = m_depthPid.compute(); // set the new output of position
+    //co = controller.getRealOutput();
     //pc.printf("setDepth: %.1f mbar, pvPos: %.1f mbar, setPos: %.2f deg\n",setDepth, pvDepth, SETVAL);
     this->positionControl(m_cmdPosDeg); // change position of motor
 }

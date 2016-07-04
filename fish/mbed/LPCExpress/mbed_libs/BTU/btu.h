@@ -11,6 +11,9 @@
 #define PULSEPERREV 11837 // (pulses per rev * gear ratio)
 // Max pressure to be experienced (mbar); currently at ~5m under water
 #define MAXDEPTH 1516
+#define MAXDEPTH_M 5
+#define MINDEPTH_M 0
+
 #define PERIOD_PWM 0.00345 //period of PWM
 // Position PID parameters
 #define POS_K_C 1
@@ -71,6 +74,7 @@ class BTU
     float m_pAtmosMbar;
     float m_pWaterNoDepthMbar;
     float m_setPressure;
+    float m_setDepthMeters;
 
     BTU();
     ~BTU();
