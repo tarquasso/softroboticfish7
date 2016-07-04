@@ -39,6 +39,8 @@
 #define PIN_IMU_SCL p27
 #define PIN_PWM_SERVO p23
 
+#define TIME_STEP_MIN 0.01
+
 /**
  * This class sets the motor position to the desired state
  * It includes instances of the classes PwmOut, QEI, PID, and MS5837

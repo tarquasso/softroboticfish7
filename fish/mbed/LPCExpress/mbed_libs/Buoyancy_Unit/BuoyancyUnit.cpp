@@ -60,14 +60,17 @@ void Buoyancy_Unit::updateMode(int mode)
     switch (mode)
     {
         case VOLTAGE:
+        m_pressureSensor.MS5837Reset();
         m_timer.attach(this, &Buoyancy_Unit::voltageControl,0.05);
         break;
 
         case POSITION:
+        m_pressureSensor.MS5837Reset();
 		m_timer.attach(this, &Buoyancy_Unit::positionControl,0.05);
         break;
 
         case DEPTH:
+        m_pressureSensor.MS5837Start();
         m_timer.attach(this, &Buoyancy_Unit::depthControl,0.05);
         break;
     }
@@ -160,7 +163,6 @@ void Buoyancy_Unit::depthControl()
     m_depthPid.setSetPoint(setDepth); // we want the process variable to be the desired value
     
     // Detect depth
-    m_pressureSensor.Barometer_MS5837();
     float pvDepth = m_pressureSensor.MS5837_Pressure();
     
     // Set motor position

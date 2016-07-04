@@ -16,7 +16,11 @@ BTU::BTU():
 BTU::~BTU(){}
 
 void BTU::init(float timeStep) {
+	if (timeStep<TIME_STEP_MIN)
+	{
+		error("time step of %f seconds is too short, needs to be larger than %f", timeStep, TIME_STEP_MIN);
 
+	}
 	// calculate depth to mbar
 	float pAtmos = 101325;
 	float pa_to_mbar = 0.01;
@@ -78,25 +82,25 @@ void BTU::updateMode(int mode) {
     	m_posPid.reset();
     	m_depthPid.reset();
     	// TODO: maybe reset PID controllers?
-    }
+	}
 
 }
 
 void BTU::runCycle() {
-    switch (m_mode) {
+	switch (m_mode) {
 
-    case VOLTAGE:
-        voltageControl(m_setval);
-        break;
+	case VOLTAGE:
+		voltageControl(m_setval);
+		break;
 
-    case POSITION:
-        positionControl(m_setval);
-        break;
+	case POSITION:
+		positionControl(m_setval);
+		break;
 
-    case DEPTH:
-        depthControl(m_setval);
-        break;
-    }
+	case DEPTH:
+		depthControl(m_setval);
+		break;
+	}
 }
 
 void BTU::updateAndRunCycle(int mode, float value) {
@@ -155,8 +159,9 @@ void BTU::depthControl(float setDepthMeters) {
     m_depthPid.setSetPoint(m_setPressure); // we want the process variable to be the desired value
 
     // Detect depth
-    //m_pressureSensor.Barometer_MS5837();
-    //m_pvDepth = m_pressureSensor.MS5837_Pressure();
+    m_pressureSensor.Barometer_MS5837();  //takes 0.30145 seconds
+    m_pvDepth = m_pressureSensor.MS5837_Pressure();
+
     //m_pvDepth = (m_pAtmosMbar + m_pWaterNoDepthMbar * setDepthMeters);
     m_pvDepthMeters = (m_pvDepth-m_pAtmosMbar)/m_pWaterNoDepthMbar;
     // Set motor position
