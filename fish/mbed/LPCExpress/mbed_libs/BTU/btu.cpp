@@ -7,8 +7,8 @@ BTU::BTU():
     m_pwm1(PIN_PWM_OUT1),
 	m_pwm2(PIN_PWM_OUT2),
 	m_encoder_bcu_motor(PIN_ENCODER_A, PIN_ENCODER_B, NC, PULSEPERREV, QEI::X4_ENCODING),
-	m_posPid(POS_K_C, POS_TAU_I, POS_TAU_D, PID_FREQ_NOT_USED),
-    m_depthPid(DEP_K_C, DEP_TAU_I, DEP_TAU_D, PID_FREQ_NOT_USED),
+	m_posPid(POS_K_C, POS_TAU_I, POS_TAU_D, PID_FREQ),
+    m_depthPid(DEP_K_C, DEP_TAU_I, DEP_TAU_D, PID_FREQ),
 	m_pressureSensor(PIN_IMU_SDA, PIN_IMU_SCL),
     m_motorServo(PIN_PWM_SERVO)
 {};
@@ -41,24 +41,20 @@ void BTU::init(float timeStep) {
 	this->voltageDefault();
 
 	m_depthPid.setMode(1); // nonzero: AUTO
-	m_depthPid.setInputLimits(0.0, MAXDEPTH); // analog input of position to be scaled 0-100%
-	m_depthPid.setOutputLimits(-360, 360);
+	m_depthPid.setInputLimits(-MAXDEPTH, MAXDEPTH); // analog input of position to be scaled 0-100%
 	m_depthPid.setInterval(timeStep);
 
 	if (SERVO_CONNECTED) {
 
 		m_depthPid.setOutputLimits(-SERVO_DEGREE_WIDTH, SERVO_DEGREE_WIDTH);
 		m_motorServo.calibrate(SERVO_PWM_WIDTH, SERVO_DEGREE_WIDTH);
-		m_pressureSensor.MS5837Init();
 	} else {
 		m_posPid.setMode(1);
 		m_posPid.setInputLimits(-360, 360);
 		m_posPid.setOutputLimits(-1, 1);
 	}
-
-	m_pvDepth = 1100.0;
-	m_pvDepthMeters = (m_pvDepth-m_pAtmosMbar)/m_pWaterNoDepthMbar;
-	m_cmdPosDeg = 0.0;
+	m_pressureSensor.MS5837Init();
+	m_pressureSensor.MS5837Start();
 }
 
 void BTU::stop() {
@@ -125,7 +121,6 @@ void BTU::voltageControl(float setDuty) {
 void BTU::positionControl(float setPosDeg) {
 	if (SERVO_CONNECTED) {
 		m_motorServo.position(setPosDeg);
-		//m_motorServo.write(1.0);
 		m_currentval = m_motorServo.readPosition();
 		return;
 	} else {
@@ -158,11 +153,8 @@ void BTU::depthControl(float setDepthMeters) {
     m_setPressure = (m_pAtmosMbar + m_pWaterNoDepthMbar * setDepthMeters);
     m_depthPid.setSetPoint(m_setPressure); // we want the process variable to be the desired value
 
-    // Detect depth
-    m_pressureSensor.Barometer_MS5837();  //takes 0.30145 seconds
+    // Read depth value
     m_pvDepth = m_pressureSensor.MS5837_Pressure();
-
-    //m_pvDepth = (m_pAtmosMbar + m_pWaterNoDepthMbar * setDepthMeters);
     m_pvDepthMeters = (m_pvDepth-m_pAtmosMbar)/m_pWaterNoDepthMbar;
     // Set motor position
     m_depthPid.setProcessValue(m_pvDepth); // update the process variable

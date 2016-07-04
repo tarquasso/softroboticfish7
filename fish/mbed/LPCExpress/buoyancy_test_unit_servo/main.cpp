@@ -2,7 +2,7 @@
 #include "mbed.h"
 
 #define NUM_FLOATS 5
-#define TIMESTEP 0.05
+#define TIMESTEP 0.1
 
 #include "MODSERIAL.h"
 #include "SerialComm.h"
@@ -19,13 +19,13 @@ bool clk = true;
 BTU m_BTU = BTU();
 int counter = 0;
 
-int mode = 2; //default
-float Kc = 0.0005;
-float TauI = 0.00003;
+int mode = 3; //default
+float Kc = 100.0;
+float TauI = 0.00000;
 float TauD = 0.000000000;
-float setVal = 0.885;
+float setVal = 0.7; //meters
 
-void runLED() {
+void runControl() {
   counter = (counter + 1) % 20;
   if(counter == 0) {
     TestLED = !TestLED;
@@ -45,21 +45,22 @@ int main() {
     m_BTU.init(TIMESTEP);
 
     Ticker timer;
-    timer.attach(&runLED, TIMESTEP);
+    timer.attach(&runControl, TIMESTEP);
     TestLED = 0;
     float valueFloats[NUM_FLOATS];
 
 	while (1) {
-		pcSerial->printf("m:%d, Kc:%f, TI:%f, TD:%f, S:%.2f, C:%.2f, d: %.2f, pM:%.3f\r\n",
+		pcSerial->printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, cm:%.2f, pm:%.2f, de:%.4f\r\n",
 				m_BTU.m_mode, m_BTU.m_kc, m_BTU.m_taui, m_BTU.m_taud, m_BTU.m_setval,
-				m_BTU.m_currentval, m_BTU.m_cmdVoltage * 100, m_BTU.m_pvDepthMeters);
+				m_BTU.m_currentval, m_BTU.m_cmdPosDeg, m_BTU.m_pvDepthMeters, m_BTU.m_setval-m_BTU.m_pvDepthMeters);
 		if (serialComm.checkIfNewMessage()) {
 
 			serialComm.getFloats(valueFloats, NUM_FLOATS);
+			pcSerial->printf("New Values\n");
 			// printing out for debugging
-			for (int i = 0; i < NUM_FLOATS; i++) {
-				pcSerial->printf("Value#%d: %f\n", i, valueFloats[i]);
-			}
+//			for (int i = 0; i < NUM_FLOATS; i++) {
+//				pcSerial->printf("Value#%d: %f\n", i, valueFloats[i]);
+//			}
 
 			mode = (int) valueFloats[0];
 			Kc = valueFloats[1];

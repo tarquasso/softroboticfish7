@@ -7,8 +7,8 @@ Buoyancy_Unit::Buoyancy_Unit():
 	m_pwm1(PIN_PWM_OUT1),
 	m_pwm2(PIN_PWM_OUT2),
 	m_encoder_bcu_motor(PIN_ENCODER_A, PIN_ENCODER_B, NC, PULSEPERREV, QEI::X4_ENCODING),
-	m_posPid(POS_K_C, POS_TAU_I, POS_TAU_D, PID_FREQ_NOT_USED),
-    m_depthPid(DEP_K_C, DEP_TAU_I, DEP_TAU_D, PID_FREQ_NOT_USED),
+	m_posPid(POS_K_C, POS_TAU_I, POS_TAU_D, PID_FREQ),
+    m_depthPid(DEP_K_C, DEP_TAU_I, DEP_TAU_D, PID_FREQ),
 	m_pressureSensor(PIN_IMU_SDA, PIN_IMU_SCL),
 	m_motorServo(PIN_PWM_SERVO)
 {};
@@ -34,6 +34,7 @@ void Buoyancy_Unit::init() {
 	m_depthPid.setInputLimits(0.0, MAXDEPTH); // analog input of position to be scaled 0-100%
 	m_depthPid.setOutputLimits(-360, 360); // position output from -360 to 360 deg
 	m_pressureSensor.MS5837Init();
+	m_pressureSensor.MS5837Start();
 }
 
 
@@ -60,17 +61,14 @@ void Buoyancy_Unit::updateMode(int mode)
     switch (mode)
     {
         case VOLTAGE:
-        m_pressureSensor.MS5837Reset();
         m_timer.attach(this, &Buoyancy_Unit::voltageControl,0.05);
         break;
 
         case POSITION:
-        m_pressureSensor.MS5837Reset();
 		m_timer.attach(this, &Buoyancy_Unit::positionControl,0.05);
         break;
 
         case DEPTH:
-        m_pressureSensor.MS5837Start();
         m_timer.attach(this, &Buoyancy_Unit::depthControl,0.05);
         break;
     }
@@ -162,7 +160,7 @@ void Buoyancy_Unit::depthControl()
 	float setDepth = m_setval;
     m_depthPid.setSetPoint(setDepth); // we want the process variable to be the desired value
     
-    // Detect depth
+    // Read depth
     float pvDepth = m_pressureSensor.MS5837_Pressure();
     
     // Set motor position

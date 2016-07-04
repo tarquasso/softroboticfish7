@@ -6,7 +6,7 @@
 #define MS5837_RX_DEPTH 3 //
 #define MS5837_TX_DEPTH 2 //
 
-#define ms5837_wait_time_us 500
+#define ms5837_wait_time_us 200
 // choose your connection here
 #define ms5837_addr_no_CS  0x76 //0b1110110
 
@@ -51,6 +51,7 @@ private:
     int32_t adc;
     int step;
     bool started;
+    bool m_finishedCalc;
     /* Data buffers */
     char ms5837_rx_data[MS5837_RX_DEPTH];
     char ms5837_tx_data[MS5837_TX_DEPTH];
@@ -59,11 +60,13 @@ private:
 public:
     MS5837 (PinName sda, PinName scl,
             char ms5837_addr = ms5837_addr_no_CS  )
-            : step(1), started(false), i2c( sda, scl ), device_address( ms5837_addr << 1 ) {
+            : step(1), started(false), m_finishedCalc(false), i2c( sda, scl ), device_address( ms5837_addr << 1 ) {
     }
     void MS5837Init(void);
     void MS5837Reset(void);
     void MS5837Start(void);
+    bool MS5837Done(void);
+
     float MS5837_Pressure (void);
     float MS5837_Temperature (void);
 protected:

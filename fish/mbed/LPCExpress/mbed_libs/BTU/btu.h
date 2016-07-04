@@ -20,7 +20,7 @@
 #define DEP_K_C 0.1
 #define DEP_TAU_I 0.1
 #define DEP_TAU_D 0.1
-#define PID_FREQ_NOT_USED 0.1 // placeholder;rate at which the PID is run is not used here but should be used when BTU::Run() is called. BTU::Run() only computes PID once
+#define PID_FREQ 0.1 // placeholder;rate at which the PID is run is not used here but should be used when BTU::Run() is called. BTU::Run() only computes PID once
 
 #define SERVO_CONNECTED true
 #define SERVO_PWM_WIDTH 0.0010
