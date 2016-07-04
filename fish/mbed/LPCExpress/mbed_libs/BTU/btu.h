@@ -35,8 +35,8 @@
 #define PIN_ENCODER_B p17
 #define PIN_PWM_OUT1 p21
 #define PIN_PWM_OUT2 p22
-#define PIN_IMU_TX p28
-#define PIN_IMU_RX p27
+#define PIN_IMU_SDA p28
+#define PIN_IMU_SCL p27
 #define PIN_PWM_SERVO p23
 
 /**
@@ -61,21 +61,27 @@ class BTU
     float m_taui;
     float m_taud;
     float m_currentval;
-    float m_output;
+    float m_cmdVoltage;
     int m_counter;
+    float m_pvDepth;
+    float m_pvDepthMeters;
+    float m_cmdPosDeg;
+    float m_pAtmosMbar;
+    float m_pWaterNoDepthMbar;
+    float m_setPressure;
 
     BTU();
     ~BTU();
     /* void run(); */
-    void init();
+    void init(float timeStep);
     void stop();
     void update(int mode, float setVal, float kc, float taui, float taud);
     void updateMode(int mode);
     void runCycle();
     void updateAndRunCycle(int mode, float value);
     void voltageControl(float setDuty);
-    void positionControl(float setPos);
-    void depthControl(float setDepth);
+    void positionControl(float setPosDeg);
+    void depthControl(float setDepthMeters);
     void voltageDefault();
 
 };

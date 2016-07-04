@@ -23,7 +23,7 @@ int mode = 2; //default
 float Kc = 0.0005;
 float TauI = 0.00003;
 float TauD = 0.000000000;
-float setVal = +90.0;
+float setVal = 0.885;
 
 void runLED() {
   counter = (counter + 1) % 20;
@@ -42,7 +42,7 @@ int main() {
     SerialComm serialComm(pcSerial);
 
 	//BTU m_BTU single instance is made in .h .cpp files;
-    m_BTU.init();
+    m_BTU.init(TIMESTEP);
 
     Ticker timer;
     timer.attach(&runLED, TIMESTEP);
@@ -50,9 +50,9 @@ int main() {
     float valueFloats[NUM_FLOATS];
 
 	while (1) {
-		pcSerial->printf("m:%d, Kc:%f, TI:%f, TD:%f, S:%.2f, C:%.2f, d: %.2f\r\n",
+		pcSerial->printf("m:%d, Kc:%f, TI:%f, TD:%f, S:%.2f, C:%.2f, d: %.2f, pM:%.3f\r\n",
 				m_BTU.m_mode, m_BTU.m_kc, m_BTU.m_taui, m_BTU.m_taud, m_BTU.m_setval,
-				m_BTU.m_currentval, m_BTU.m_output * 100);
+				m_BTU.m_currentval, m_BTU.m_cmdVoltage * 100, m_BTU.m_pvDepthMeters);
 		if (serialComm.checkIfNewMessage()) {
 
 			serialComm.getFloats(valueFloats, NUM_FLOATS);

@@ -35,8 +35,8 @@
 #define PIN_ENCODER_B p17
 #define PIN_PWM_OUT1 p21
 #define PIN_PWM_OUT2 p22
-#define PIN_IMU_TX p28
-#define PIN_IMU_RX p27
+#define PIN_IMU_SDA p28
+#define PIN_IMU_SCL p27
 #define PIN_PWM_SERVO p23
 
 /**

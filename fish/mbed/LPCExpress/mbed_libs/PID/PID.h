@@ -122,7 +122,7 @@ public:
     /**
      * Set how fast the PID loop is run.
      *
-     * @param interval PID calculation peformed every interval seconds.
+     * @param interval PID calculation performed every interval seconds.
      */
     void setInterval(float interval);
     

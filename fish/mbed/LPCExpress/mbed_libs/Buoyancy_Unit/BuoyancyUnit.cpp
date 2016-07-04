@@ -9,7 +9,7 @@ Buoyancy_Unit::Buoyancy_Unit():
 	m_encoder_bcu_motor(PIN_ENCODER_A, PIN_ENCODER_B, NC, PULSEPERREV, QEI::X4_ENCODING),
 	m_posPid(POS_K_C, POS_TAU_I, POS_TAU_D, PID_FREQ_NOT_USED),
     m_depthPid(DEP_K_C, DEP_TAU_I, DEP_TAU_D, PID_FREQ_NOT_USED),
-	m_pressureSensor(PIN_IMU_TX, PIN_IMU_RX),
+	m_pressureSensor(PIN_IMU_SDA, PIN_IMU_SCL),
 	m_motorServo(PIN_PWM_SERVO)
 {};
 
