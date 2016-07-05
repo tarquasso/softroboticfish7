@@ -22,7 +22,7 @@ int mode = 3; //default
 float Kc = 1.0;
 float TauI = 0.0;
 float TauD = 0.0;
-float setVal = 0.7; //meters
+float setVal = 0.0; //meters
 
 void runControl() {
   counter = (counter + 1) % 20;
@@ -42,7 +42,7 @@ int main() {
 
 	//BTU m_BTU single instance is made in .h .cpp files;
     m_BTU.init(TIMESTEP);
-
+    pcSerial->printf("pressure at start: %.6f\r\n",m_BTU.m_pvDepth);
     Ticker timer;
     timer.attach(&runControl, TIMESTEP);
     TestLED = 0;
