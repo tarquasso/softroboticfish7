@@ -49,7 +49,8 @@
  */
 #include "PID.h"
 
-PID::PID(float Kc, float tauI, float tauD, float interval) {
+PID::PID(float Kc, float tauI, float tauD, float interval)
+{
 
     usingFeedForward = false;
     inAuto           = false;
@@ -74,7 +75,6 @@ PID::PID(float Kc, float tauI, float tauD, float interval) {
     bias_     = 0.0;
     
     realOutput_ = 0.0;
-
 }
 
 void PID::setInputLimits(float inMin, float inMax) {
@@ -138,7 +138,7 @@ void PID::setTunings(float Kc, float tauI, float tauD) {
 
     float tempTauR;
 
-    if (tauI == 0.0) {
+    if (tauI < 0.00001) {
         tempTauR = 0.0;
     } else {
         tempTauR = (1.0 / tauI) * tSample_;
@@ -238,12 +238,11 @@ float PID::compute() {
         scaledSP = 0;
     }
 
-    float error = scaledSP - scaledPV;
-
-    //Check and see if the output is pegged at a limit and only
+    error_ = scaledSP - scaledPV;
+	//Check and see if the output is pegged at a limit and only
     //integrate if it is not. This is to prevent reset-windup.
-    if (!(prevControllerOutput_ >= 1 && error > 0) && !(prevControllerOutput_ <= 0 && error < 0)) {
-        accError_ += error;
+    if (!(prevControllerOutput_ >= 1 && error_ > 0) && !(prevControllerOutput_ <= 0 && error_ < 0)) {
+        accError_ += error_;
     }
 
     //Compute the current slope of the input signal.
@@ -256,7 +255,7 @@ float PID::compute() {
     }
 
     //Perform the PID calculation.
-    controllerOutput_ = scaledBias + Kc_ * (error + (tauR_ * accError_) - (tauD_ * dMeas));
+    controllerOutput_ = scaledBias + Kc_ * (error_ + (tauR_ * accError_) - (tauD_ * dMeas));
 
     //Make sure the computed output is within output constraints.
     if (controllerOutput_ < 0.0) {
@@ -320,5 +319,11 @@ float PID::getIParam() {
 float PID::getDParam() {
 
     return dParam_;
+
+}
+
+float PID::getError() {
+
+    return error_;
 
 }

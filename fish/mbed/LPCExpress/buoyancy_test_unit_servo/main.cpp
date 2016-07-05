@@ -2,7 +2,7 @@
 #include "mbed.h"
 
 #define NUM_FLOATS 5
-#define TIMESTEP 0.1
+#define TIMESTEP 1.0
 
 #include "MODSERIAL.h"
 #include "SerialComm.h"
@@ -12,12 +12,14 @@
 DigitalOut TestLED(LED1);
 DigitalOut TestLED2(LED2);
 
+
+
 bool clk = true;
 BTU m_BTU = BTU();
 int counter = 0;
 
-int mode = 2; //default
-float Kc = 10.0;
+int mode = 3; //default
+float Kc = 1.0;
 float TauI = 0.0;
 float TauD = 0.0;
 float setVal = 0.7; //meters
@@ -47,9 +49,13 @@ int main() {
     float valueFloats[NUM_FLOATS];
 
 	while (1) {
-		pcSerial->printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, cm:%.2f, pm:%.2f, de:%.4f\r\n",
-				m_BTU.m_mode, m_BTU.m_kc, m_BTU.m_taui, m_BTU.m_taud, m_BTU.m_setval,
-				m_BTU.m_currentval, m_BTU.m_cmdPosDeg, m_BTU.m_pvDepthMeters, m_BTU.m_setval-m_BTU.m_pvDepthMeters);
+		wait(0.5);
+		pcSerial->printf(
+				"m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, cm:%.2f, pm:%.2f, de:%.4f, er:%.4f\r\n",
+				m_BTU.m_mode, m_BTU.m_kc, m_BTU.m_taui, m_BTU.m_taud,
+				m_BTU.m_setval, m_BTU.m_currentval, m_BTU.m_cmdPosDeg,
+				m_BTU.m_pvDepthMeters, m_BTU.m_setval - m_BTU.m_pvDepthMeters,
+				m_BTU.m_errorPIDUnScaled);
 		if (serialComm.checkIfNewMessage()) {
 
 			serialComm.getFloats(valueFloats, NUM_FLOATS);

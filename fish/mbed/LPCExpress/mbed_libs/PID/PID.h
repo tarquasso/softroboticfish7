@@ -163,6 +163,7 @@ public:
     float getPParam();
     float getIParam();
     float getDParam();
+    float getError();
 
 private:
 
@@ -207,7 +208,7 @@ private:
 
     //Controller output as a real world value.
     volatile float realOutput_;
-
+    float error_;
 };
 
 #endif /* PID_H */

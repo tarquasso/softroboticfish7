@@ -75,6 +75,7 @@ class BTU
     float m_pWaterNoDepthMbar;
     float m_setPressure;
     float m_setDepthMeters;
+    float m_errorPIDUnScaled;
 
     BTU();
     ~BTU();
