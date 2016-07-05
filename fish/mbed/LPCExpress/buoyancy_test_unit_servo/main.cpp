@@ -9,9 +9,6 @@
 
 // MODSERIAL pcSerial(USBTX,USBRX); //serial device
 
-AnalogIn pot1(p15);
-AnalogIn pot2(p19);
-AnalogIn pot3(p20);
 DigitalOut TestLED(LED1);
 DigitalOut TestLED2(LED2);
 
@@ -19,7 +16,7 @@ bool clk = true;
 BTU m_BTU = BTU();
 int counter = 0;
 
-int mode = 3; //default
+int mode = 2; //default
 float Kc = 10.0;
 float TauI = 0.0;
 float TauD = 0.0;

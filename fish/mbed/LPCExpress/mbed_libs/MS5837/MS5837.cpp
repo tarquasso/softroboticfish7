@@ -15,6 +15,7 @@ void MS5837::MS5837Init(void) {
 
 void MS5837::MS5837Start(void) {
 	if (!started) {
+		step = 1;
 		MS5837::Barometer_MS5837();
 		wait_ms(20);
 	}
@@ -25,6 +26,7 @@ void MS5837::MS5837Start(void) {
 void MS5837::MS5837Reset(void) {
 	timeOut1.detach();
 	started = false;
+	step = 1;
 	/* transmit out 1 byte reset command */
 	ms5837_tx_data[0] = ms5837_reset;
 	if (i2c.write(device_address, ms5837_tx_data, 1))
