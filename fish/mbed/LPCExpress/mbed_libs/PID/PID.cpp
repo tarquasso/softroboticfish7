@@ -67,7 +67,7 @@ PID::PID(float Kc, float tauI, float tauD, float interval)
 
     setPoint_             = 0.0;
     processVariable_      = 0.0;
-    prevProcessVariable_  = 0.0;
+    prevError_  		  = 0.0;
     controllerOutput_     = 0.0;
     prevControllerOutput_ = 0.0;
 
@@ -85,15 +85,15 @@ void PID::setInputLimits(float inMin, float inMax) {
     }
 
     //Rescale the working variables to reflect the changes.
-    prevProcessVariable_ *= (inMax - inMin) / inSpan_;
-    accError_            *= (inMax - inMin) / inSpan_;
+    prevError_ 			*= (inMax - inMin) / inSpan_;
+    accError_           *= (inMax - inMin) / inSpan_;
 
     //Make sure the working variables are within the new limits.
-    if (prevProcessVariable_ > 1) {
-        prevProcessVariable_ = 1;
-    } else if (prevProcessVariable_ < 0) {
-        prevProcessVariable_ = 0;
-    }
+    //if (prevError_ > 1) {
+    //    prevError_ = 1;
+    //} else if (prevError_ < 0) {
+    //    prevError_ = 0;
+    //}
 
     inMin_  = inMin;
     inMax_  = inMax;
@@ -141,7 +141,7 @@ void PID::setTunings(float Kc, float tauI, float tauD) {
     if (tauI < 0.00001) {
         tempTauR = 0.0;
     } else {
-        tempTauR = (1.0 / tauI) * tSample_;
+        tempTauR = (1.0 / tauI);
     }
 
     //For "bumpless transfer" we need to rescale the accumulated error.
@@ -155,7 +155,7 @@ void PID::setTunings(float Kc, float tauI, float tauD) {
 
     Kc_   = Kc;
     tauR_ = tempTauR;
-    tauD_ = tauD / tSample_;
+    tauD_ = tauD;
 
 }
 
@@ -170,10 +170,10 @@ void PID::reset(void) {
     }
 
     prevControllerOutput_ = scaledBias;
-    prevProcessVariable_  = (processVariable_ - inMin_) / inSpan_;
+    prevError_  = 0.0; //(processVariable_ - inMin_) / inSpan_;
 
     //Clear any error in the integral.
-    accError_ = 0;
+    accError_ = 0.0;
 
 }
 
@@ -232,6 +232,7 @@ float PID::compute() {
     }
 
     float scaledSP = (setPoint_ - inMin_) / inSpan_;
+
     if (scaledSP > 1.0) {
         scaledSP = 1;
     } else if (scaledSP < 0.0) {
@@ -242,11 +243,11 @@ float PID::compute() {
 	//Check and see if the output is pegged at a limit and only
     //integrate if it is not. This is to prevent reset-windup.
     if (!(prevControllerOutput_ >= 1 && error_ > 0) && !(prevControllerOutput_ <= 0 && error_ < 0)) {
-        accError_ += error_;
+        accError_ += error_ * tSample_;
     }
 
     //Compute the current slope of the input signal.
-    float dMeas = (scaledPV - prevProcessVariable_) / tSample_;
+    float derivative = (error_ - prevError_) / tSample_;
 
     float scaledBias = 0.0;
 
@@ -255,7 +256,7 @@ float PID::compute() {
     }
 
     //Perform the PID calculation.
-    controllerOutput_ = scaledBias + Kc_ * (error_ + (tauR_ * accError_) + (tauD_ * dMeas));
+    controllerOutput_ = scaledBias + Kc_ * (error_ + (tauR_ * accError_) + (tauD_ * derivative));
 
     //Make sure the computed output is within output constraints.
     if (controllerOutput_ < 0.0) {
@@ -267,7 +268,7 @@ float PID::compute() {
     //Remember this output for the windup check next time.
     prevControllerOutput_ = controllerOutput_;
     //Remember the input for the derivative calculation next time.
-    prevProcessVariable_  = scaledPV;
+    prevError_  = error_;
 
     //Scale the output from percent span back out to a real world number.
     return ((controllerOutput_ * outSpan_) + outMin_);
