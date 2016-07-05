@@ -1,5 +1,6 @@
 #include "MS5837/MS5837.h"
 #include "mbed.h"
+#include "BTU/BTU.h"
 #include <ros.h>
 #include <fish_msgs/DepthTestMsg.h>
 #include <fish_msgs/mbedStatusMsg.h>
@@ -13,7 +14,7 @@
 // Mode Int8
 // Value Float32
 
-#define TIMESTEP_MS 100
+#define TIMESTEP 0.05
 #define DEPTH_MODE 3
 #define VOLT_MODE 1
 #define POS_MODE 2
@@ -46,6 +47,8 @@ int mode = 1;
 float desiredNumber = 0;
 float mode_min = MIN_VOLT;
 float mode_max = MAX_VOLT;
+
+BTU btu();
 
 void commandCb(const fish_msgs::DepthTestMsg& ctrl_msg) {
   mode = ctrl_msg.mode;
@@ -102,16 +105,26 @@ void runDisplay() {
 }
 
 void initController() {
-  return;
+  btu.init();
 }
 
 void runController() {
-  return;
+  btu.updateAndRunCycle(mode, desiredNumber);
 }
 
 void curateStatusMsg() {
   stat_msg.mode = mode;
   stat_msg.value = desiredNumber;
+}
+
+void loopFn() {
+  nh.spinOnce();
+  // curateStatusMsg();
+  stat_msg.mode = mode;
+  stat_msg.value = desiredNumber;
+  statusPub.publish( &stat_msg );
+  runDisplay();
+  runController();
 }
 
 int main() {
@@ -120,14 +133,9 @@ int main() {
   nh.advertise(statusPub);
   initController();
   pressureSensor.MS5837Init();
+  Ticker timer;
+  timer.attach(loopFn, TIMESTEP)
   while(1) {
-    nh.spinOnce();
-    runDisplay();
-    // curateStatusMsg();
-    stat_msg.mode = mode;
-    stat_msg.value = desiredNumber;
-    statusPub.publish( &stat_msg );
-    runController();
-    wait_ms(TIMESTEP_MS);
   }
+
 }
