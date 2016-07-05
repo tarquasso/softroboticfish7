@@ -129,10 +129,12 @@ void BTU::positionControl(float setPosDeg) {
 	if (SERVO_CONNECTED) {
 		m_motorServo.position(setPosDeg);
 		m_currentval = m_motorServo.readPosition();
+		this->getPressureReading();
 		return;
 	} else {
 		m_posPid.setTunings(m_kc, m_taui, m_taud);
 		m_posPid.setSetPoint(setPosDeg);
+		this->getPressureReading();
 		// Detect motor position
 		float pvPos = m_encoder_bcu_motor.getPulses() % PULSEPERREV;
 		float pvDeg = pvPos / PULSEPERREV * 360;
@@ -164,9 +166,8 @@ void BTU::depthControl(float setDepthMeters) {
     //m_pV = m_setDepthMeters/MAXDEPTH_M;
     //m_depthPid.setSetPoint(m_pV); // we want the process variable to be the desired value
 
-    // Read depth value
-    m_pvDepth = m_pressureSensor.MS5837_Pressure();
-    m_pvDepthMeters = (m_pvDepth-m_pAtmosMbar)/m_pWaterNoDepthMbar;
+    this->getPressureReading();
+
     // Set motor position
     m_depthPid.setProcessValue(m_pvDepthMeters); // update the process variable
     m_cmdPosDeg = m_depthPid.compute(); // set the new output of position
@@ -180,4 +181,10 @@ void BTU::voltageDefault() {
     m_pwm2.period(0.00345); // 3.45ms period
     m_pwm1 = 0;           // duty cycle of 50%
     m_pwm2 = 0;
+}
+
+void BTU::getPressureReading(){
+	  // Read depth value
+	    m_pvDepth = m_pressureSensor.MS5837_Pressure();
+	    m_pvDepthMeters = (m_pvDepth-m_pAtmosMbar)/m_pWaterNoDepthMbar;
 }
