@@ -18,6 +18,7 @@ PID::PID(float Kc, float tauI, float tauD, float interval, float inMin, float in
   setPoint_ = 0.0;
   processVar_ = 0.0;
   integral_ = 0.0;
+  previousOutput_ = 0.0;
   bias_ = b;
   errorPrior = 0;
 
@@ -82,10 +83,13 @@ void PID::setBias(float b) {
 
 float PID::compute() {
   float error = setPoint_ - processVar_;
-  integral_ += (error*sampleTime_);
+  if (!(prevControllerOutput_ >= outMax_ && error > 0) && !(prevControllerOutput_ <= outMin && error < 0)) {
+    integral_ += (error*sampleTime_);
+  }
   float derivative = (error - errorPrior_) / sampleTime_;
   float output = (Kc_ * error) + (tauI_ * integral_) + (tauD_ * derivative) + bias_;
   errorPrior_ = error;
 
-  return clip(output, outMin_, outMax_);
+  prevControllerOutput_ = clip(output, outMin_, outMax_);
+  return prevControllerOutput_;
 }
