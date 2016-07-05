@@ -48,6 +48,8 @@ void BTU::init(float timeStep) {
 	if (SERVO_CONNECTED) {
 
 		m_depthPid.setOutputLimits(-SERVO_DEGREE_WIDTH, SERVO_DEGREE_WIDTH);
+		m_depthPid.setBias(0);
+
 		//m_depthPid.setOutputLimits(0.0, 1.0);
 		//m_depthPid.setTunings(m_kc, 0.0, 0.0);
 		//m_depthPid.setBias(SERVO_DEGREE_WIDTH);

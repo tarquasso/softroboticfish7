@@ -238,7 +238,7 @@ float PID::compute() {
         scaledSP = 0;
     }
 
-    error_ = scaledSP - scaledPV;
+    error_ = (scaledSP - scaledPV);
 	//Check and see if the output is pegged at a limit and only
     //integrate if it is not. This is to prevent reset-windup.
     if (!(prevControllerOutput_ >= 1 && error_ > 0) && !(prevControllerOutput_ <= 0 && error_ < 0)) {
@@ -255,7 +255,7 @@ float PID::compute() {
     }
 
     //Perform the PID calculation.
-    controllerOutput_ = scaledBias + Kc_ * (error_ + (tauR_ * accError_) - (tauD_ * dMeas));
+    controllerOutput_ = scaledBias + Kc_ * (error_ + (tauR_ * accError_) + (tauD_ * dMeas));
 
     //Make sure the computed output is within output constraints.
     if (controllerOutput_ < 0.0) {
