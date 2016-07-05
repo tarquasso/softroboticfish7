@@ -90,6 +90,7 @@ class BTU
     void positionControl(float setPosDeg);
     void depthControl(float setDepthMeters);
     void voltageDefault();
+    void getPressureReading();
 
 };
 

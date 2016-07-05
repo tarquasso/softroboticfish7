@@ -184,7 +184,7 @@ private:
     float setPoint_;         
     //The thing we measure.
     float processVariable_;  
-    float prevProcessVariable_;
+    float prevError_;
     //The output that affects the process variable.
     float controllerOutput_; 
     float prevControllerOutput_;
