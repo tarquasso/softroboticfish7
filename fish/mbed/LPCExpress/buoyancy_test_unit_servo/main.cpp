@@ -2,12 +2,12 @@
 #include "mbed.h"
 
 #define NUM_FLOATS 5
-#define TIMESTEP 0.1
+#define TIMESTEP 0.05
 
 #include "MODSERIAL.h"
 #include "SerialComm.h"
 
-// MODSERIAL pcSerial(USBTX,USBRX); //serial device
+MODSERIAL pcSerial(USBTX,USBRX); //serial device
 AnalogIn pot1(p15);
 DigitalOut TestLED(LED1);
 DigitalOut TestLED2(LED2);
@@ -47,22 +47,22 @@ void runControl() {
 }
 
 int main() {
-	MODSERIAL* pcSerial = new MODSERIAL(USBTX,USBRX); //dynamic allocation of the serial device
-	pcSerial->printf("Start!\n");
+	//MODSERIAL* pcSerial = new MODSERIAL(USBTX,USBRX); //dynamic allocation of the serial device
+	pcSerial.printf("Start!\n");
 
 	//Set up a serial communication object
-    SerialComm serialComm(pcSerial);
+    SerialComm serialComm(&pcSerial);
 
 	//BTU m_BTU single instance is made in .h .cpp files;
     m_BTU.init(TIMESTEP);
-    pcSerial->printf("pressure at start: %.6f\r\n",m_BTU.m_pvDepth);
+    pcSerial.printf("pressure at start: %.6f\r\n",m_BTU.m_pvDepth);
     Ticker timer;
     timer.attach(&runControl, TIMESTEP);
     TestLED = 0;
     float valueFloats[NUM_FLOATS];
 
 	while (1) {
-		pcSerial->printf(
+		pcSerial.printf(
 				"m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, cm:%.2f, pm:%.2f, de:%.4f, er:%.4f\r\n",
 				m_BTU.m_mode, m_BTU.m_kc, m_BTU.m_taui, m_BTU.m_taud,
 				m_BTU.m_setval, m_BTU.m_currentval, m_BTU.m_cmdPosDeg,
@@ -77,7 +77,7 @@ int main() {
 		if (serialComm.checkIfNewMessage()) {
 
 			serialComm.getFloats(valueFloats, NUM_FLOATS);
-			pcSerial->printf("New Values\n");
+			pcSerial.printf("New Values\n");
 			// printing out for debugging
 //			for (int i = 0; i < NUM_FLOATS; i++) {
 //				pcSerial->printf("Value#%d: %f\n", i, valueFloats[i]);

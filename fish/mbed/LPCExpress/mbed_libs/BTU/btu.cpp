@@ -22,9 +22,9 @@ void BTU::init(float timeStep) {
 
 	}
 	// calculate depth to mbar
-	//float pAtmosS1 =  98300; //101325
-	float pAtmosS2 = 101300; //101325
-	float pAtmos = pAtmosS2;
+	float pAtmosS1 =  100000; //101325
+	//float pAtmosS2 = 101300; //101325
+	float pAtmos = pAtmosS1;
 	float pa_to_mbar = 0.01;
 	m_pAtmosMbar = pAtmos * pa_to_mbar;
 	float densityWater = 1000;
