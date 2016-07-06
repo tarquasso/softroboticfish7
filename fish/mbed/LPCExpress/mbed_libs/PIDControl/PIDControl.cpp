@@ -15,14 +15,19 @@ PID::PID(float Kc, float tauI, float tauD, float interval, float inMin, float in
 
   setTunings(Kc, tauI, tauD);
 
+  reset();
+
+}
+
+void PID::reset() {
   setPoint_ = 0.0;
   processVar_ = 0.0;
   integral_ = 0.0;
   bias_ = b;
   errorPrior_ = 0;
   prevControllerOutput_ = 0.0;
-
 }
+
 
 
 void PID::setInputLimits(float inMin, float inMax) {
@@ -56,6 +61,10 @@ void PID::setTunings(float Kc, float tauI, float tauD) {
   //Verify that the tunings make sense.
   if (Kc == 0.0 || tauI < 0.0 || tauD < 0.0) {
     return;
+  }
+
+  if ((Kc != Kc_) || (tauI != tauI_) || (tauD != tauD_)) {
+    reset();
   }
 
   Kc_ = Kc;

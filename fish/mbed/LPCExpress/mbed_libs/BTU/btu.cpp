@@ -3,6 +3,11 @@
 // The static instance
 // Buoyancy_Unit m_BTU;
 
+float clip(float val, float min, float max) {
+  float newVal = (val > max) ? max : val;
+  return (newVal < min) ? min : newVal;
+}
+
 BTU::BTU():
     m_pwm1(PIN_PWM_OUT1),
 	m_pwm2(PIN_PWM_OUT2),
@@ -158,6 +163,16 @@ void BTU::positionControl(float setPosDeg) {
 		m_cmdVoltage = m_posPid.compute(); //commanded voltage value
 		this->voltageControl(m_cmdVoltage); // change voltage provided to motor
 	}
+}
+
+void BTU::velocityControl(float setVel) {
+  if (SERVO_CONNECTED) {
+    float pos = m_motorServo.readPosition();
+    float newPos = clip(pos+setVel, -SERVO_DEGREE_WIDTH, SERVO_DEGREE_WIDTH);
+    m_motorServo.position(newPos);
+  } else {
+    // TODO:
+  }
 }
 
 void BTU::depthControl(float setDepthMeters) {

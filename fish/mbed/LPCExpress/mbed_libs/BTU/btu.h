@@ -88,6 +88,7 @@ class BTU
     void updateAndRunCycle(int mode, float value);
     void voltageControl(float setDuty);
     void positionControl(float setPosDeg);
+    void velocityControl(float setVel);
     void depthControl(float setDepthMeters);
     void voltageDefault();
     void getPressureReading();

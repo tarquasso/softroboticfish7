@@ -6,13 +6,14 @@
 class PID {
  public:
   PID(float Kc, float tauI, float tauD, float interval, float inMin, float inMax, float outMin, float outMax, float bias);
+  void setTunings(float Kc, float tauI, float tauD);
+  void reset();
   void setSetPoint(float sp);
   void setProcessValue(float pv);
   float compute();
 
  private:
   void setInterval(float interval);
-  void setTunings(float Kc, float tauI, float tauD);
   void setInputLimits(float inMin, float inMax);
   void setOutputLimits(float outMin, float outMin);
 
