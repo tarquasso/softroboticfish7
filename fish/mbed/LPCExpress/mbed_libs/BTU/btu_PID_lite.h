@@ -47,7 +47,7 @@ class BTU {
   void update(int mode, float kc, float tauI, float tauD);
   void updateMode(int mode);
   void runCycle(float setVal);
-  void updateAndRunCycle(int mode, float cycle);
+  void updateAndRunCycle(int mode, float value);
   void positionControl(float setPosDeg);
   void velocityControl(float setVel);
   void depthControl(float setDepthMeters);
