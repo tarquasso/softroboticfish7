@@ -85,7 +85,7 @@ void BTU::velocityControl(float setVel) {
 void BTU::depthControl(float setDepthMeters) {
   m_depthPid.setSetPoint(setDepthMeters);
 
-  float curDepth = getPressureReading();
+  float curDepth = getDepth();
 
   m_depthPid.setProcessValue(curDepth);
 
@@ -93,7 +93,8 @@ void BTU::depthControl(float setDepthMeters) {
   velocityControl(m_cmdVel);
 }
 
-float BTU::getPressureReading() {
-  float pvDepth = m_pressureSensor.MS5837_Pressure();
-  float pvDepthMeters = (pvDepth - m_pAtmosMbar) / m_pWaterNoDepthMbar;
+float BTU::getDepth() {
+  float pvDepth = getPressure();
+  float pvDepthMeters = (pvDepth - P_ATMOS_MBAR) / P_WATER_SURFACE_MBAR;
+  return pvDepthMeters;
 }

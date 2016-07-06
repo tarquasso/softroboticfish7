@@ -75,7 +75,7 @@ void displayMode() {
 }
 
 void displayPressure() {
-  float curDepth = btu.getPressureReading();
+  float curDepth = btu.getPressure();
   if (min_pressure == -1) {
     min_pressure = curDepth;
   }

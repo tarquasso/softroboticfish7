@@ -43,16 +43,16 @@ class BTU {
   BTU();
   ~BTU();
   void init();
-  float getPressure();
   void stop();
-  void update(int mode, float setVal, float kc, float tauI, float tauD);
+  void update(int mode, float kc, float tauI, float tauD);
   void updateMode(int mode);
   void runCycle(float setVal);
   void updateAndRunCycle(int mode, float cycle);
   void positionControl(float setPosDeg);
   void velocityControl(float setVel);
   void depthControl(float setDepthMeters);
-  float getPressureReading();
+  float getPressure();
+  float getDepth();
 
  private:
   PID m_depthPid;
