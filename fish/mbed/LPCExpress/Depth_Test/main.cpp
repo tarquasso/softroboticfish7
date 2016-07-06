@@ -1,6 +1,6 @@
-#include "MS5837/MS5837.h"
+#include <MS5837.h>
 #include "mbed.h"
-#include "BTU/BTU.h"
+#include "BTU/btu_PID_lite.h"
 #include <ros.h>
 #include <fish_msgs/DepthTestMsg.h>
 #include <fish_msgs/mbedStatusMsg.h>
@@ -36,8 +36,6 @@ DigitalOut modeHighOrder(LED1);
 DigitalOut modeLowOrder(LED2);
 PwmOut command(LED3);
 PwmOut pressure(LED4);
-
-MS5837 pressureSensor(PIN_IMU_SDA, PIN_IMU_SCL);
 
 float max_pressure = 0;
 float min_pressure = -1;
@@ -77,8 +75,7 @@ void displayMode() {
 }
 
 void displayPressure() {
-  pressureSensor.Barometer_MS5837();
-  float curDepth = pressureSensor.MS5837_Pressure();
+  float curDepth = btu.getPressureReading();
   if (min_pressure == -1) {
     min_pressure = curDepth;
   }
@@ -118,12 +115,6 @@ void curateStatusMsg() {
 }
 
 void loopFn() {
-  nh.spinOnce();
-  // curateStatusMsg();
-  stat_msg.mode = mode;
-  stat_msg.value = desiredNumber;
-  statusPub.publish( &stat_msg );
-  runDisplay();
   runController();
 }
 
@@ -132,10 +123,16 @@ int main() {
   nh.subscribe(cmdSub);
   nh.advertise(statusPub);
   initController();
-  pressureSensor.MS5837Init();
   Ticker timer;
   timer.attach(loopFn, TIMESTEP)
   while(1) {
+    nh.spinOnce();
+    // curateStatusMsg();
+    stat_msg.mode = mode;
+    stat_msg.value = desiredNumber;
+    statusPub.publish( &stat_msg );
+    runDisplay();
+    wait(TIMESTEP);
   }
 
 }
