@@ -52,14 +52,14 @@ void BTU::updateMode(int mode) {
 void BTU::runCycle(float setVal) {
   switch (m_mode) {
 
-  case POSITION:
+  case POSITION_CTRL_MODE:
     positionControl(setVal);
     break;
 
-  case VELOCITY:
+  case VELOCITY_CTRL_MODE:
     velocityControl(setVal);
 
-  case DEPTH:
+  case DEPTH_CTRL_MODE:
     depthControl(setVal);
   }
 }

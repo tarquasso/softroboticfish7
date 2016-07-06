@@ -11,9 +11,9 @@
 #define P_ATMOS_MBAR 1000
 #define P_WATER_SURFACE_MBAR 98.02
 
-#define POSITION 1
-#define VELOCITY 2
-#define DEPTH 3
+#define POSITION_CTRL_MODE 1
+#define VELOCITY_CTRL_MODE 2
+#define DEPTH_CTRL_MODE 3
 
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5
@@ -48,9 +48,6 @@ class BTU {
   void updateMode(int mode);
   void runCycle(float setVal);
   void updateAndRunCycle(int mode, float value);
-  void positionControl(float setPosDeg);
-  void velocityControl(float setVel);
-  void depthControl(float setDepthMeters);
   float getPressure();
   float getDepth();
 
@@ -58,7 +55,10 @@ class BTU {
   PID m_depthPid;
   Servo m_motorServo;
   MS5837 m_pressureSensor;
-
   int m_mode;
   float m_kc, m_tauI, m_tauD;
+
+  void positionControl(float setPosDeg);
+  void velocityControl(float setVel);
+  void depthControl(float setDepthMeters);
 };
