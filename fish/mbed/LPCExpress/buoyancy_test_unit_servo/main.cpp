@@ -33,8 +33,8 @@ void runControl() {
     a1 = -91;
     b1 = 91;
   } else if(mode == 2) {
-    a1 = -10.0;
-    b1 = 10.0;
+    a1 = -360.0;
+    b1 = 360.0;
 
   } else {
     a1 = 0.1;
@@ -61,7 +61,7 @@ int main() {
 
   while(1) {
       float depth = btu.getDepth();
-      pcSerial.printf("m:%d, kc:%d, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, er:%.4f\r\n",
+      pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, er:%.4f\r\n",
                       btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getServoPos(), depth, setVal - depth);
 
       if(serialComm.checkIfNewMessage()) {

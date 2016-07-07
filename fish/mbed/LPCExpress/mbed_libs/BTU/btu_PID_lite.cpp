@@ -77,7 +77,7 @@ void BTU::positionControl(float setPosDeg) {
 
 void BTU::velocityControl(float setVel) {
   float pos = m_motorServo.readPosition();
-  m_motorServo.position(pos + setVel);
+  m_motorServo.position(pos + (setVel * PID_FREQ));
 }
 
 

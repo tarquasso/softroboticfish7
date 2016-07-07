@@ -18,8 +18,8 @@
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5
 
-#define VEL_MIN -15.0
-#define VEL_MAX 15.0
+#define VEL_MIN -360.0          /* deg/sec */
+#define VEL_MAX 360.0
 
 #define POS_MIN -91.0
 #define POS_MAX 91.0
@@ -29,7 +29,7 @@
 #define DEP_K_C 1.0
 #define DEP_TAU_I 0.0
 #define DEP_TAU_D 0.0
-#define PID_FREQ 0.1
+#define PID_FREQ 0.05
 
 #define SERVO_PWM_WIDTH 0.0010
 #define SERVO_DEGREE_WIDTH 91.0
