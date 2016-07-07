@@ -3,7 +3,7 @@
 
 #include "mbed.h"
 #include "QEI.h"
-#include "PIDControl.h"
+#include "PIDControl/PIDControl.h"
 #include "MS5837.h" // pressure sensor
 #include "Servo.h"
 
@@ -17,6 +17,9 @@
 
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5
+
+#define VEL_MIN -15.0
+#define VEL_MAX 15.0
 
 #define PERIOD_PWM 0.00345
 
@@ -40,6 +43,7 @@
  * It includes instances of the classes PwmOut
  */
 class BTU {
+public:
   BTU();
   ~BTU();
   void init();
@@ -62,3 +66,5 @@ class BTU {
   void velocityControl(float setVel);
   void depthControl(float setDepthMeters);
 };
+
+#endif

@@ -1,6 +1,6 @@
 #include "PIDControl.h"
 
-float clip(float val, float min, float max) {
+float pid_clip(float val, float min, float max) {
   float newval = val;
   newval = (newval > max) ? max : newval;
   newval = (newval < min) ? min : newval;
@@ -23,7 +23,6 @@ void PID::reset() {
   setPoint_ = 0.0;
   processVar_ = 0.0;
   integral_ = 0.0;
-  bias_ = b;
   errorPrior_ = 0;
   prevControllerOutput_ = 0.0;
 }
@@ -73,33 +72,34 @@ void PID::setTunings(float Kc, float tauI, float tauD) {
 }
 
 void PID::setInterval(float interval) {
-  sampleTime = interval_;
+  sampleTime_ = interval;
 }
 
 void PID::setSetPoint(float sp) {
-  setPoint_ = clip(sp, inMin_, inMax_);
+  setPoint_ = pid_clip(sp, inMin_, inMax_);
 }
 
 void PID::setProcessValue(float pv) {
 
-  processVar_ = clip(pv, inMin_, inMax_);
+  processVar_ = pid_clip(pv, inMin_, inMax_);
 
 }
 
 void PID::setBias(float b) {
   bias_ = b;
+  reset();
 }
 
 float PID::compute() {
   float error = setPoint_ - processVar_;
-  if (!(prevControllerOutput_ >= outMax_ && error_ > 0) && !(prevControllerOutput_ <= outMin_ && error_ < 0)) {
+  if (!(prevControllerOutput_ >= outMax_ && error > 0) && !(prevControllerOutput_ <= outMin_ && error < 0)) {
     integral_ += (error*sampleTime_);
   }
   float derivative = (error - errorPrior_) / sampleTime_;
   float output = (Kc_ * error) + (tauI_ * integral_) + (tauD_ * derivative) + bias_;
   errorPrior_ = error;
 
-  prevControllerOutput_ = clip(output, outMin_, outMax_);
+  prevControllerOutput_ = pid_clip(output, outMin_, outMax_);
 
   return prevControllerOutput_;
 }

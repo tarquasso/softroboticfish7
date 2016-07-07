@@ -46,7 +46,7 @@ float desiredNumber = 0;
 float mode_min = MIN_VOLT;
 float mode_max = MAX_VOLT;
 
-BTU btu();
+BTU btu = BTU();
 
 void commandCb(const fish_msgs::DepthTestMsg& ctrl_msg) {
   mode = ctrl_msg.mode;
@@ -124,7 +124,7 @@ int main() {
   nh.advertise(statusPub);
   initController();
   Ticker timer;
-  timer.attach(loopFn, TIMESTEP)
+  timer.attach(loopFn, TIMESTEP);
   while(1) {
     nh.spinOnce();
     // curateStatusMsg();

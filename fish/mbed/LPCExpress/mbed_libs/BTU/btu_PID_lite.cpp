@@ -38,7 +38,7 @@ void BTU::update(int mode, float kc, float tauI, float tauD) {
   m_kc = kc;
   m_tauI = tauI;
   m_tauD = tauD;
-  m_depthPid.setTuning(kc, tauI, tauD);
+  m_depthPid.setTunings(kc, tauI, tauD);
 }
 
 void BTU::updateMode(int mode) {
@@ -73,7 +73,6 @@ void BTU::updateAndRunCycle(int mode, float value) {
 void BTU::positionControl(float setPosDeg) {
   float setPos = clip(setPosDeg, -SERVO_DEGREE_WIDTH, SERVO_DEGREE_WIDTH);
   m_motorServo.position(setPos);
-  m_currentVal = m_motorServo.readPosition();
 }
 
 void BTU::velocityControl(float setVel) {
@@ -90,7 +89,7 @@ void BTU::depthControl(float setDepthMeters) {
   m_depthPid.setProcessValue(curDepth);
 
   float cmdVel = m_depthPid.compute();
-  velocityControl(m_cmdVel);
+  velocityControl(cmdVel);
 }
 
 float BTU::getDepth() {
