@@ -29,7 +29,7 @@ void runControl() {
 
   setVal = pot1;
   float a1, b1;
-  if(mode == 1) {               //  pos control
+  if(mode == 1 || mode == 4) {               //  pos control
     a1 = -91;
     b1 = 91;
   } else if(mode == 2) {
@@ -61,7 +61,7 @@ int main() {
 
   while(1) {
       float depth = btu.getDepth();
-      pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, er:%.4f\r\n",
+      pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, depth_er:%.4f, osc:%d\r\n",
                       btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getServoPos(), depth, setVal - depth);
 
       if(serialComm.checkIfNewMessage()) {

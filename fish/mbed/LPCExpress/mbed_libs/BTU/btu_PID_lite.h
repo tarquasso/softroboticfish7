@@ -14,6 +14,7 @@
 #define POSITION_CTRL_MODE 1
 #define VELOCITY_CTRL_MODE 2
 #define DEPTH_CTRL_MODE 3
+#define SPEC_POSITION_CTRL_MODE 4
 
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5
@@ -30,6 +31,10 @@
 #define DEP_TAU_I 0.0
 #define DEP_TAU_D 0.0
 #define PID_FREQ 0.05
+
+#define SP_K_C 23.7
+#define SP_TAU_I 0.175
+#define SP_TAU_D 0.05
 
 #define SERVO_PWM_WIDTH 0.0010
 #define SERVO_DEGREE_WIDTH 91.0
@@ -48,6 +53,7 @@
 class BTU {
 private:
   PID m_depthPid;
+  PID m_specPid;
   Servo m_motorServo;
   MS5837 m_pressureSensor;
   int m_mode;
@@ -56,6 +62,7 @@ private:
   void positionControl(float setPosDeg);
   void velocityControl(float setVel);
   void depthControl(float setDepthMeters);
+  void specialPosControl(float setPosDeg);
 
 public:
   BTU();
@@ -73,7 +80,6 @@ public:
   float getTauI() { return m_tauI; };
   float getTauD() { return m_tauD; };
   float getServoPos() { return m_motorServo.readPosition(); };
-
 
 
 };
