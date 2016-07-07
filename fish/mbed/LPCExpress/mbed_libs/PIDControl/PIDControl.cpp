@@ -92,6 +92,7 @@ void PID::setBias(float b) {
 
 float PID::compute() {
   float error = setPoint_ - processVar_;
+  // same anti-windup as in the old PID library, but rewritten to handle our bounds
   if (!(prevControllerOutput_ >= outMax_ && error > 0) && !(prevControllerOutput_ <= outMin_ && error < 0)) {
     integral_ += (error*sampleTime_);
   }
