@@ -19,8 +19,8 @@
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5
 
-#define VEL_MIN -360.0          /* deg/sec */
-#define VEL_MAX 360.0
+#define VEL_MIN -280.0          /* deg/sec */
+#define VEL_MAX 280.0
 
 #define POS_MIN -91.0
 #define POS_MAX 91.0
@@ -36,7 +36,7 @@
 #define SP_TAU_I 0.175
 #define SP_TAU_D 0.05
 
-#define SERVO_PWM_WIDTH 0.0010
+#define SERVO_PWM_WIDTH 0.0006
 #define SERVO_DEGREE_WIDTH 91.0
 
 #define PIN_IMU_SDA p28

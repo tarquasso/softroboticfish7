@@ -30,11 +30,11 @@ void runControl() {
   setVal = pot1;
   float a1, b1;
   if(mode == 1 || mode == 4) {               //  pos control
-    a1 = -91;
-    b1 = 91;
+    a1 = POS_MIN;
+    b1 = POS_MAX;
   } else if(mode == 2) {
-    a1 = -360.0;
-    b1 = 360.0;
+      a1 = VEL_MIN;
+      b1 = VEL_MAX;
 
   } else {
     a1 = 0.1;
