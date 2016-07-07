@@ -136,9 +136,9 @@ int main() {
   timer.attach(loopFn, TIMESTEP);
   while(1) {
     nh.spinOnce();
-    // curateStatusMsg();
-    stat_msg.mode = mode;
-    stat_msg.value = desiredNumber;
+    curateStatusMsg();
+    //stat_msg.mode = mode;
+    //stat_msg.value = desiredNumber;
     statusPub.publish( &stat_msg );
     runDisplay();
     wait(TIMESTEP);

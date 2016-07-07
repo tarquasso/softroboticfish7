@@ -46,6 +46,17 @@
  * It includes instances of the classes PwmOut
  */
 class BTU {
+private:
+  PID m_depthPid;
+  Servo m_motorServo;
+  MS5837 m_pressureSensor;
+  int m_mode;
+  float m_kc, m_tauI, m_tauD;
+
+  void positionControl(float setPosDeg);
+  void velocityControl(float setVel);
+  void depthControl(float setDepthMeters);
+
 public:
   BTU();
   ~BTU();
@@ -57,17 +68,14 @@ public:
   void updateAndRunCycle(int mode, float value);
   float getPressure();
   float getDepth();
+  int getMode() { return m_mode; };
+  float getKc() { return m_kc; };
+  float getTauI() { return m_tauI; };
+  float getTauD() { return m_tauD; };
+  float getServoPos() { return m_motorServo.readPosition(); };
 
- private:
-  PID m_depthPid;
-  Servo m_motorServo;
-  MS5837 m_pressureSensor;
-  int m_mode;
-  float m_kc, m_tauI, m_tauD;
 
-  void positionControl(float setPosDeg);
-  void velocityControl(float setVel);
-  void depthControl(float setDepthMeters);
+
 };
 
 #endif

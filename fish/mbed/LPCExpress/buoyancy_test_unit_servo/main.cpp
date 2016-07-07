@@ -1,4 +1,4 @@
-#include "BTU/btu.h"
+#include "BTU/btu_PID_lite.cpp"
 #include "mbed.h"
 
 #define NUM_FLOATS 5
@@ -7,90 +7,73 @@
 #include "MODSERIAL.h"
 #include "SerialComm.h"
 
-MODSERIAL pcSerial(USBTX,USBRX); //serial device
+MODSERIAL pcSerial(USBTX, USBRX);
 AnalogIn pot1(p15);
 DigitalOut TestLED(LED1);
 DigitalOut TestLED2(LED2);
 
-
-
-bool clk = true;
-BTU m_BTU = BTU();
+// bool clk = true;
+BTU btu = BTU();
 int counter = 0;
-
-int mode = 2; //default
+int mode = 2;
 float Kc = 1.0;
 float TauI = 0.0;
 float TauD = 0.0;
-float setVal = 0.0; //meters
+float setVal = 0.0;             // meters
 
 void runControl() {
   counter = (counter + 1) % 20;
-  if(counter == 0) {
+  if(!counter) {
     TestLED = !TestLED;
   }
 
-	setVal = pot1;
-	if(mode == 2)
-		{
-		float a1 = -91; 		// scale for range in [a,b]
-		float b1 = 91;
-		setVal = (b1-a1)*setVal+a1;
-		}
-	else{
-		float a1 = 0.1; 		// scale for range in [a,b]
-		float b1 = 2.0;
-		setVal = (b1-a1)*setVal+a1;
-	}
-  m_BTU.update(mode, setVal, Kc, TauI, TauD);
-  m_BTU.runCycle();
+  setVal = pot1;
+  float a1, b1;
+  if(mode == 1) {               //  pos control
+    a1 = -91;
+    b1 = 91;
+  } else if(mode == 2) {
+    a1 = -10.0;
+    b1 = 10.0;
+
+  } else {
+    a1 = 0.1;
+    b1 = 2.0;
+  }
+  setVal = (b1-a1)*setVal+a1;
+
+
+  btu.update(mode, Kc, TauI, TauD);
+  btu.updateAndRunCycle(mode, setVal);
 }
 
 int main() {
-	//MODSERIAL* pcSerial = new MODSERIAL(USBTX,USBRX); //dynamic allocation of the serial device
-	pcSerial.printf("Start!\n");
+  pcSerial.printf("Start!\n");
 
-	//Set up a serial communication object
-    SerialComm serialComm(&pcSerial);
+  SerialComm serialComm(&pcSerial);
 
-	//BTU m_BTU single instance is made in .h .cpp files;
-    m_BTU.init(TIMESTEP);
-    pcSerial.printf("pressure at start: %.6f\r\n",m_BTU.m_pvDepth);
-    Ticker timer;
-    timer.attach(&runControl, TIMESTEP);
-    TestLED = 0;
-    float valueFloats[NUM_FLOATS];
+  btu.init();
+  pcSerial.printf("pressure at start: %.6f\r\n", btu.getPressure());
+  Ticker timer;
+  timer.attach(&runControl, TIMESTEP);
+  TestLED = 0;
+  float valueFloats[NUM_FLOATS];
 
-	while (1) {
-		pcSerial.printf(
-				"m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, cm:%.2f, pm:%.2f, de:%.4f, er:%.4f\r\n",
-				m_BTU.m_mode, m_BTU.m_kc, m_BTU.m_taui, m_BTU.m_taud,
-				m_BTU.m_setval, m_BTU.m_currentval, m_BTU.m_cmdPosDeg,
-				m_BTU.m_pvDepthMeters, m_BTU.m_setval - m_BTU.m_pvDepthMeters,
-				m_BTU.m_errorPIDUnScaled);
+  while(1) {
+      float depth = btu.getDepth();
+      pcSerial.printf("m:%d, kc:%d, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, er:%.4f\r\n",
+                      btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getServoPos(), depth, setVal - depth);
 
+      if(serialComm.checkIfNewMessage()) {
+          serialComm.getFloats(valueFloats, NUM_FLOATS);
 
-//		pcSerial->printf("m:%d, set:%.2f, current:%.2f, Volt:%.2f, DepthM:%.2f, de:%.4f\r\n",
-//				m_BTU.m_mode, m_BTU.m_setval,
-//				m_BTU.m_currentval, m_BTU.m_cmdVoltage, m_BTU.m_pvDepthMeters, m_BTU.m_setval-m_BTU.m_currentval);
-
-		if (serialComm.checkIfNewMessage()) {
-
-			serialComm.getFloats(valueFloats, NUM_FLOATS);
-			pcSerial.printf("New Values\n");
-			// printing out for debugging
-//			for (int i = 0; i < NUM_FLOATS; i++) {
-//				pcSerial->printf("Value#%d: %f\n", i, valueFloats[i]);
-//			}
-
-
-			mode = (int) valueFloats[0];
-			Kc = valueFloats[1];
-			TauI = valueFloats[2];
-			TauD = valueFloats[3];
-			//setVal = valueFloats[4];
-		}
-		wait_ms(1000);
-		TestLED2 = !TestLED2;
-	}
+          mode = (int) valueFloats[0];
+          Kc = valueFloats[1];
+          TauI = valueFloats[2];
+          TauD = valueFloats[3];
+          setVal = valueFloats[4];
+      }
+      wait_ms(1000);
+      TestLED2 = !TestLED2;
+  }
 }
