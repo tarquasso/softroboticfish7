@@ -39,14 +39,14 @@ class DepthJoy(object):
         self.sub_joy = rospy.Subscriber("joy", Joy, self.cbJoy, queue_size = 1)
 
         self.sub_mbed = rospy.Subscriber("mbed_stat", mbedStatusMsg, self.cbMbed, queue_size = 1)
-        self.mode_map = {3: "depth", 1: "voltage", 2: "position"}
-        self.desired_number = {"depth": 0, "voltage": 0, "position": 0}
+        self.mode_map = {3: "depth", 2: "velocity", 1: "position"}
+        self.desired_number = {"depth": 0, "velocity": 0, "position": 0}
         self.mode = 1
 
-        self.axis_gain_dict = {"depth": -1, "voltage": 1, "position": 1}
-        self.tick_gain_dict = {"depth": -0.05, "voltage": 0.05, "position": 0.05}
+        self.axis_gain_dict = {"depth": -1, "velocity": 1, "position": 1}
+        self.tick_gain_dict = {"depth": -0.05, "velocity": 0.05, "position": 0.05}
 
-        self.minmax_dict = {"depth": (0, 1), "voltage": (0, 1), "position": (0,1)}
+        self.minmax_dict = {"depth": (0, 1), "velocity": (-1, 1), "position": (-1,1)}
 
         self.bad_axes = [23, 24, 25]
         # Controller:
