@@ -21,6 +21,9 @@
 #define VEL_MIN -15.0
 #define VEL_MAX 15.0
 
+#define POS_MIN -91.0
+#define POS_MAX 91.0
+
 #define PERIOD_PWM 0.00345
 
 #define DEP_K_C 1.0

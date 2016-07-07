@@ -16,14 +16,14 @@
 
 #define TIMESTEP 0.05
 #define DEPTH_MODE 3
-#define VOLT_MODE 1
+#define VEL_MODE 1
 #define POS_MODE 2
 #define MIN_DEPTH 0
-#define MAX_DEPTH 1.0
-#define MIN_VOLT 0
-#define MAX_VOLT 1.0
-#define MIN_POS 0
-#define MAX_POS 1.0
+#define MAX_DEPTH 5.0
+#define MIN_VEL -10.0
+#define MAX_VEL 10.0
+#define MIN_POS -91.0
+#define MAX_POS 91.0
 
 
 ros::NodeHandle nh;
@@ -41,10 +41,10 @@ float max_pressure = 0;
 float min_pressure = -1;
 float curDepth = 0;
 
-int mode = 1;
+int mode = VELOCITY_CTRL_MODE;
 float desiredNumber = 0;
-float mode_min = MIN_VOLT;
-float mode_max = MAX_VOLT;
+float mode_min = VEL_MIN;
+float mode_max = VEL_MAX;
 
 BTU btu = BTU();
 
@@ -53,16 +53,16 @@ void commandCb(const fish_msgs::DepthTestMsg& ctrl_msg) {
   desiredNumber = ctrl_msg.value;
   switch (mode) {
   case DEPTH_MODE:
-    mode_min = MIN_DEPTH;
-    mode_max = MAX_DEPTH;
+    mode_min = DEPTH_MIN;
+    mode_max = DEPTH_MAX;
     break;
- case VOLT_MODE:
-    mode_min = MIN_VOLT;
-    mode_max = MAX_VOLT;
+ case VEL_MODE:
+    mode_min = VEL_MIN;
+    mode_max = VEL_MAX;
     break;
  case POS_MODE:
-    mode_min = MIN_POS;
-    mode_max = MAX_POS;
+    mode_min = POS_MIN;
+    mode_max = POS_MAX;
     break;
   }
 }
@@ -92,7 +92,7 @@ void displayPressure() {
 
 void displayCommand() {
   // LED3
-  command = (desiredNumber - mode_min)/(mode_max - mode_min);
+  command = (desiredNumber >= 0) ? desiredNumber : (-1*desiredNumber);
 }
 
 void runDisplay() {
@@ -101,12 +101,21 @@ void runDisplay() {
   displayCommand();
 }
 
+float scaleNumber(float desired) {
+	if (mode == DEPTH_CTRL_MODE) {
+		return desired * mode_max;
+	}
+
+	return (((desired + 1) * (mode_max - mode_min))/2) + (mode_min);
+
+}
+
 void initController() {
   btu.init();
 }
 
 void runController() {
-  btu.updateAndRunCycle(mode, desiredNumber);
+  btu.updateAndRunCycle(mode, scaleNumber(desiredNumber));
 }
 
 void curateStatusMsg() {
