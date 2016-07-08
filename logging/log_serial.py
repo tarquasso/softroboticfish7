@@ -23,3 +23,4 @@ while True:
     logfile.write(x)
     # time.sleep(0.25)
     logfile.flush()
+    time.sleep(0.25)
