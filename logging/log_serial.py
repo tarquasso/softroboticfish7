@@ -18,9 +18,10 @@ logfile = open("logs/" + testname, "w")
 ser.flush()
 
 while True:
-    x = ser.readline()
-    print(x, end="")
-    logfile.write(x)
-    # time.sleep(0.25)
-    logfile.flush()
-    time.sleep(0.25)
+    if ser.inWaiting():
+        bytesToRead = ser.inWaiting();
+        x = ser.read(bytesToRead)
+        print(x, end="")
+        logfile.write(x)
+        # time.sleep(0.25)
+        logfile.flush()
