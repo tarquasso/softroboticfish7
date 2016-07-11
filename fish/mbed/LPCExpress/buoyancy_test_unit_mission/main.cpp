@@ -4,7 +4,7 @@
 #define NUM_FLOATS 4
 #define TIMESTEP 0.05
 #define DEPTH_THRESHOLD 0.1
-#define MISSION_TIMEOUT 10.0
+#define MISSION_TIMEOUT 60.0
 #define ERROR_THRESHOLD 0.15
 #define SUCCESS_TIME 5.0
 #define UNWOUND_POS 91.0
@@ -20,7 +20,7 @@ DigitalOut TestLED2(LED2);
 DigitalOut inMission(LED3);
 DigitalOut missionSuccess(LED4);
 
-// LocalFileSystem local("local");
+LocalFileSystem local("local");
 
 // bool clk = true;
 BTU btu = BTU();
@@ -35,10 +35,11 @@ float timeout = 0.0;
 float successTime = 0.0;
 int missionDepth = 0.0;
 bool missionStarted = false;
-
+FILE *fp;
 
 void terminateMission() {
     Mission.detach();
+    fclose(fp);
     counter = 0;
     inMission = 0;
     timeout = 0.0;
@@ -83,6 +84,9 @@ void runMission() {
 
 void startMission(float kc, float taui, float taud, float setDepth) {
     terminateMission();
+    fp = fopen("/local/log", "w");
+    fprintf(fp, "MISSION START, TARGET: %.2f\r\n", setDepth);
+
     missionSuccess = 0;
     missionDepth = setDepth;
     btu.update(DEPTH_CTRL_MODE, kc, taui, taud);
@@ -113,6 +117,11 @@ int main() {
       //     pcSerial.printf("m:%d, s:%.2f, cu:%.2f, de:%.2f\r\n", btu.getMode(), setVal, btu.getServoPos(), depth);
       // }
       // pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, pos_er:%.4f, th:%d, to:%.2f, st:%.2f\r\n", btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getServoPos(), setVal - btu.getServoPos(), checkThreshold(), timeout, successTime);
+      if(inMission) {
+          float depth = btu.getDepth();
+          fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, depth_er:%.4f, to:%.2f\r\n",
+                  btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getServoPos(), depth, setVal - depth, timeout);
+      }
       if(serialComm.checkIfNewMessage()) {
           serialComm.getFloats(valueFloats, NUM_FLOATS);
 
@@ -121,7 +130,6 @@ int main() {
           TauI = valueFloats[1];
           TauD = valueFloats[2];
           setVal = valueFloats[3];
-
           startMission(Kc, TauI, TauD, setVal);
       }
       wait_ms(500);
