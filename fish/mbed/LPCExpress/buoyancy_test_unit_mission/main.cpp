@@ -4,7 +4,7 @@
 #define NUM_FLOATS 4
 #define TIMESTEP 0.05
 #define DEPTH_THRESHOLD 0.1
-#define MISSION_TIMEOUT 60.0
+#define MISSION_TIMEOUT 10.0
 #define ERROR_THRESHOLD 0.15
 #define SUCCESS_TIME 5.0
 #define UNWOUND_POS 91.0
@@ -14,11 +14,13 @@
 #include "SerialComm.h"
 
 MODSERIAL pcSerial(USBTX, USBRX);
-AnalogIn pot1(p15);
+// AnalogIn pot1(p15);
 DigitalOut TestLED(LED1);
 DigitalOut TestLED2(LED2);
 DigitalOut inMission(LED3);
 DigitalOut missionSuccess(LED4);
+
+// LocalFileSystem local("local");
 
 // bool clk = true;
 BTU btu = BTU();
@@ -30,7 +32,7 @@ float TauD = 0.0;
 float setVal = 0.0;             // meters
 Ticker Mission;
 float timeout = 0.0;
-int successTime = 0.0;
+float successTime = 0.0;
 int missionDepth = 0.0;
 bool missionStarted = false;
 
@@ -47,6 +49,7 @@ void terminateMission() {
 
 bool checkThreshold() {
     float error = btu.getDepth() - missionDepth;
+    // float error = btu.getServoPos() - missionDepth;
     float absError = (error > 0) ? error : (-1 * error);
     return (absError <= ERROR_THRESHOLD);
 }
@@ -70,7 +73,7 @@ void runMission() {
         terminateMission();
         return;
     }
-    if (successTime >= SUCCESS_TIME || timeout >= MISSION_TIMEOUT) {
+    if (timeout >= MISSION_TIMEOUT) {
         missionSuccess = 0;
         terminateMission();
         return;
@@ -83,6 +86,7 @@ void startMission(float kc, float taui, float taud, float setDepth) {
     missionSuccess = 0;
     missionDepth = setDepth;
     btu.update(DEPTH_CTRL_MODE, kc, taui, taud);
+    // btu.update(SPEC_POSITION_CTRL_MODE, kc, taui, taud);
     Mission.attach(&runMission, TIMESTEP);
 }
 
@@ -98,6 +102,7 @@ int main() {
   float valueFloats[NUM_FLOATS];
 
   while(1) {
+      // depth = btu.getDepth();
       // if (mode == DEPTH_CTRL_MODE) {
       //     pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, depth_er:%.4f\r\n",
       //                 btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getServoPos(), depth, setVal - depth);
@@ -107,7 +112,7 @@ int main() {
       // } else {
       //     pcSerial.printf("m:%d, s:%.2f, cu:%.2f, de:%.2f\r\n", btu.getMode(), setVal, btu.getServoPos(), depth);
       // }
-
+      // pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, pos_er:%.4f, th:%d, to:%.2f, st:%.2f\r\n", btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getServoPos(), setVal - btu.getServoPos(), checkThreshold(), timeout, successTime);
       if(serialComm.checkIfNewMessage()) {
           serialComm.getFloats(valueFloats, NUM_FLOATS);
 
