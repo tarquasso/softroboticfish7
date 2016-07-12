@@ -9,12 +9,17 @@ float clip(float val, float min, float max) {
 
 BTU::BTU():
     m_depthPid(DEP_K_C, DEP_TAU_I, DEP_TAU_D, PID_FREQ, DEPTH_MIN, DEPTH_MAX, VEL_MIN, VEL_MAX, 0),
-    m_specPid(SP_K_C, SP_TAU_I, SP_TAU_D, PID_FREQ, POS_MIN, POS_MAX, VEL_MIN, VEL_MAX, 0),
-    m_velPid(VEL_K_C, VEL_TAU_I, VEL_TAU_D, PID_FREQ, VEL_MIN, VEL_MAX, -1, 1, 0),
+    m_posAPid(SP_K_C, SP_TAU_I, SP_TAU_D, PID_FREQ, POS_MIN, POS_MAX, VEL_MIN, VEL_MAX, 0),
+    m_posBPid(SP_K_C, SP_TAU_I, SP_TAU_D, PID_FREQ, POS_MIN, POS_MAX, VEL_MIN, VEL_MAX, 0),
+    m_velAPid(VEL_K_C, VEL_TAU_I, VEL_TAU_D, PID_FREQ, VEL_MIN, VEL_MAX, -1, 1, 0),
+    m_velBPid(VEL_K_C, VEL_TAU_I, VEL_TAU_D, PID_FREQ, VEL_MIN, VEL_MAX, -1, 1, 0),
 	m_pressureSensor(PIN_IMU_SDA, PIN_IMU_SCL),
-    m_actPwm1(PIN_ACT_PWM1),
-    m_actPwm2(PIN_ACT_PWM2),
-    m_actPot(PIN_ACT_POT)
+    m_actAPwm(PIN_ACTA_PWM),
+    m_actBPwm(PIN_ACTB_PWM),
+    m_actAPot(PIN_ACTA_POT),
+    m_actBPot(PIN_ACTB_POT),
+    m_actADir(PIN_ACTA_DIR),
+    m_actBDir(PIN_ACTB_DIR)
 {};
 
 BTU::~BTU(){}
@@ -34,7 +39,8 @@ void BTU::init() {
     // m_pressureSensor.MS5837Start();
     wait(0.1);                    // remnant from old BTU class
 
-    m_oldPos = getActPosition();
+    m_oldPosA = getActPosition(ACT_A);
+    m_oldPosB = getActPosition(ACT_B);
 }
 
 float BTU::getPressure() {
@@ -51,14 +57,22 @@ void BTU::update(int mode, float kc, float tauI, float tauD) {
     m_tauI = tauI;
     m_tauD = tauD;
     m_depthPid.setTunings(kc, tauI, tauD);
-    m_specPid.setTunings(kc, tauI, tauD);
+}
+
+void BTU::updatePosTunings(float kc, float tauI, float tauD) {
+    m_p_kc = kc;
+    m_p_tauI = tauI;
+    m_p_tauD = tauD;
+    m_posAPid.setTunings(kc, tauI, tauD);
+    m_posBPid.setTunings(kc, tauI, tauD);
 }
 
 void BTU::updateVelTunings(float kc, float tauI, float tauD) {
     m_v_kc = kc;
     m_v_tauI = tauI;
     m_v_tauD = tauD;
-    m_velPid.setTunings(kc, tauI, tauD);
+    m_velAPid.setTunings(kc, tauI, tauD);
+    m_velBPid.setTunings(kc, tauI, tauD);
 }
 
 void BTU::updateMode(int mode) {
@@ -66,8 +80,10 @@ void BTU::updateMode(int mode) {
         stop();
         m_mode = mode;
         m_depthPid.reset();
-        m_specPid.reset();
-        m_velPid.reset();
+        m_posAPid.reset();
+        m_posBPid.reset();
+        m_velAPid.reset();
+        m_velBPid.reset();
     }
 }
 
@@ -103,30 +119,77 @@ void BTU::updateAndRunCycle(int mode, float value) {
 //     m_motorServo.position(setPos);
 // }
 
-void BTU::voltageControl(float setDuty) {
-    if(setDuty > 0) {
-        m_actPwm1 = setDuty;
-        m_actPwm2 = 0;
+void BTU::voltageControlHelper(float setDuty, int ctrl) {
+    PwmOut* actPwm;
+    DigitalOut* actDir;
+    if(ctrl == ACT_A) {
+        actPwm = &m_actAPwm;
+        actDir = &m_actADir;
     } else {
-        m_actPwm1 = 0;
-        m_actPwm2 = -setDuty;
+        actPwm = &m_actBPwm;
+        actDir = &m_actBDir;
+    }
+    if(setDuty > 0) {
+        *actPwm = setDuty;
+        *actDir = 1;
+    } else {
+        *actDir = 0;
+        *actPwm = -setDuty;
     }
 }
 
-float BTU::getActPosition() {
-    float position = m_actPot;
-    return position;
+void BTU::voltageControl(float setDuty) {
+    voltageControlHelper(setDuty, ACT_A);
+    voltageControlHelper(setDuty, ACT_B);
+}
+
+float BTU::getActPosition(int act) {
+    float position;
+    if(act == ACT_A) {
+        position = m_actAPot;
+    } else {
+        position = m_actBPot;
+    }
+    float scaledPos = (position - POT_MIN) / (POT_MAX - POT_MIN);
+    return scaledPos;
 }
 
 void BTU::velocityControl(float setVel) {
-    // float pos = m_motorServo.readPosition();
-    float pos = getActPosition();
-    m_velPid.setProcessValue((pos - m_oldPos) / PID_FREQ);
-    m_velPid.setSetPoint(setVel);
-    float cmdVolt = m_velPid.compute();
-    m_oldPos = pos;
-    voltageControl(cmdVolt);
+    velocityControlHelper(setVel, ACT_A);
+    velocityControlHelper(setVel, ACT_B);
 }
+
+float btu_abs(float a) {
+    return (a >= 0) ? a : -a;
+}
+
+void BTU::velocityControlHelper(float setVel, int ctrl) {
+    // float pos = m_motorServo.readPosition();
+    if(ctrl != ACT_A && ctrl != ACT_B) {
+        return;
+    }
+    float pos;
+    float cmdVolt;
+    if(ctrl == ACT_A) {
+        pos = getActPosition(ACT_A);
+        m_velAPid.setProcessValue((pos - m_oldPosA) / PID_FREQ);
+        m_velAPid.setSetPoint(setVel);
+        cmdVolt = m_velAPid.compute();
+        m_oldPosA = pos;
+    } else if(ctrl == ACT_B){
+        pos = getActPosition(ACT_B);
+        m_velBPid.setProcessValue((pos - m_oldPosB) / PID_FREQ);
+        m_velBPid.setSetPoint(setVel);
+        cmdVolt = m_velBPid.compute();
+        m_oldPosB = pos;
+    }
+    if(btu_abs(cmdVolt) <= VOLTAGE_THRESHOLD || (getActPosition(ctrl) <= 0.01 && setVel < 0) || (getActPosition(ctrl) >= 0.99 && setVel > 0)) {
+        cmdVolt = 0;
+    }
+    voltageControlHelper(cmdVolt, ctrl);
+
+}
+
 
 
 
@@ -138,17 +201,20 @@ void BTU::depthControl(float setDepthMeters) {
     m_depthPid.setProcessValue(curDepth);
 
     float cmdVel = m_depthPid.compute();
-    velocityControl(-1 * cmdVel);
+    velocityControl(cmdVel);
 }
 
 void BTU::specialPosControl(float setPosDeg) {
-    m_specPid.setSetPoint(setPosDeg);
-
+    m_posAPid.setSetPoint(setPosDeg);
+    m_posBPid.setSetPoint(setPosDeg);
     // m_specPid.setProcessValue(m_motorServo.readPosition());
-    m_specPid.setProcessValue(getActPosition());
-    float cmdVel = m_specPid.compute();
+    m_posAPid.setProcessValue(getActPosition(ACT_A));
+    m_posBPid.setProcessValue(getActPosition(ACT_B));
+    float cmdVelA = m_posAPid.compute();
+    float cmdVelB = m_posBPid.compute();
     // m_specCmd = (int)(cmdVel >= 0); // just for test recording purposes
-    velocityControl(cmdVel);
+    velocityControlHelper(cmdVelA, ACT_A);
+    velocityControlHelper(cmdVelB, ACT_B);
 }
 
 float BTU::getDepth() {

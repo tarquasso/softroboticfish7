@@ -29,23 +29,14 @@ void runControl() {
   }
 
   //setVal = pot1;
-  float a1, b1;
-  if(mode == 4) {               //  pos control
-    a1 = POS_MIN;
-    b1 = POS_MAX;
-  } else if(mode == 2) {
-      a1 = VEL_MIN;
-      b1 = VEL_MAX;
-
-  } else {
-    a1 = -0.2;
-    b1 = 3.3;
-  }
   //setVal = (b1-a1)*setVal+a1;
 
   if(mode == VELOCITY_CTRL_MODE) {
       btu.updateMode(mode);
       btu.updateVelTunings(Kc, TauI, TauD);
+  } else if (mode == SPEC_POSITION_CTRL_MODE){
+	  btu.updateMode(mode);
+	  btu.updatePosTunings(Kc, TauI, TauD);
   } else {
       btu.update(mode, Kc, TauI, TauD);
   }
@@ -65,15 +56,16 @@ int main() {
   float valueFloats[NUM_FLOATS];
 
   while(1) {
-      float depth = btu.getDepth();
+	  float depth = 0;
+      //float depth = btu.getDepth();
       if (mode == DEPTH_CTRL_MODE) {
     	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, depth_er:%.4f\r\n",
-                      btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getActPosition(), depth, setVal - depth);
+                      btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - depth);
       } else if (mode == SPEC_POSITION_CTRL_MODE) {
-    	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, pos_er:%.4f\r\n",
-    	                        btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getActPosition(), depth, setVal - btu.getActPosition());
+    	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, pos_er:%.4f %.4f\r\n",
+    	                        btu.getMode(), btu.getPKc(), btu.getPTauI(), btu.getPTauD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - btu.getActPosition(ACT_A), setVal - btu.getActPosition(ACT_B));
       } else {
-    	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f\r\n", btu.getMode(), Kc, TauI, TauD, setVal, btu.getActPosition(), depth);
+    	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f\r\n", btu.getMode(), Kc, TauI, TauD, setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth);
       }
 
       if(serialComm.checkIfNewMessage()) {

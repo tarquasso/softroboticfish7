@@ -45,14 +45,23 @@
 
 #define PIN_IMU_SDA p28
 #define PIN_IMU_SCL p27
-#define PIN_ACT_POT p17
-#define PIN_ACT_PWM1 p24
-#define PIN_ACT_PWM2 p25
+#define PIN_ACTA_POT p16
+#define PIN_ACTB_POT p20
+#define PIN_ACTA_PWM p22
+#define PIN_ACTB_PWM p21
+#define PIN_ACTA_DIR p29
+#define PIN_ACTB_DIR p30
 /* #define PIN_PWM_SERVO p23 */
 
 #define TIME_STEP_MIN 0.01
 
+#define ACT_A 1
+#define ACT_B 2
 
+#define POT_MIN 0.015
+#define POT_MAX 0.97
+
+#define VOLTAGE_THRESHOLD 0.05
 /**
  * This class is used for controlling and accessing data from the Buoyancy Test Unit
  * It includes instances of the classes PwmOut
@@ -60,20 +69,29 @@
 class BTU {
 private:
   PID m_depthPid;
-  PID m_specPid;
-  PID m_velPid;
+  PID m_posAPid;
+  PID m_posBPid;
+  PID m_velAPid;
+  PID m_velBPid;
   MS5837 m_pressureSensor;
   int m_mode;
   float m_kc, m_tauI, m_tauD;
   float m_v_kc, m_v_tauI, m_v_tauD;
-  PwmOut m_actPwm1;
-  PwmOut m_actPwm2;
-  AnalogIn m_actPot;
-  float m_oldPos;
+  float m_p_kc, m_p_tauI, m_p_tauD;
+  PwmOut m_actAPwm;
+  PwmOut m_actBPwm;
+  AnalogIn m_actBPot;
+  AnalogIn m_actAPot;
+  DigitalOut m_actADir;
+  DigitalOut m_actBDir;
+  float m_oldPosA;
+  float m_oldPosB;
 
   /* void positionControl(float setPosDeg); */
   void voltageControl(float setDuty);
+  void voltageControlHelper(float setDuty, int ctrl);
   void velocityControl(float setVel);
+  void velocityControlHelper(float setVel, int ctrl);
   void depthControl(float setDepthMeters);
   void specialPosControl(float setPosDeg);
 
@@ -83,8 +101,9 @@ public:
   void init();
   void stop();
   void update(int mode, float kc, float tauI, float tauD);
+  void updatePosTunings(float kc, float tauI, float tauD);
   void updateVelTunings(float kc, float tauI, float tauD);
-  float getActPosition();
+  float getActPosition(int act);
   void updateMode(int mode);
   void runCycle(float setVal);
   void updateAndRunCycle(int mode, float value);
@@ -97,6 +116,9 @@ public:
   float getVKc() {return m_v_kc; };
   float getVTauI() { return m_v_tauI; };
   float getVTauD() { return m_v_tauD; };
+  float getPKc() { return m_p_kc; };
+  float getPTauI() { return m_p_tauI; };
+  float getPTauD() { return m_p_tauD; };
 
 };
 
