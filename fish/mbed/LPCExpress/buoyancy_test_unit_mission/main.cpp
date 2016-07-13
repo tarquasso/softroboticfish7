@@ -4,6 +4,7 @@
 #define NUM_FLOATS 5
 #define TIMESTEP 0.05
 #define DEPTH_THRESHOLD 0.5
+#define MIN_MISSION_DEPTH 0.2
 #define MISSION_TIMEOUT 60.0
 #define ERROR_THRESHOLD 0.15
 #define SUCCESS_TIME 3.0
@@ -38,7 +39,7 @@ Ticker Mission;
 float timeout = 0.0;
 float missionTime = 0.0;
 float successTime = 0.0;
-int missionDepth = 0.0;
+float missionDepth = 0.0;
 bool missionStarted = false;
 FILE *fp;
 
@@ -69,6 +70,7 @@ void runMission() {
     if(btu.getDepth() >= DEPTH_THRESHOLD) {
         inMission = 1;
         missionStarted = true;
+        btu.updateMode(DEPTH_CTRL_MODE);
     }
     if(!missionStarted) {
         return;
@@ -81,7 +83,8 @@ void runMission() {
             terminateMission();
             return;
         } else {
-            missionDepth = clip(missionDepth + missionStep, DEPTH_THRESHOLD, missionFloor);
+        	successTime = 0.0;
+            missionDepth = clip(missionDepth + missionStep, MIN_MISSION_DEPTH, missionFloor);
             timeout = 0.0;
         }
     }
@@ -101,7 +104,7 @@ void startMission(float kc, float taui, float taud, float setDepth, float stepDi
 
     missionSuccess = 0;
     missionFloor = setDepth;
-    missionDepth = clip(DEPTH_THRESHOLD + missionStep, DEPTH_THRESHOLD, missionFloor);
+    missionDepth = MIN_MISSION_DEPTH;
     missionStep = stepDist;
     btu.update(DEPTH_CTRL_MODE, kc, taui, taud);
     // btu.update(SPEC_POSITION_CTRL_MODE, kc, taui, taud);
@@ -134,10 +137,13 @@ int main() {
       if(inMission) {
           float depth = btu.getDepth();
           fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f\r\n",
-                  btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getServoPos(), depth, setVal - depth, missionTime, timeout);
+                  btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), missionDepth, btu.getServoPos(), depth, missionDepth - depth, missionTime, timeout);
       } else {
     	  btu.updateAndRunCycle(POSITION_CTRL_MODE, UNWOUND_POS);
       }
+      float depth = btu.getDepth();
+      pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f\r\n",
+                        btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), missionDepth, btu.getServoPos(), depth, missionDepth - depth, missionTime, timeout);
       if(serialComm.checkIfNewMessage()) {
           serialComm.getFloats(valueFloats, NUM_FLOATS);
 
