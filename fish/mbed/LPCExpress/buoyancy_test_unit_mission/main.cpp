@@ -3,11 +3,12 @@
 
 #define NUM_FLOATS 5
 #define TIMESTEP 0.05
-#define DEPTH_THRESHOLD 0.5
+#define DEPTH_THRESHOLD 0.3
 #define MIN_MISSION_DEPTH 0.2
-#define MISSION_TIMEOUT 30.0
+#define MISSION_TIMEOUT 60.0
 #define ERROR_THRESHOLD 0.075
-#define SUCCESS_TIME 3.0
+#define SUCCESS_TIME 8.0
+#define DEBRIEF_TIME_LIMIT 20.0
 #define UNWOUND_POS 91.0
 
 
@@ -41,6 +42,8 @@ float missionTime = 0.0;
 float successTime = 0.0;
 float missionDepth = 0.0;
 bool missionStarted = false;
+float debriefTime = 0.0;
+bool debriefMode = false;
 FILE *fp;
 
 void terminateMission() {
@@ -53,6 +56,7 @@ void terminateMission() {
     successTime = 0.0;
     missionTime = 0.0;
     missionStarted = false;
+    debriefMode = false;
     btu.updateAndRunCycle(POSITION_CTRL_MODE, UNWOUND_POS);
 }
 
@@ -64,6 +68,14 @@ bool checkThreshold() {
 }
 
 void runMission() {
+	if(debriefMode) {
+		inMission = 0;
+		if(debriefTime >= DEBRIEF_TIME_LIMIT) {
+			terminateMission();
+		}
+		debriefTime += TIMESTEP;
+		return;
+	}
     counter = (counter + 1) % 20;
     if(!counter) {
         TestLED = !TestLED;
@@ -85,7 +97,7 @@ void runMission() {
     if (successTime >= SUCCESS_TIME) {
         if(missionDepth == missionFloor) {
             missionSuccess = 1;
-            terminateMission();
+            debriefMode = true;
             return;
         } else {
         	successTime = 0.0;
@@ -109,7 +121,7 @@ void startMission(float kc, float taui, float taud, float setDepth, float stepDi
 
     missionSuccess = 0;
     missionFloor = setDepth;
-    missionDepth = MIN_MISSION_DEPTH;
+    missionDepth = clip(stepDist, MIN_MISSION_DEPTH, missionFloor);
     missionStep = stepDist;
     btu.update(DEPTH_CTRL_MODE, kc, taui, taud);
     // btu.update(SPEC_POSITION_CTRL_MODE, kc, taui, taud);
