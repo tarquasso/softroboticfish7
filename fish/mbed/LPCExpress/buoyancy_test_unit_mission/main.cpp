@@ -5,8 +5,8 @@
 #define TIMESTEP 0.05
 #define DEPTH_THRESHOLD 0.5
 #define MIN_MISSION_DEPTH 0.2
-#define MISSION_TIMEOUT 60.0
-#define ERROR_THRESHOLD 0.15
+#define MISSION_TIMEOUT 30.0
+#define ERROR_THRESHOLD 0.075
 #define SUCCESS_TIME 3.0
 #define UNWOUND_POS 91.0
 
@@ -47,6 +47,7 @@ void terminateMission() {
     Mission.detach();
     fclose(fp);
     counter = 0;
+    TestLED = 0;
     inMission = 0;
     timeout = 0.0;
     successTime = 0.0;
@@ -76,7 +77,11 @@ void runMission() {
         return;
     }
     btu.runCycle(missionDepth);
-    successTime += ((int) checkThreshold() * TIMESTEP);
+    if(checkThreshold()) {
+    	successTime += TIMESTEP;
+    } else {
+    	successTime = 0.0;
+    }
     if (successTime >= SUCCESS_TIME) {
         if(missionDepth == missionFloor) {
             missionSuccess = 1;
@@ -141,9 +146,9 @@ int main() {
       } else {
     	  btu.updateAndRunCycle(POSITION_CTRL_MODE, UNWOUND_POS);
       }
-      float depth = btu.getDepth();
-      pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f\r\n",
-                        btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), missionDepth, btu.getServoPos(), depth, missionDepth - depth, missionTime, timeout);
+      //float depth = btu.getDepth();
+      //pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f\r\n",
+      //                  btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), missionDepth, btu.getServoPos(), depth, missionDepth - depth, missionTime, timeout);
       if(serialComm.checkIfNewMessage()) {
           serialComm.getFloats(valueFloats, NUM_FLOATS);
 
