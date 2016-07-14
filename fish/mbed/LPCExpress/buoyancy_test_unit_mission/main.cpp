@@ -6,7 +6,7 @@
 #define DEPTH_THRESHOLD 0.3
 #define MIN_MISSION_DEPTH 0.2
 #define MISSION_TIMEOUT 60.0
-#define ERROR_THRESHOLD 0.075
+#define ERROR_THRESHOLD 0.125
 #define SUCCESS_TIME 8.0
 #define DEBRIEF_TIME_LIMIT 20.0
 #define UNWOUND_POS 91.0
@@ -57,6 +57,7 @@ void terminateMission() {
     missionTime = 0.0;
     missionStarted = false;
     debriefMode = false;
+    debriefTime = 0.0;
     btu.updateAndRunCycle(POSITION_CTRL_MODE, UNWOUND_POS);
 }
 
