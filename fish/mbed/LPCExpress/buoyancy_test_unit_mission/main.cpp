@@ -107,7 +107,7 @@ void runMission() {
     }
     if (timeout >= MISSION_TIMEOUT) {
         missionSuccess = 0;
-        terminateMission();
+        debriefMode = true;
         return;
     }
     missionTime += TIMESTEP;
