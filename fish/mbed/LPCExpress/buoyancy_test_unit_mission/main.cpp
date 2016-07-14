@@ -70,6 +70,8 @@ bool checkThreshold() {
 void runMission() {
 	if(debriefMode) {
 		inMission = 0;
+		missionDepth = 0;
+		btu.updateAndRunCycle(POSITION_CTRL_MODE, UNWOUND_POS);
 		if(debriefTime >= DEBRIEF_TIME_LIMIT) {
 			terminateMission();
 		}
@@ -151,7 +153,7 @@ int main() {
       //     pcSerial.printf("m:%d, s:%.2f, cu:%.2f, de:%.2f\r\n", btu.getMode(), setVal, btu.getServoPos(), depth);
       // }
       // pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, pos_er:%.4f, th:%d, to:%.2f, st:%.2f\r\n", btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getServoPos(), setVal - btu.getServoPos(), checkThreshold(), timeout, successTime);
-      if(inMission) {
+      if(inMission || debriefMode) {
           float depth = btu.getDepth();
           fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f\r\n",
                   btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), missionDepth, btu.getServoPos(), depth, missionDepth - depth, missionTime, timeout);
