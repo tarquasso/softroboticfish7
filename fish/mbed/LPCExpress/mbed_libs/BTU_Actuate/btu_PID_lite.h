@@ -32,9 +32,9 @@
 #define DEP_TAU_D 0.0
 #define PID_FREQ 0.05
 
-#define SP_K_C 23.7
-#define SP_TAU_I 0.175
-#define SP_TAU_D 0.05
+#define SP_K_C 8.0
+#define SP_TAU_I 0.0
+#define SP_TAU_D 0.0
 
 #define VEL_K_C 1
 #define VEL_TAU_I 0
