@@ -41,6 +41,10 @@ void BTU::init() {
 
     m_oldPosA = getActPosition(ACT_A);
     m_oldPosB = getActPosition(ACT_B);
+
+    avg_windowPtr = 0;
+    avg_windowSize = 0;
+    currentAvg = 0;
 }
 
 float BTU::getPressure() {
@@ -150,7 +154,19 @@ float BTU::getActPosition(int act) {
     } else {
         position = m_actBPot;
     }
-    float scaledPos = (position - POT_MIN) / (POT_MAX - POT_MIN);
+    float oldPos = avg_window[avg_windowPtr];
+    avg_window[avg_windowPtr] = position;
+    avg_windowPtr = (avg_windowPtr + 1) % AVG_WINDOW_WIDTH;
+    if(avg_windowSize >= AVG_WINDOW_WIDTH) {
+        currentAvg = currentAvg + (position / AVG_WINDOW_WIDTH) - (oldPos / AVG_WINDOW_WIDTH);
+    } else {
+        avg_windowSize++;
+        currentAvg = 0;
+        for(int i = 0; i < avg_windowSize; i++) {
+            currentAvg += (avg_window[i] / avg_windowSize);
+        }
+    }
+    float scaledPos = (currentAvg - POT_MIN) / (POT_MAX - POT_MIN);
     return scaledPos;
 }
 

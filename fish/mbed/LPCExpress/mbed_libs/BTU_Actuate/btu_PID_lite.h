@@ -19,11 +19,11 @@
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5
 
-#define VEL_MIN -1.0          /* deg/sec */
+#define VEL_MIN -1.0          /* servoLen/sec */
 #define VEL_MAX 1.0
 
-#define POS_MIN -91.0
-#define POS_MAX 91.0
+#define POS_MIN -1.0
+#define POS_MAX 1.0
 
 #define PERIOD_PWM 0.00345
 
@@ -58,8 +58,10 @@
 #define ACT_A 1
 #define ACT_B 2
 
-#define POT_MIN 0.015
+#define POT_MIN 0.02
 #define POT_MAX 0.97
+
+#define AVG_WINDOW_WIDTH 5
 
 #define VOLTAGE_THRESHOLD 0.05
 /**
@@ -86,6 +88,10 @@ private:
   DigitalOut m_actBDir;
   float m_oldPosA;
   float m_oldPosB;
+  float avg_window[AVG_WINDOW_WIDTH];
+  int avg_windowPtr;
+  int avg_windowSize;
+  float currentAvg;
 
   /* void positionControl(float setPosDeg); */
   void voltageControl(float setDuty);
