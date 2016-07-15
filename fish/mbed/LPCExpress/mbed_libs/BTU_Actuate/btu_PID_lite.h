@@ -88,10 +88,15 @@ private:
   DigitalOut m_actBDir;
   float m_oldPosA;
   float m_oldPosB;
-  float avg_window[AVG_WINDOW_WIDTH];
-  int avg_windowPtr;
-  int avg_windowSize;
-  float currentAvg;
+
+  int m_avg_windowPtr;
+  int m_avg_windowSize;
+
+  float m_avg_windowA[AVG_WINDOW_WIDTH];
+  float m_currentAvgA;
+
+  float m_avg_windowB[AVG_WINDOW_WIDTH];
+  float m_currentAvgB;
 
   /* void positionControl(float setPosDeg); */
   void voltageControl(float setDuty);
@@ -100,6 +105,7 @@ private:
   void velocityControlHelper(float setVel, int ctrl);
   void depthControl(float setDepthMeters);
   void specialPosControl(float setPosDeg);
+  void updatePositionReadings();
 
 public:
   BTU();

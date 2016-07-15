@@ -42,9 +42,15 @@ void BTU::init() {
     m_oldPosA = getActPosition(ACT_A);
     m_oldPosB = getActPosition(ACT_B);
 
-    avg_windowPtr = 0;
-    avg_windowSize = 0;
-    currentAvg = 0;
+    for(int i = 0; i < AVG_WINDOW_WIDTH; i++) {
+        m_avg_windowA[i] = 0;
+        m_avg_windowB[i] = 0;
+    }
+    m_avg_windowPtr = 0;
+    m_avg_windowSize = 0;
+    m_currentAvgA = 0;
+
+    m_currentAvgB = 0;
 }
 
 float BTU::getPressure() {
@@ -147,26 +153,37 @@ void BTU::voltageControl(float setDuty) {
     voltageControlHelper(setDuty, ACT_B);
 }
 
-float BTU::getActPosition(int act) {
-    float position;
-    if(act == ACT_A) {
-        position = m_actAPot;
+void BTU::updatePositionReadings() {
+    float aPosition = m_actAPot;
+    float bPosition = m_actBPot;
+
+    float aOldPos = m_avg_windowA[m_avg_windowPtr];
+    float bOldPos = m_avg_windowB[m_avg_windowPtr];
+    m_avg_windowA[m_avg_windowPtr] = aPosition;
+    m_avg_windowB[m_avg_windowPtr] = bPosition;
+    if(m_avg_windowSize >= AVG_WINDOW_WIDTH) {
+        m_currentAvgA = m_currentAvgA + (aPosition / AVG_WINDOW_WIDTH)- (aOldPos / AVG_WINDOW_WIDTH);
+        m_currentAvgB = m_currentAvgB + (bPosition / AVG_WINDOW_WIDTH)- (bOldPos / AVG_WINDOW_WIDTH);
     } else {
-        position = m_actBPot;
-    }
-    float oldPos = avg_window[avg_windowPtr];
-    avg_window[avg_windowPtr] = position;
-    avg_windowPtr = (avg_windowPtr + 1) % AVG_WINDOW_WIDTH;
-    if(avg_windowSize >= AVG_WINDOW_WIDTH) {
-        currentAvg = currentAvg + (position / AVG_WINDOW_WIDTH) - (oldPos / AVG_WINDOW_WIDTH);
-    } else {
-        avg_windowSize++;
-        currentAvg = 0;
-        for(int i = 0; i < avg_windowSize; i++) {
-            currentAvg += (avg_window[i] / avg_windowSize);
+        m_avg_windowSize++;
+        m_currentAvgA = 0;
+        m_currentAvgB = 0;
+        for(int i = 0; i < m_avg_windowSize; i++) {
+            m_currentAvgA = (m_avg_windowA[i] / m_avg_windowSize);
+            m_currentAvgB = (m_avg_windowB[i] / m_avg_windowSize);
         }
     }
-    float scaledPos = (currentAvg - POT_MIN) / (POT_MAX - POT_MIN);
+}
+
+float BTU::getActPosition(int act) {
+    updatePositionReadings();
+    float position;
+    if(act == ACT_A) {
+        position = m_currentAvgA;
+    } else {
+        position = m_currentAvgB;
+    }
+    float scaledPos = (position - POT_MIN) / (POT_MAX - POT_MIN);
     return scaledPos;
 }
 
