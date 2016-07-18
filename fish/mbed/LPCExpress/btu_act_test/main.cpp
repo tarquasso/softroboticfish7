@@ -1,4 +1,4 @@
-#include "BTU_Actuate/btu_PID_lite.cpp"
+#include <BtuLinear/BtuLinear.cpp>
 #include "mbed.h"
 
 #define NUM_FLOATS 5
@@ -14,7 +14,7 @@ DigitalOut TestLED(LED1);
 DigitalOut TestLED2(LED2);
 
 // bool clk = true;
-BTU btu = BTU();
+BtuLinear btu = BtuLinear();
 int counter = 0;
 int mode = 2;
 float Kc = 1.0;

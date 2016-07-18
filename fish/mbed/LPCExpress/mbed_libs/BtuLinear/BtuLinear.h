@@ -1,9 +1,9 @@
 #ifndef BTU_H
 #define BTU_H
 
+#include <PidControl/PidControl.h>
 #include "mbed.h"
 #include "QEI.h"
-#include "PIDControl/PIDControl.h"
 #include "MS5837.h" // pressure sensor
 /* #include "Servo.h" */
 
@@ -68,13 +68,13 @@
  * This class is used for controlling and accessing data from the Buoyancy Test Unit
  * It includes instances of the classes PwmOut
  */
-class BTU {
+class BtuLinear {
 private:
-  PID m_depthPid;
-  PID m_posAPid;
-  PID m_posBPid;
-  PID m_velAPid;
-  PID m_velBPid;
+  PidControl m_depthPid;
+  PidControl m_posAPid;
+  PidControl m_posBPid;
+  PidControl m_velAPid;
+  PidControl m_velBPid;
   MS5837 m_pressureSensor;
   int m_mode;
   float m_kc, m_tauI, m_tauD;
@@ -82,8 +82,8 @@ private:
   float m_p_kc, m_p_tauI, m_p_tauD;
   PwmOut m_actAPwm;
   PwmOut m_actBPwm;
-  AnalogIn m_actBPot;
   AnalogIn m_actAPot;
+  AnalogIn m_actBPot;
   DigitalOut m_actADir;
   DigitalOut m_actBDir;
   float m_oldPosA;
@@ -108,8 +108,8 @@ private:
   void updatePositionReadings();
 
 public:
-  BTU();
-  ~BTU();
+  BtuLinear();
+  ~BtuLinear();
   void init();
   void stop();
   void update(int mode, float kc, float tauI, float tauD);

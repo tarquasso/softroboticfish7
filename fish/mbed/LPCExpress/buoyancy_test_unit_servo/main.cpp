@@ -1,4 +1,4 @@
-#include "BTU/btu_PID_lite.cpp"
+#include "BtuRotary.cpp"
 #include "mbed.h"
 
 #define NUM_FLOATS 5
@@ -13,7 +13,7 @@ DigitalOut TestLED(LED1);
 DigitalOut TestLED2(LED2);
 
 // bool clk = true;
-BTU btu = BTU();
+BtuRotary btu = BtuRotary();
 int counter = 0;
 int mode = 2;
 float Kc = 1.0;

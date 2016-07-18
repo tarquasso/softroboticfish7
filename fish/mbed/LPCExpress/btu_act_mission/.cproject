@@ -61,13 +61,15 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PidControl}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuRotary}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuLinear}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.cpp.specs.1469727140" name="Specs" superClass="com.crt.advproject.cpp.specs" value="com.crt.advproject.cpp.specs.newlib" valueType="enumerated"/>
@@ -110,13 +112,15 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PidControl}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuRotary}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuLinear}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gcc.specs.153435856" name="Specs" superClass="com.crt.advproject.gcc.specs" value="com.crt.advproject.gcc.specs.newlib" valueType="enumerated"/>
@@ -140,13 +144,15 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PidControl}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuRotary}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuLinear}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.assembler.input.910682278" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.608365356" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
@@ -228,6 +234,9 @@
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed/TARGET_LPC1768"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/PidControl"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/BtuRotary"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/BtuLinear"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/mbed_libs/Debug"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="mbed_libs" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
@@ -300,8 +309,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PidControl}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuRotary}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuLinear}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.cpp.specs.1827098702" name="Specs" superClass="com.crt.advproject.cpp.specs" value="com.crt.advproject.cpp.specs.newlib" valueType="enumerated"/>
@@ -351,8 +362,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PidControl}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuRotary}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuLinear}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/.}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.compiler.input.1938378962" superClass="com.crt.advproject.compiler.input"/>
@@ -380,8 +393,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PidControl}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuRotary}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuLinear}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.assembler.input.812068162" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.697211086" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
@@ -457,6 +472,9 @@
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/BTU"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/Buoyancy_Unit"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/PidControl"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/BtuRotary"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/BtuLinear"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/mbed_libs/Release"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="mbed_libs" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
@@ -592,135 +610,6 @@
 				<parser enabled="true"/>
 			</scannerInfoProvider>
 		</profile>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.1977230950;com.crt.advproject.config.exe.release.1977230950.180082224;com.crt.advproject.gcc.exe.release.536058616;com.crt.advproject.compiler.input.1565281352">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfile"/>
-			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.2019491857;com.crt.advproject.config.exe.debug.2019491857.;com.crt.advproject.cpp.exe.debug.88038757;com.crt.advproject.compiler.cpp.input.1370967818">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfileCPP"/>
-			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.1977230950;com.crt.advproject.config.exe.release.1977230950.;com.crt.advproject.gcc.exe.release.563782464;com.crt.advproject.compiler.input.1938378962">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfile"/>
-			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.1977230950;com.crt.advproject.config.exe.release.1977230950.;com.crt.advproject.cpp.exe.release.822772966;com.crt.advproject.compiler.cpp.input.1172589171">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfileCPP"/>
 			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
@@ -764,7 +653,50 @@
 				</scannerInfoProvider>
 			</profile>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.1977230950;com.crt.advproject.config.exe.release.1977230950.;com.crt.advproject.gas.exe.release.579950187;com.crt.advproject.assembler.input.812068162">
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.2019491857;com.crt.advproject.config.exe.debug.2019491857.;com.crt.advproject.gas.exe.debug.1277199919;com.crt.advproject.assembler.input.910682278">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfile"/>
+			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.1977230950.480035771;com.crt.advproject.config.exe.release.1977230950.480035771.;com.crt.advproject.gcc.exe.release.1994545390;com.crt.advproject.compiler.input.797968970">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfile"/>
 			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
 				<buildOutputProvider>
@@ -893,7 +825,7 @@
 				</scannerInfoProvider>
 			</profile>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.1977230950;com.crt.advproject.config.exe.release.1977230950.180082224;com.crt.advproject.cpp.exe.release.930589045;com.crt.advproject.compiler.cpp.input.1706370613">
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.2019491857;com.crt.advproject.config.exe.debug.2019491857.;com.crt.advproject.cpp.exe.debug.88038757;com.crt.advproject.compiler.cpp.input.1370967818">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfileCPP"/>
 			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
 				<buildOutputProvider>
@@ -979,93 +911,179 @@
 				</scannerInfoProvider>
 			</profile>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.1977230950;com.crt.advproject.config.exe.release.1977230950.;com.crt.advproject.gcc.exe.release.563782464;com.crt.advproject.compiler.input.1938378962">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfile"/>
+			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.1977230950;com.crt.advproject.config.exe.release.1977230950.180082224;com.crt.advproject.cpp.exe.release.930589045;com.crt.advproject.compiler.cpp.input.1706370613">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfileCPP"/>
+			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.1977230950;com.crt.advproject.config.exe.release.1977230950.;com.crt.advproject.gas.exe.release.579950187;com.crt.advproject.assembler.input.812068162">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfile"/>
+			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.1977230950;com.crt.advproject.config.exe.release.1977230950.180082224;com.crt.advproject.gcc.exe.release.536058616;com.crt.advproject.compiler.input.1565281352">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfile"/>
+			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.2019491857;com.crt.advproject.config.exe.debug.2019491857.;com.crt.advproject.gcc.exe.debug.529082641;com.crt.advproject.compiler.input.205113874">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfile"/>
-			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.2019491857;com.crt.advproject.config.exe.debug.2019491857.;com.crt.advproject.gas.exe.debug.1277199919;com.crt.advproject.assembler.input.910682278">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfile"/>
-			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.1977230950.480035771;com.crt.advproject.config.exe.release.1977230950.480035771.;com.crt.advproject.gcc.exe.release.1994545390;com.crt.advproject.compiler.input.797968970">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfile"/>
 			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
 				<buildOutputProvider>

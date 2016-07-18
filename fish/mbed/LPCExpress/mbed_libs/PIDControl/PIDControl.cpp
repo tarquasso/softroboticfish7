@@ -1,4 +1,4 @@
-#include "PIDControl.h"
+#include <PidControl/PidControl.h>
 
 float pid_clip(float val, float min, float max) {
   float newval = val;
@@ -7,7 +7,7 @@ float pid_clip(float val, float min, float max) {
   return newval;
 }
 
-PID::PID(float Kc, float tauI, float tauD, float interval, float inMin, float inMax, float outMin, float outMax, float b) {
+PidControl::PidControl(float Kc, float tauI, float tauD, float interval, float inMin, float inMax, float outMin, float outMax, float b) {
   setInputLimits(inMin, inMax);
   setOutputLimits(outMin, outMax);
 
@@ -19,7 +19,7 @@ PID::PID(float Kc, float tauI, float tauD, float interval, float inMin, float in
 
 }
 
-void PID::reset() {
+void PidControl::reset() {
   setPoint_ = 0.0;
   processVar_ = 0.0;
   integral_ = 0.0;
@@ -29,7 +29,7 @@ void PID::reset() {
 
 
 
-void PID::setInputLimits(float inMin, float inMax) {
+void PidControl::setInputLimits(float inMin, float inMax) {
 
     //Make sure we haven't been given impossible values.
     if (inMin >= inMax) {
@@ -43,7 +43,7 @@ void PID::setInputLimits(float inMin, float inMax) {
 }
 
 
-void PID::setOutputLimits(float outMin, float outMax) {
+void PidControl::setOutputLimits(float outMin, float outMax) {
 
     //Make sure we haven't been given impossible values.
     if (outMin >= outMax) {
@@ -56,7 +56,7 @@ void PID::setOutputLimits(float outMin, float outMax) {
 }
 
 
-void PID::setTunings(float Kc, float tauI, float tauD) {
+void PidControl::setTunings(float Kc, float tauI, float tauD) {
   //Verify that the tunings make sense.
   if (Kc == 0.0 || tauI < 0.0 || tauD < 0.0) {
     return;
@@ -71,26 +71,26 @@ void PID::setTunings(float Kc, float tauI, float tauD) {
   tauD_ = tauD;
 }
 
-void PID::setInterval(float interval) {
+void PidControl::setInterval(float interval) {
   sampleTime_ = interval;
 }
 
-void PID::setSetPoint(float sp) {
+void PidControl::setSetPoint(float sp) {
   setPoint_ = pid_clip(sp, inMin_, inMax_);
 }
 
-void PID::setProcessValue(float pv) {
+void PidControl::setProcessValue(float pv) {
 
   processVar_ = pid_clip(pv, inMin_, inMax_);
 
 }
 
-void PID::setBias(float b) {
+void PidControl::setBias(float b) {
   bias_ = b;
   reset();
 }
 
-float PID::compute() {
+float PidControl::compute() {
   float error = setPoint_ - processVar_;
   // same anti-windup as in the old PID library, but rewritten to handle our bounds
   if (!(prevControllerOutput_ >= outMax_ && error > 0) && !(prevControllerOutput_ <= outMin_ && error < 0)) {

@@ -25,7 +25,7 @@ DigitalOut missionSuccess(LED4);
 LocalFileSystem local("local");
 
 // bool clk = true;
-BTU btu = BTU();
+BtuLinear btu = BtuLinear();
 int counter = 0;
 int mode = 2;
 float Kc = 1.0;
