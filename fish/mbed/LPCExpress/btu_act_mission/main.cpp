@@ -9,7 +9,7 @@
 #define ERROR_THRESHOLD 0.125
 #define SUCCESS_TIME 8.0
 #define DEBRIEF_TIME_LIMIT 20.0
-#define UNWOUND_POS 0
+#define UNWOUND_POS 1.0
 
 
 #include "MODSERIAL.h"
