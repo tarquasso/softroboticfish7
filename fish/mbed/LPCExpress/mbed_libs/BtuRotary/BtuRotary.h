@@ -1,11 +1,12 @@
-#ifndef BTU_H
-#define BTU_H
+#ifndef BTUROTARY_H
+#define BTUROTARY_H
 
 #include "PidController.h"
 #include "mbed.h"
 #include "QEI.h"
 #include "MS5837.h" // pressure sensor
 #include "Servo.h"
+#include "utility.h"
 
 
 #define P_ATMOS_MBAR 1000

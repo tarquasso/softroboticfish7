@@ -34,7 +34,7 @@ void runControl() {
   if(mode == VELOCITY_CTRL_MODE) {
       btu.updateMode(mode);
       btu.updateVelTunings(Kc, TauI, TauD);
-  } else if (mode == SPEC_POSITION_CTRL_MODE){
+  } else if (mode == POSITION_CTRL_MODE){
 	  btu.updateMode(mode);
 	  btu.updatePosTunings(Kc, TauI, TauD);
   } else {
@@ -61,7 +61,7 @@ int main() {
 	  if (mode == DEPTH_CTRL_MODE) {
     	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f\r\n",
                       btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - depth);
-      } else if (mode == SPEC_POSITION_CTRL_MODE) {
+      } else if (mode == POSITION_CTRL_MODE) {
     	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, pos_er:%.4f %.4f\r\n",
     	                        btu.getMode(), btu.getPKc(), btu.getPTauI(), btu.getPTauD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - btu.getActPosition(ACT_A), setVal - btu.getActPosition(ACT_B));
       } else {

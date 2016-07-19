@@ -1,9 +1,9 @@
 #include <BtuRotary/BtuRotary.h>
 
-float clip(float val, float min, float max) {
-    float newVal = (val > max) ? max : val;
-    return (newVal < min) ? min : newVal;
-}
+// float clip(float val, float min, float max) {
+//     float newVal = (val > max) ? max : val;
+//     return (newVal < min) ? min : newVal;
+// }
 
 
 
@@ -82,7 +82,7 @@ void BtuRotary::updateAndRunCycle(int mode, float value) {
 
 
 void BtuRotary::positionControl(float setPosDeg) {
-    float setPos = clip(setPosDeg, -SERVO_DEGREE_WIDTH, SERVO_DEGREE_WIDTH);
+    float setPos = utility::clip(setPosDeg, -SERVO_DEGREE_WIDTH, SERVO_DEGREE_WIDTH);
     m_motorServo.position(setPos);
 }
 

@@ -1,10 +1,11 @@
-#ifndef BTU_H
-#define BTU_H
+#ifndef BTULINEAR_H
+#define BTULINEAR_H
 
 #include "mbed.h"
 #include "QEI.h"
 #include "MS5837.h" // pressure sensor
 #include "PidController.h"
+#include "utility.h"
 /* #include "Servo.h" */
 
 
@@ -13,8 +14,8 @@
 
 #define VOLTAGE_CTRL_MODE 1
 #define VELOCITY_CTRL_MODE 2
-#define DEPTH_CTRL_MODE 3
-#define SPEC_POSITION_CTRL_MODE 4
+#define DEPTH_CTRL_MODE 4
+#define POSITION_CTRL_MODE 3
 
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5
@@ -88,6 +89,7 @@ private:
   DigitalOut m_actBDir;
   float m_oldPosA;
   float m_oldPosB;
+  float m_currentVoltage;
 
   int m_avg_windowPtr;
   int m_avg_windowSize;
@@ -103,8 +105,10 @@ private:
   void voltageControlHelper(float setDuty, int ctrl);
   void velocityControl(float setVel);
   void velocityControlHelper(float setVel, int ctrl);
+  void positionControl(float setPos);
+  void positionControlHelper(float setPos, int ctrl);
   void depthControl(float setDepthMeters);
-  void specialPosControl(float setPosDeg);
+  void depthControlHelper(float cmdVelocity);
   void updatePositionReadings();
 
 public:
