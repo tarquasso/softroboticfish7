@@ -1,9 +1,9 @@
 #include "BtuLinear/BtuLinear.h"
 
-float clip(float val, float min, float max) {
-    float newVal = (val > max) ? max : val;
-    return (newVal < min) ? min : newVal;
-}
+// float clip(float val, float min, float max) {
+//     float newVal = (val > max) ? max : val;
+//     return (newVal < min) ? min : newVal;
+// }
 
 
 
@@ -51,6 +51,7 @@ void BtuLinear::init() {
     m_currentAvgA = 0;
 
     m_currentAvgB = 0;
+    m_currentVoltage = 0;
 }
 
 float BtuLinear::getPressure() {
@@ -89,6 +90,10 @@ void BtuLinear::updateMode(int mode) {
     if(m_mode != mode) {
         stop();
         m_mode = mode;
+        m_currentVoltage = 0;
+        m_currentAvgA = 0;
+        m_currentAvgB = 0;
+        m_avg_windowSize = 0;
         m_depthPid.reset();
         m_posAPid.reset();
         m_posBPid.reset();
@@ -219,12 +224,39 @@ void BtuLinear::velocityControlHelper(float setVel, int ctrl) {
     if(btu_abs(cmdVolt) <= VOLTAGE_THRESHOLD || (getActPosition(ctrl) <= 0.01 && setVel < 0) || (getActPosition(ctrl) >= 0.99 && setVel > 0)) {
         cmdVolt = 0;
     }
-    voltageControlHelper(cmdVolt, ctrl);
+    m_currentVoltage += cmdVolt
+    voltageControlHelper(m_currentVoltage, ctrl);
 
 }
 
+positionControlHelper(float setPosDeg, int ctrl) {
+    if(ctrl == ACT_A) {
+        m_posAPid.setSetPoint(setPosDeg);
+        // m_specPid.setProcessValue(m_motorServo.readPosition());
+        m_posAPid.setProcessValue(getActPosition(ACT_A));
+        float cmdVelA = m_posAPid.compute();
+        // m_specCmd = (int)(cmdVel >= 0); // just for test recording purposes
+        velocityControlHelper(cmdVelA, ACT_A);
+    } else {
+        m_posBPid.setSetPoint(setPosDeg);
+        // m_specPid.setProcessValue(m_motorServo.readPosition());
+        m_posBPid.setProcessValue(getActPosition(ACT_B));
+        float cmdVelB = m_posBPid.compute();
+        // m_specCmd = (int)(cmdVel >= 0); // just for test recording purposes
+        velocityControlHelper(cmdVelB, ACT_B);
+    }
 
+}
 
+void BtuLinear::positionControl(float setPos) {
+    positionControlHelper(setPos, ACT_A);
+    positionControlHelper(setPos, ACT_B);
+}
+
+void BtuLinear::depthControlHelper(float cmdVelocity) {
+    velocityControlHelper(cmdVel, ACT_A);
+    positionControlHelper(getActPosition(ACT_A), ACT_B);
+}
 
 void BtuLinear::depthControl(float setDepthMeters) {
     m_depthPid.setSetPoint(setDepthMeters);
@@ -234,20 +266,8 @@ void BtuLinear::depthControl(float setDepthMeters) {
     m_depthPid.setProcessValue(curDepth);
 
     float cmdVel = m_depthPid.compute();
-    velocityControl(cmdVel);
-}
-
-void BtuLinear::specialPosControl(float setPosDeg) {
-    m_posAPid.setSetPoint(setPosDeg);
-    m_posBPid.setSetPoint(setPosDeg);
-    // m_specPid.setProcessValue(m_motorServo.readPosition());
-    m_posAPid.setProcessValue(getActPosition(ACT_A));
-    m_posBPid.setProcessValue(getActPosition(ACT_B));
-    float cmdVelA = m_posAPid.compute();
-    float cmdVelB = m_posBPid.compute();
-    // m_specCmd = (int)(cmdVel >= 0); // just for test recording purposes
-    velocityControlHelper(cmdVelA, ACT_A);
-    velocityControlHelper(cmdVelB, ACT_B);
+    depthControlHelper(cmdVel);
+    // velocityControl(cmdVel);
 }
 
 float BtuLinear::getDepth() {

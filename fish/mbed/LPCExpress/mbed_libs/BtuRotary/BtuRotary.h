@@ -1,5 +1,5 @@
-#ifndef BTU_H
-#define BTU_H
+#ifndef BTUROTARY_H
+#define BTUROTARY_H
 
 #include <PidControl/PidControl.h>
 #include "mbed.h"

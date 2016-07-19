@@ -1,5 +1,5 @@
-#ifndef BTU_H
-#define BTU_H
+#ifndef BTULINEAR_H
+#define BTULINEAR_H
 
 #include <PidControl/PidControl.h>
 #include "mbed.h"
@@ -88,6 +88,7 @@ private:
   DigitalOut m_actBDir;
   float m_oldPosA;
   float m_oldPosB;
+  float m_currentVoltage;
 
   int m_avg_windowPtr;
   int m_avg_windowSize;
@@ -103,8 +104,10 @@ private:
   void voltageControlHelper(float setDuty, int ctrl);
   void velocityControl(float setVel);
   void velocityControlHelper(float setVel, int ctrl);
+  void positionControl(float setPos);
+  void positionControlHelper(float setPos, int ctrl);
   void depthControl(float setDepthMeters);
-  void specialPosControl(float setPosDeg);
+  void depthControlHelper(float cmdVelocity);
   void updatePositionReadings();
 
 public:

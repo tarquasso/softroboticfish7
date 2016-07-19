@@ -1,9 +1,9 @@
 #include <BtuRotary/BtuRotary.h>
 
-float clip(float val, float min, float max) {
-    float newVal = (val > max) ? max : val;
-    return (newVal < min) ? min : newVal;
-}
+// float clip(float val, float min, float max) {
+//     float newVal = (val > max) ? max : val;
+//     return (newVal < min) ? min : newVal;
+// }
 
 
 
