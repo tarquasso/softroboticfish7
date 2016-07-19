@@ -21,7 +21,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="axf" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="Debug build" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="com.crt.advproject.config.exe.debug.2019491857" name="Debug" parent="com.crt.advproject.config.exe.debug" postannouncebuildStep="Performing post-build steps" postbuildStep="arm-none-eabi-size &quot;${BuildArtifactFileName}&quot; ; arm-none-eabi-objcopy -O binary &quot;${BuildArtifactFileName}&quot; &quot;${BuildArtifactFileBaseName}.bin&quot; ; #echo &quot;copying files to mbed, assuming file system of mbed is at f&quot; ; #rm /f/*.bin ; #cp ${BuildArtifactFileBaseName}.bin /f/. ; #echo &quot;if no error above, copying was successful&quot; ; # checksum -p ${TargetChip} -d &quot;${BuildArtifactFileBaseName}.bin&quot;">
+				<configuration artifactExtension="axf" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="Debug build" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="com.crt.advproject.config.exe.debug.2019491857" name="Debug" parent="com.crt.advproject.config.exe.debug" postannouncebuildStep="Performing post-build steps" postbuildStep="arm-none-eabi-size &quot;${BuildArtifactFileName}&quot; ; arm-none-eabi-objcopy -O binary &quot;${BuildArtifactFileName}&quot; &quot;${BuildArtifactFileBaseName}.bin&quot; ; echo &quot;copying files to mbed, assuming file system of mbed is at f&quot; ; rm /f/*.bin ; cp ${BuildArtifactFileBaseName}.bin /f/. ; echo &quot;if no error above, copying was successful&quot; ; # checksum -p ${TargetChip} -d &quot;${BuildArtifactFileBaseName}.bin&quot;">
 					<folderInfo id="com.crt.advproject.config.exe.debug.2019491857." name="/" resourcePath="">
 						<toolChain id="com.crt.advproject.toolchain.exe.debug.305863439" name="Code Red MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug.1056224942" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
@@ -61,6 +61,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X}&quot;"/>
@@ -112,6 +113,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X}&quot;"/>
@@ -144,6 +146,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/MODSERIAL}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/.}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_CR}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP/TARGET_LPC176X}&quot;"/>
@@ -263,7 +266,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="axf" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="Release build" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="com.crt.advproject.config.exe.release.1977230950" name="Release" parent="com.crt.advproject.config.exe.release" postannouncebuildStep="Performing post-build steps" postbuildStep="arm-none-eabi-size &quot;${BuildArtifactFileName}&quot; ; arm-none-eabi-objcopy -O binary &quot;${BuildArtifactFileName}&quot; &quot;${BuildArtifactFileBaseName}.bin&quot; ; #checksum -p ${TargetChip} -d &quot;${BuildArtifactFileBaseName}.bin&quot;">
+				<configuration artifactExtension="axf" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="Release build" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="com.crt.advproject.config.exe.release.1977230950" name="Release" parent="com.crt.advproject.config.exe.release" postannouncebuildStep="Performing post-build steps" postbuildStep="arm-none-eabi-size &quot;${BuildArtifactFileName}&quot;; arm-none-eabi-objcopy -O binary &quot;${BuildArtifactFileName}&quot; &quot;${BuildArtifactFileBaseName}.bin&quot; ; #checksum -p ${TargetChip} -d &quot;${BuildArtifactFileBaseName}.bin&quot;;">
 					<folderInfo id="com.crt.advproject.config.exe.release.1977230950." name="/" resourcePath="">
 						<toolChain id="com.crt.advproject.toolchain.exe.release.756613197" name="Code Red MCU Tools" superClass="com.crt.advproject.toolchain.exe.release">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.release.1775167776" name="ARM-based MCU (Release)" superClass="com.crt.advproject.platform.exe.release"/>
@@ -309,6 +312,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PidControl}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuRotary}&quot;"/>
@@ -362,6 +366,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PidControl}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuRotary}&quot;"/>
@@ -393,6 +398,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768/TARGET_NXP}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed/TARGET_LPC1768}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/mbed}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BTU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/Buoyancy_Unit}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/PidControl}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mbed_libs/BtuRotary}&quot;"/>
