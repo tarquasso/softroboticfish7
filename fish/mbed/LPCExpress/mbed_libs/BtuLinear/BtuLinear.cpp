@@ -110,8 +110,8 @@ void BtuLinear::runCycle(float setVal) {
         depthControl(setVal);
         break;
 
-    case SPEC_POSITION_CTRL_MODE:
-        specialPosControl(setVal);
+    case POSITION_CTRL_MODE:
+        positionControl(setVal);
         break;
     }
 }
@@ -217,12 +217,12 @@ void BtuLinear::velocityControlHelper(float setVel, int ctrl) {
     if(btu_abs(cmdVolt) <= VOLTAGE_THRESHOLD || (getActPosition(ctrl) <= 0.01 && setVel < 0) || (getActPosition(ctrl) >= 0.99 && setVel > 0)) {
         cmdVolt = 0;
     }
-    m_currentVoltage += cmdVolt
+    m_currentVoltage += cmdVolt;
     voltageControlHelper(m_currentVoltage, ctrl);
 
 }
 
-positionControlHelper(float setPosDeg, int ctrl) {
+void BtuLinear::positionControlHelper(float setPosDeg, int ctrl) {
     if(ctrl == ACT_A) {
         m_posAPid.setSetPoint(setPosDeg);
         // m_specPid.setProcessValue(m_motorServo.readPosition());
@@ -247,7 +247,7 @@ void BtuLinear::positionControl(float setPos) {
 }
 
 void BtuLinear::depthControlHelper(float cmdVelocity) {
-    velocityControlHelper(cmdVel, ACT_A);
+    velocityControlHelper(cmdVelocity, ACT_A);
     positionControlHelper(getActPosition(ACT_A), ACT_B);
 }
 

@@ -82,7 +82,7 @@ void BtuRotary::updateAndRunCycle(int mode, float value) {
 
 
 void BtuRotary::positionControl(float setPosDeg) {
-    float setPos = clip(setPosDeg, -SERVO_DEGREE_WIDTH, SERVO_DEGREE_WIDTH);
+    float setPos = utility::clip(setPosDeg, -SERVO_DEGREE_WIDTH, SERVO_DEGREE_WIDTH);
     m_motorServo.position(setPos);
 }
 

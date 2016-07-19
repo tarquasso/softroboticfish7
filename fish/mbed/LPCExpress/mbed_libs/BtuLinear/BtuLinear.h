@@ -5,6 +5,7 @@
 #include "QEI.h"
 #include "MS5837.h" // pressure sensor
 #include "PidController.h"
+#include "utility.h"
 /* #include "Servo.h" */
 
 
@@ -13,8 +14,8 @@
 
 #define VOLTAGE_CTRL_MODE 1
 #define VELOCITY_CTRL_MODE 2
-#define DEPTH_CTRL_MODE 3
-#define SPEC_POSITION_CTRL_MODE 4
+#define DEPTH_CTRL_MODE 4
+#define POSITION_CTRL_MODE 3
 
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5

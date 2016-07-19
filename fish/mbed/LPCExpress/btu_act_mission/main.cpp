@@ -59,7 +59,7 @@ void terminateMission() {
     missionStarted = false;
     debriefMode = false;
     debriefTime = 0.0;
-    btu.updateAndRunCycle(SPEC_POSITION_CTRL_MODE, UNWOUND_POS);
+    btu.updateAndRunCycle(POSITION_CTRL_MODE, UNWOUND_POS);
 }
 
 bool checkThreshold() {
@@ -73,7 +73,7 @@ void runMission() {
 	if(debriefMode) {
 		inMission = 0;
 		missionDepth = 0;
-		btu.updateAndRunCycle(SPEC_POSITION_CTRL_MODE, UNWOUND_POS);
+		btu.updateAndRunCycle(POSITION_CTRL_MODE, UNWOUND_POS);
 		if(debriefTime >= DEBRIEF_TIME_LIMIT) {
 			terminateMission();
 		}
@@ -160,7 +160,7 @@ int main() {
           fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f\r\n",
                   btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, missionDepth - depth, missionTime, timeout);
       } else {
-    	  btu.updateAndRunCycle(SPEC_POSITION_CTRL_MODE, UNWOUND_POS);
+    	  btu.updateAndRunCycle(POSITION_CTRL_MODE, UNWOUND_POS);
       }
       //float depth = btu.getDepth();
       //pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f\r\n",

@@ -6,6 +6,7 @@
 #include "QEI.h"
 #include "MS5837.h" // pressure sensor
 #include "Servo.h"
+#include "utility.h"
 
 
 #define P_ATMOS_MBAR 1000
