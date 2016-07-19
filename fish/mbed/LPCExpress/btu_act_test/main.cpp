@@ -2,7 +2,7 @@
 #include "BtuLinear.h"
 
 #define NUM_FLOATS 5
-#define TIMESTEP 0.05
+#define TIMESTEP 0.06
 
 
 #include "MODSERIAL.h"

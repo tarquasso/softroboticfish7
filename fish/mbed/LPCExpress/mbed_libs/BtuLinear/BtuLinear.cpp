@@ -30,7 +30,7 @@ void BtuLinear::init() {
     // m_motorServo.calibrate(SERVO_PWM_WIDTH, SERVO_DEGREE_WIDTH);
     m_pressureSensor.MS5837Init();
     m_pressureSensor.MS5837Start();
-    wait(0.1);                    // remnant from old BTU class
+    wait(0.1);                    // remnant from old BTU class TODO: check if can be removed
 
     m_oldPosA = getActPosition(ACT_A);
     m_oldPosB = getActPosition(ACT_B);
@@ -178,10 +178,13 @@ void BtuLinear::updatePositionReadings() {
     float bOldPos = m_avg_windowB[m_avg_windowPtr];
     m_avg_windowA[m_avg_windowPtr] = aPosition;
     m_avg_windowB[m_avg_windowPtr] = bPosition;
+    m_avg_windowPtr = (m_avg_windowPtr+1) % AVG_WINDOW_WIDTH;
     if(m_avg_windowSize >= AVG_WINDOW_WIDTH) {
-        m_currentAvgA = m_currentAvgA + (aPosition / AVG_WINDOW_WIDTH)- (aOldPos / AVG_WINDOW_WIDTH);
+        // buffer is full
+    	m_currentAvgA = m_currentAvgA + (aPosition / AVG_WINDOW_WIDTH)- (aOldPos / AVG_WINDOW_WIDTH);
         m_currentAvgB = m_currentAvgB + (bPosition / AVG_WINDOW_WIDTH)- (bOldPos / AVG_WINDOW_WIDTH);
     } else {
+    	// buffer is still filling up
         m_avg_windowSize++;
         m_currentAvgA = 0;
         m_currentAvgB = 0;
