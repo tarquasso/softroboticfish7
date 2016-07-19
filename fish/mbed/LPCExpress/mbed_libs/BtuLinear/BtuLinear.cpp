@@ -222,31 +222,38 @@ float btu_abs(float a) {
     return (a >= 0) ? a : -a;
 }
 
-void BtuLinear::velocityControlHelper(float setVel, int ctrl) {
+void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
     // float pos = m_motorServo.readPosition();
     if(ctrl != ACT_A && ctrl != ACT_B) {
         return;
     }
     float pos;
+    float deltaVolt;
     float cmdVolt;
+    float setVel = setVelocity;
+    if ((getActPosition(ctrl) <= 0.01 && setVel < 0) || (getActPosition(ctrl) >= 0.99 && setVel > 0)) {
+        setVel = 0;
+    }
+
     if(ctrl == ACT_A) {
         pos = getActPosition(ACT_A);
         m_velAPid.setProcessValue((pos - m_oldPosA) / PID_FREQ);
         m_velAPid.setSetPoint(setVel);
-        cmdVolt = m_velAPid.compute();
+        deltaVolt = m_velAPid.compute();
         m_oldPosA = pos;
     } else if(ctrl == ACT_B){
         pos = getActPosition(ACT_B);
         m_velBPid.setProcessValue((pos - m_oldPosB) / PID_FREQ);
         m_velBPid.setSetPoint(setVel);
-        cmdVolt = m_velBPid.compute();
+        deltaVolt = m_velBPid.compute();
         m_oldPosB = pos;
     }
-    if(btu_abs(cmdVolt) <= VOLTAGE_THRESHOLD || (getActPosition(ctrl) <= 0.01 && setVel < 0) || (getActPosition(ctrl) >= 0.99 && setVel > 0)) {
+    m_currentVoltage += deltaVolt;
+    cmdVolt = m_currentVoltage;
+    if(btu_abs(cmdVolt) <= VOLTAGE_THRESHOLD) {
         cmdVolt = 0;
     }
-    m_currentVoltage += cmdVolt;
-    voltageControlHelper(m_currentVoltage, ctrl);
+    voltageControlHelper(cmdVolt, ctrl);
 
 }
 

@@ -59,8 +59,8 @@
 #define ACT_A 1
 #define ACT_B 2
 
-#define POT_MIN 0.02
-#define POT_MAX 0.97
+#define POT_MIN 0.01
+#define POT_MAX 0.98
 
 #define AVG_WINDOW_WIDTH 5
 
@@ -104,7 +104,7 @@ private:
   void voltageControl(float setDuty);
   void voltageControlHelper(float setDuty, int ctrl);
   void velocityControl(float setVel);
-  void velocityControlHelper(float setVel, int ctrl);
+  void velocityControlHelper(float setVelocity, int ctrl);
   void positionControl(float setPos);
   void positionControlHelper(float setPos, int ctrl);
   void depthControl(float setDepthMeters);
