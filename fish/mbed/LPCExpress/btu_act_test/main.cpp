@@ -6,6 +6,12 @@
 #define TIMESTEP (1.0/FREQUENCY)
 #define PRINTF_WAIT_MS 500
 
+#define SERIAL_MESSAGE_NUM_MODE 0
+#define SERIAL_MESSAGE_NUM_KC 1
+#define SERIAL_MESSAGE_NUM_TAUI 2
+#define SERIAL_MESSAGE_NUM_TAUD 3
+#define SERIAL_MESSAGE_NUM_SETVAL 4
+
 #include "MODSERIAL.h"
 #include "SerialComm.h"
 
@@ -79,11 +85,11 @@ int main() {
       if(serialComm.checkIfNewMessage()) {
           serialComm.getFloats(valueFloats, NUM_FLOATS);
 
-          mode = (int) valueFloats[0];
-          Kc = valueFloats[1];
-          TauI = valueFloats[2];
-          TauD = valueFloats[3];
-          setVal = valueFloats[4];
+          mode = (int) valueFloats[SERIAL_MESSAGE_NUM_MODE];
+          Kc = valueFloats[SERIAL_MESSAGE_NUM_KC];
+          TauI = valueFloats[SERIAL_MESSAGE_NUM_TAUI];
+          TauD = valueFloats[SERIAL_MESSAGE_NUM_TAUD];
+          setVal = valueFloats[SERIAL_MESSAGE_NUM_SETVAL];
       }
       wait_ms(PRINTF_WAIT_MS);
       TestLED2 = !TestLED2;
