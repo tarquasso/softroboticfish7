@@ -36,7 +36,7 @@ void BtuLinear::init() {
 
     // m_motorServo.calibrate(SERVO_PWM_WIDTH, SERVO_DEGREE_WIDTH);
     m_pressureSensor.MS5837Init();
-    // m_pressureSensor.MS5837Start();
+    m_pressureSensor.MS5837Start();
     wait(0.1);                    // remnant from old BTU class
 
     m_oldPosA = getActPosition(ACT_A);

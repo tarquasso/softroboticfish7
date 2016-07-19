@@ -58,7 +58,7 @@ int main() {
   while(1) {
 	  float depth = 0;
       depth = btu.getDepth();
-      if (mode == DEPTH_CTRL_MODE) {
+	  if (mode == DEPTH_CTRL_MODE) {
     	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f\r\n",
                       btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - depth);
       } else if (mode == SPEC_POSITION_CTRL_MODE) {
