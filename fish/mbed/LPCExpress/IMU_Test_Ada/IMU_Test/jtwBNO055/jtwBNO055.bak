@@ -1,8 +1,0 @@
-void jtwBNO055::writeByte(uint_8 reg, uint_8 value) {
-  uint_8 tx[2];
-  tx[0] = reg;
-  tx[1] = value;
-  i2c.write(addr, tx, 2);
-}
-
-bool
