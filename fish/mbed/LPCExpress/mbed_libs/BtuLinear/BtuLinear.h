@@ -1,10 +1,10 @@
 #ifndef BTU_H
 #define BTU_H
 
-#include <PidControl/PidControl.h>
 #include "mbed.h"
 #include "QEI.h"
 #include "MS5837.h" // pressure sensor
+#include "PidController.h"
 /* #include "Servo.h" */
 
 
@@ -70,11 +70,11 @@
  */
 class BtuLinear {
 private:
-  PidControl m_depthPid;
-  PidControl m_posAPid;
-  PidControl m_posBPid;
-  PidControl m_velAPid;
-  PidControl m_velBPid;
+  PidController m_depthPid;
+  PidController m_posAPid;
+  PidController m_posBPid;
+  PidController m_velAPid;
+  PidController m_velBPid;
   MS5837 m_pressureSensor;
   int m_mode;
   float m_kc, m_tauI, m_tauD;

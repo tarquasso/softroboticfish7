@@ -1,9 +1,5 @@
-#include "BtuLinear/BtuLinear.h"
+#include "BtuLinear.h"
 
-float clip(float val, float min, float max) {
-    float newVal = (val > max) ? max : val;
-    return (newVal < min) ? min : newVal;
-}
 
 
 

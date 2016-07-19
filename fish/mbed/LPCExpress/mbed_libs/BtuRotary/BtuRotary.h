@@ -1,7 +1,7 @@
 #ifndef BTU_H
 #define BTU_H
 
-#include <PidControl/PidControl.h>
+#include "PidController.h"
 #include "mbed.h"
 #include "QEI.h"
 #include "MS5837.h" // pressure sensor
@@ -52,8 +52,8 @@
  */
 class BtuRotary {
 private:
-  PidControl m_depthPid;
-  PidControl m_specPid;
+  PidController m_depthPid;
+  PidController m_specPid;
   MS5837 m_pressureSensor;
   Servo m_motorServo;
   int m_mode;

@@ -3,9 +3,9 @@
 
 #include "mbed.h"
 
-class PidControl {
+class PidController {
  public:
-  PidControl(float Kc, float tauI, float tauD, float interval, float inMin, float inMax, float outMin, float outMax, float bias);
+  PidController(float Kc, float tauI, float tauD, float interval, float inMin, float inMax, float outMin, float outMax, float bias);
   void setTunings(float Kc, float tauI, float tauD);
   void reset();
   void setSetPoint(float sp);
