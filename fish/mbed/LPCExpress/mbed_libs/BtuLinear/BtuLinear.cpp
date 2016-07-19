@@ -193,12 +193,18 @@ void BtuLinear::updatePositionReadings() {
 }
 
 float BtuLinear::getActPosition(int act) {
-    updatePositionReadings();
+    // updatePositionReadings();
+    // float position;
+    // if(act == ACT_A) {
+    //     position = m_currentAvgA;
+    // } else {
+    //     position = m_currentAvgB;
+    // }
     float position;
     if(act == ACT_A) {
-        position = m_currentAvgA;
+        position = m_actAPot;
     } else {
-        position = m_currentAvgB;
+        position = m_actBPot;
     }
     float scaledPos = (position - POT_MIN) / (POT_MAX - POT_MIN);
     return scaledPos;
