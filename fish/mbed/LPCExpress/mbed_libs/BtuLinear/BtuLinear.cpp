@@ -18,7 +18,7 @@ BtuLinear::BtuLinear():
 BtuLinear::~BtuLinear(){}
 
 void BtuLinear::init() {
-    m_mode = 2;                   // vel control
+    m_mode = DEFAULT_CTRL_MODE;                   // vel control
     m_kc = DEP_K_C;
     m_tauI = DEP_TAU_I;
     m_tauD = DEP_TAU_D;
@@ -52,11 +52,19 @@ float BtuLinear::getPressure() {
 }
 
 void BtuLinear::stop() {
-    return;
+	m_currentVoltage = 0;
+	m_currentAvgA = 0;
+	m_currentAvgB = 0;
+	m_avg_windowSize = 0;
+	m_depthPid.reset();
+	m_posAPid.reset();
+	m_posBPid.reset();
+	m_velAPid.reset();
+	m_velBPid.reset();
+	return;
 }
 
-void BtuLinear::update(int mode, float kc, float tauI, float tauD) {
-    updateMode(mode);
+void BtuLinear::updateDepthTunings(float kc, float tauI, float tauD) {
     m_kc = kc;
     m_tauI = tauI;
     m_tauD = tauD;
@@ -81,17 +89,8 @@ void BtuLinear::updateVelTunings(float kc, float tauI, float tauD) {
 
 void BtuLinear::updateMode(int mode) {
     if(m_mode != mode) {
-        stop();
+        this->stop();
         m_mode = mode;
-        m_currentVoltage = 0;
-        m_currentAvgA = 0;
-        m_currentAvgB = 0;
-        m_avg_windowSize = 0;
-        m_depthPid.reset();
-        m_posAPid.reset();
-        m_posBPid.reset();
-        m_velAPid.reset();
-        m_velBPid.reset();
     }
 }
 

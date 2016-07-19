@@ -16,6 +16,7 @@
 #define VELOCITY_CTRL_MODE 2
 #define DEPTH_CTRL_MODE 4
 #define POSITION_CTRL_MODE 3
+#define DEFAULT_CTRL_MODE VELOCITY_CTRL_MODE
 
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5
@@ -111,12 +112,15 @@ private:
   void depthControlHelper(float cmdVelocity);
   void updatePositionReadings();
 
+protected:
+
+
 public:
   BtuLinear();
   ~BtuLinear();
   void init();
   void stop();
-  void update(int mode, float kc, float tauI, float tauD);
+  void updateDepthTunings(float kc, float tauI, float tauD);
   void updatePosTunings(float kc, float tauI, float tauD);
   void updateVelTunings(float kc, float tauI, float tauD);
   float getActPosition(int act);

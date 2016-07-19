@@ -2,8 +2,9 @@
 #include "BtuLinear.h"
 
 #define NUM_FLOATS 5
-#define TIMESTEP 0.06
-
+#define FREQUENCY 20
+#define TIMESTEP (1.0/FREQUENCY)
+#define PRINTF_WAIT_MS 500
 
 #include "MODSERIAL.h"
 #include "SerialComm.h"
@@ -23,23 +24,24 @@ float TauD = 0.0;
 float setVal = 0.0;             // meters
 
 void runControl() {
-  counter = (counter + 1) % 20;
+  counter = (counter + 1) % FREQUENCY;
   if(!counter) {
+	// blink every second
     TestLED = !TestLED;
   }
 
   //setVal = pot1;
   //setVal = (b1-a1)*setVal+a1;
 
+  // Based on Mode, update Tunings
   if(mode == VELOCITY_CTRL_MODE) {
-      btu.updateMode(mode);
       btu.updateVelTunings(Kc, TauI, TauD);
   } else if (mode == POSITION_CTRL_MODE){
-	  btu.updateMode(mode);
 	  btu.updatePosTunings(Kc, TauI, TauD);
   } else {
-      btu.update(mode, Kc, TauI, TauD);
+      btu.updateDepthTunings(Kc, TauI, TauD);
   }
+  // Update Mode and Run Cycle
   btu.updateAndRunCycle(mode, setVal);
 }
 
@@ -50,9 +52,15 @@ int main() {
 
   btu.init();
   pcSerial.printf("pressure at start: %.6f\r\n", btu.getPressure());
-  Ticker timer;
-  timer.attach(&runControl, TIMESTEP);
+
+  // start test leds at off
   TestLED = 0;
+  TestLED2 = 0;
+
+  // attach control ticker every time step
+  Ticker controlTicker;
+  controlTicker.attach(&runControl, TIMESTEP);
+
   float valueFloats[NUM_FLOATS];
 
   while(1) {
@@ -77,7 +85,7 @@ int main() {
           TauD = valueFloats[3];
           setVal = valueFloats[4];
       }
-      wait_ms(500);
+      wait_ms(PRINTF_WAIT_MS);
       TestLED2 = !TestLED2;
   }
 }
