@@ -128,22 +128,41 @@ void BtuLinear::updateAndRunCycle(int mode, float value) {
 // }
 
 void BtuLinear::voltageControlHelper(float setDuty, int ctrl) {
-    PwmOut* actPwm;
-    DigitalOut* actDir;
+    // PwmOut* actPwm;
+    // DigitalOut* actDir;
+    // if(ctrl == ACT_A) {
+    //     actPwm = &m_actAPwm;
+    //     actDir = &m_actADir;
+    // } else {
+    //     actPwm = &m_actBPwm;
+    //     actDir = &m_actBDir;
+    // }
     if(ctrl == ACT_A) {
-        actPwm = &m_actAPwm;
-        actDir = &m_actADir;
-    } else {
-        actPwm = &m_actBPwm;
-        actDir = &m_actBDir;
+        if(setDuty > 0) {
+            m_actAPwm = setDuty;
+            m_actADir = 1;
+        } else {
+            m_actADir = 0;
+            m_actAPwm = -setDuty;
+        }
     }
-    if(setDuty > 0) {
-        *actPwm = setDuty;
-        *actDir = 1;
-    } else {
-        *actDir = 0;
-        *actPwm = -setDuty;
+
+    if(ctrl == ACT_B) {
+        if(setDuty > 0) {
+            m_actBPwm = setDuty;
+            m_actBDir = 1;
+        } else {
+            m_actBDir = 0;
+            m_actBPwm = -setDuty;
+        }
     }
+    // if(setDuty > 0) {
+    //     *actPwm = setDuty;
+    //     *actDir = 1;
+    // } else {
+    //     *actDir = 0;
+    //     *actPwm = -setDuty;
+    // }
 }
 
 void BtuLinear::voltageControl(float setDuty) {
