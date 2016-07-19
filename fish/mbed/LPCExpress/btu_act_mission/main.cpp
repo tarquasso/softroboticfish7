@@ -127,7 +127,7 @@ void startMission(float kc, float taui, float taud, float setDepth, float stepDi
     missionFloor = setDepth;
     missionDepth = utility::clip(stepDist, MIN_MISSION_DEPTH, missionFloor);
     missionStep = stepDist;
-    btu.update(DEPTH_CTRL_MODE, kc, taui, taud);
+    btu.updateDepthTunings(DEPTH_CTRL_MODE, kc, taui, taud);
     // btu.update(SPEC_POSITION_CTRL_MODE, kc, taui, taud);
     Mission.attach(&runMission, TIMESTEP);
 }
