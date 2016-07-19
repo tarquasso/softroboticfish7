@@ -1,6 +1,6 @@
 #include <MS5837.h>
 #include "mbed.h"
-#include "BTU/btu_PID_lite.h"
+#include "BtuRotary/BtuRotary.h"
 #include <ros.h>
 #include <fish_msgs/DepthTestMsg.h>
 #include <fish_msgs/mbedStatusMsg.h>
@@ -46,7 +46,7 @@ float desiredNumber = 0;
 float mode_min = VEL_MIN;
 float mode_max = VEL_MAX;
 
-BTU btu = BTU();
+BtuRotary btu = BtuRotary();
 
 void commandCb(const fish_msgs::DepthTestMsg& ctrl_msg) {
   mode = ctrl_msg.mode;

@@ -1,10 +1,10 @@
-#ifndef BTU_H
-#define BTU_H
+#ifndef BTULINEAR_H
+#define BTULINEAR_H
 
 #include "mbed.h"
 #include "QEI.h"
-#include "PIDControl/PIDControl.h"
 #include "MS5837.h" // pressure sensor
+#include "PidController.h"
 /* #include "Servo.h" */
 
 
@@ -68,13 +68,13 @@
  * This class is used for controlling and accessing data from the Buoyancy Test Unit
  * It includes instances of the classes PwmOut
  */
-class BTU {
+class BtuLinear {
 private:
-  PID m_depthPid;
-  PID m_posAPid;
-  PID m_posBPid;
-  PID m_velAPid;
-  PID m_velBPid;
+  PidController m_depthPid;
+  PidController m_posAPid;
+  PidController m_posBPid;
+  PidController m_velAPid;
+  PidController m_velBPid;
   MS5837 m_pressureSensor;
   int m_mode;
   float m_kc, m_tauI, m_tauD;
@@ -82,12 +82,13 @@ private:
   float m_p_kc, m_p_tauI, m_p_tauD;
   PwmOut m_actAPwm;
   PwmOut m_actBPwm;
-  AnalogIn m_actBPot;
   AnalogIn m_actAPot;
+  AnalogIn m_actBPot;
   DigitalOut m_actADir;
   DigitalOut m_actBDir;
   float m_oldPosA;
   float m_oldPosB;
+  float m_currentVoltage;
 
   int m_avg_windowPtr;
   int m_avg_windowSize;
@@ -103,13 +104,15 @@ private:
   void voltageControlHelper(float setDuty, int ctrl);
   void velocityControl(float setVel);
   void velocityControlHelper(float setVel, int ctrl);
+  void positionControl(float setPos);
+  void positionControlHelper(float setPos, int ctrl);
   void depthControl(float setDepthMeters);
-  void specialPosControl(float setPosDeg);
+  void depthControlHelper(float cmdVelocity);
   void updatePositionReadings();
 
 public:
-  BTU();
-  ~BTU();
+  BtuLinear();
+  ~BtuLinear();
   void init();
   void stop();
   void update(int mode, float kc, float tauI, float tauD);

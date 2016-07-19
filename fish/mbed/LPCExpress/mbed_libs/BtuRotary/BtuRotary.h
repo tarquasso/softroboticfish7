@@ -1,9 +1,9 @@
-#ifndef BTU_H
-#define BTU_H
+#ifndef BTUROTARY_H
+#define BTUROTARY_H
 
+#include "PidController.h"
 #include "mbed.h"
 #include "QEI.h"
-#include "PIDControl/PIDControl.h"
 #include "MS5837.h" // pressure sensor
 #include "Servo.h"
 
@@ -50,12 +50,12 @@
  * This class is used for controlling and accessing data from the Buoyancy Test Unit
  * It includes instances of the classes PwmOut
  */
-class BTU {
+class BtuRotary {
 private:
-  PID m_depthPid;
-  PID m_specPid;
-  Servo m_motorServo;
+  PidController m_depthPid;
+  PidController m_specPid;
   MS5837 m_pressureSensor;
+  Servo m_motorServo;
   int m_mode;
   float m_kc, m_tauI, m_tauD;
 
@@ -65,8 +65,8 @@ private:
   void specialPosControl(float setPosDeg);
 
 public:
-  BTU();
-  ~BTU();
+  BtuRotary();
+  ~BtuRotary();
   void init();
   void stop();
   void update(int mode, float kc, float tauI, float tauD);
