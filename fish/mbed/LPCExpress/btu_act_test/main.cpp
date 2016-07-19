@@ -1,5 +1,5 @@
-#include <BtuLinear/BtuLinear.cpp>
 #include "mbed.h"
+#include "BtuLinear.h"
 
 #define NUM_FLOATS 5
 #define TIMESTEP 0.05

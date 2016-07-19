@@ -1,5 +1,6 @@
-#include "BTU_Actuate/btu_PID_lite.cpp"
+#include <utility.h>
 #include "mbed.h"
+#include "BtuLinear.h"
 
 #define NUM_FLOATS 5
 #define TIMESTEP 0.05
@@ -12,8 +13,8 @@
 #define UNWOUND_POS 0
 
 
-#include "MODSERIAL.h"
-#include "SerialComm.h"
+#include "MODSERIAL/MODSERIAL.h"
+#include "SerialComm/SerialComm.h"
 
 MODSERIAL pcSerial(USBTX, USBRX);
 // AnalogIn pot1(p15);
@@ -104,7 +105,7 @@ void runMission() {
             return;
         } else {
         	successTime = 0.0;
-            missionDepth = clip(missionDepth + missionStep, MIN_MISSION_DEPTH, missionFloor);
+            missionDepth = utility::clip(missionDepth + missionStep, MIN_MISSION_DEPTH, missionFloor);
             timeout = 0.0;
         }
     }
@@ -124,7 +125,7 @@ void startMission(float kc, float taui, float taud, float setDepth, float stepDi
 
     missionSuccess = 0;
     missionFloor = setDepth;
-    missionDepth = clip(stepDist, MIN_MISSION_DEPTH, missionFloor);
+    missionDepth = utility::clip(stepDist, MIN_MISSION_DEPTH, missionFloor);
     missionStep = stepDist;
     btu.update(DEPTH_CTRL_MODE, kc, taui, taud);
     // btu.update(SPEC_POSITION_CTRL_MODE, kc, taui, taud);

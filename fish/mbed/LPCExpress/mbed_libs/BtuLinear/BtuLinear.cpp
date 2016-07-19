@@ -1,11 +1,4 @@
-#include "BtuLinear/BtuLinear.h"
-
-// float clip(float val, float min, float max) {
-//     float newVal = (val > max) ? max : val;
-//     return (newVal < min) ? min : newVal;
-// }
-
-
+#include "BtuLinear.h"
 
 BtuLinear::BtuLinear():
     m_depthPid(DEP_K_C, DEP_TAU_I, DEP_TAU_D, PID_FREQ, DEPTH_MIN, DEPTH_MAX, VEL_MIN, VEL_MAX, 0),
