@@ -228,9 +228,6 @@ void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
     float deltaVolt;
     float cmdVolt;
     float setVel = setVelocity;
-    if ((getActPosition(ctrl) <= 0.01 && setVel < 0) || (getActPosition(ctrl) >= 0.99 && setVel > 0)) {
-        setVel = 0;
-    }
 
     if(ctrl == ACT_A) {
         pos = getActPosition(ACT_A);
@@ -246,6 +243,9 @@ void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
         m_oldPosB = pos;
     }
     m_currentVoltage += deltaVolt;
+    if ((getActPosition(ctrl) <= 0.01 && setVel < 0) || (getActPosition(ctrl) >= 0.99 && setVel > 0)) {
+        m_currentVoltage = 0;
+    }
     cmdVolt = m_currentVoltage;
     if(btu_abs(cmdVolt) <= VOLTAGE_THRESHOLD) {
         cmdVolt = 0;
