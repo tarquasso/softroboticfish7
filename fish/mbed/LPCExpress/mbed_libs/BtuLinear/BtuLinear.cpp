@@ -245,7 +245,7 @@ void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
         deltaVolt = m_velBPid.compute();
         m_oldPosB = pos;
     }
-    m_currentVoltage += deltaVolt;
+    m_currentVoltage = utility::clip(m_currentVoltage + deltaVolt, -1.0, 1.0);
     if ((getActPosition(ctrl) <= 0.01 && setVel < 0) || (getActPosition(ctrl) >= 0.99 && setVel > 0)) {
         m_currentVoltage = 0;
     }
