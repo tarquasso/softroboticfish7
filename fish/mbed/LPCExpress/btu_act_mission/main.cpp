@@ -12,6 +12,14 @@
 #define DEBRIEF_TIME_LIMIT 20.0
 #define UNWOUND_POS 1.0
 
+#define DEF_V_KC 0.5
+#define DEF_V_TAUI 0
+#define DEF_V_TAUD 0
+
+#define DEF_P_KC 1
+#define DEF_P_TAUI 0
+#define DEF_P_TAUD 0
+
 
 #include "MODSERIAL/MODSERIAL.h"
 #include "SerialComm/SerialComm.h"
@@ -128,6 +136,8 @@ void startMission(float kc, float taui, float taud, float setDepth, float stepDi
     missionDepth = utility::clip(stepDist, MIN_MISSION_DEPTH, missionFloor);
     missionStep = stepDist;
     btu.updateDepthTunings(DEPTH_CTRL_MODE, kc, taui, taud);
+    btu.updateVelTunings(DEF_V_KC, DEF_V_TAUI, DEF_V_TAUD);
+    btu.updatePosTunings(DEF_P_KC, DEF_P_TAUI, DEF_P_TAUD);
     // btu.update(SPEC_POSITION_CTRL_MODE, kc, taui, taud);
     Mission.attach(&runMission, TIMESTEP);
 }

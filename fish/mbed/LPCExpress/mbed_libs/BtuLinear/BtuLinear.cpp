@@ -293,7 +293,7 @@ void BtuLinear::depthControl(float setDepthMeters) {
     m_depthPid.setProcessValue(curDepth);
 
     float cmdVel = m_depthPid.compute();
-    depthControlHelper(cmdVel);
+    depthControlHelper(-1*cmdVel);
     // velocityControl(cmdVel);
 }
 
