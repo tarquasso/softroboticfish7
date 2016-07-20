@@ -1,14 +1,14 @@
 #include "PidController.h"
 #include "utility.h"
 
-PidController::PidController(float Kc, float tauI, float tauD, float interval,
+PidController::PidController(float Kc, float Ki, float Kd, float interval,
 		float inMin, float inMax, float outMin, float outMax, float b) {
 	setInputLimits(inMin, inMax);
 	setOutputLimits(outMin, outMax);
 
 	sampleTime_ = interval;
 
-	setTunings(Kc, tauI, tauD);
+	setTunings(Kc, Ki, Kd);
 
 	reset();
 
@@ -47,19 +47,19 @@ void PidController::setOutputLimits(float outMin, float outMax) {
 	outMax_ = outMax;
 }
 
-void PidController::setTunings(float Kc, float tauI, float tauD) {
+void PidController::setTunings(float Kc, float Ki, float Kd) {
 	//Verify that the tunings make sense.
-	if (Kc == 0.0 || tauI < 0.0 || tauD < 0.0) {
+	if (Kc == 0.0 || Ki < 0.0 || Kd < 0.0) {
 		return;
 	}
 
-	if ((Kc != Kc_) || (tauI != tauI_) || (tauD != tauD_)) {
+	if ((Kc != Kc_) || (Ki != Ki_) || (Kd != Kd_)) {
 		reset();
 	}
 
 	Kc_ = Kc;
-	tauI_ = tauI;
-	tauD_ = tauD;
+	Ki_ = Ki;
+	Kd_ = Kd;
 }
 
 void PidController::setInterval(float interval) {
@@ -89,7 +89,7 @@ float PidController::compute() {
 		integral_ += (error * sampleTime_);
 	}
 	float derivative = (error - errorPrior_) / sampleTime_;
-	float output = (Kc_ * error) + (tauI_ * integral_) + (tauD_ * derivative)
+	float output = (Kc_ * error) + (Ki_ * integral_) + (Kd_ * derivative)
 			+ bias_;
 	errorPrior_ = error;
 
