@@ -1,11 +1,5 @@
 #include "PidController.h"
-
-float pid_clip(float val, float min, float max) {
-  float newval = val;
-  newval = (newval > max) ? max : newval;
-  newval = (newval < min) ? min : newval;
-  return newval;
-}
+#include "utility.h"
 
 PidController::PidController(float Kc, float tauI, float tauD, float interval, float inMin, float inMax, float outMin, float outMax, float b) {
   setInputLimits(inMin, inMax);
@@ -76,12 +70,12 @@ void PidController::setInterval(float interval) {
 }
 
 void PidController::setSetPoint(float sp) {
-  setPoint_ = pid_clip(sp, inMin_, inMax_);
+  setPoint_ = utility::clip(sp, inMin_, inMax_);
 }
 
 void PidController::setProcessValue(float pv) {
 
-  processVar_ = pid_clip(pv, inMin_, inMax_);
+  processVar_ = utility::clip(pv, inMin_, inMax_);
 
 }
 
@@ -100,7 +94,7 @@ float PidController::compute() {
   float output = (Kc_ * error) + (tauI_ * integral_) + (tauD_ * derivative) + bias_;
   errorPrior_ = error;
 
-  prevControllerOutput_ = pid_clip(output, outMin_, outMax_);
+  prevControllerOutput_ = utility::clip(output, outMin_, outMax_);
 
   return prevControllerOutput_;
 }
