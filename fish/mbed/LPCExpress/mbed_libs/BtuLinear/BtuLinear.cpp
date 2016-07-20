@@ -231,6 +231,10 @@ void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
     float cmdVolt;
     float setVel = setVelocity;
 
+    if ((getActPosition(ctrl) <= 0.01 && setVel < 0) || (getActPosition(ctrl) >= 0.99 && setVel > 0)) {
+        setVel = 0;
+    }
+
     if(ctrl == ACT_A) {
         pos = getActPosition(ACT_A);
         m_velAPid.setProcessValue((pos - m_oldPosA) / PID_FREQ);
@@ -245,7 +249,7 @@ void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
         m_oldPosB = pos;
     }
     m_currentVoltage = utility::clip(m_currentVoltage + deltaVolt, -1.0, 1.0);
-    if ((getActPosition(ctrl) <= 0.01 && setVel < 0) || (getActPosition(ctrl) >= 0.99 && setVel > 0)) {
+    if ((getActPosition(ctrl) <= 0.01 && setVel <= 0) || (getActPosition(ctrl) >= 0.99 && setVel >= 0)) {
         m_currentVoltage = 0;
     }
     cmdVolt = m_currentVoltage;
@@ -281,8 +285,8 @@ void BtuLinear::positionControl(float setPos) {
 }
 
 void BtuLinear::depthControlHelper(float cmdVelocity) {
-    velocityControlHelper(cmdVelocity, ACT_A);
-    positionControlHelper(getActPosition(ACT_A), ACT_B);
+    velocityControlHelper(cmdVelocity, ACT_B);
+    positionControlHelper(getActPosition(ACT_B), ACT_A);
 }
 
 void BtuLinear::depthControl(float setDepthMeters) {

@@ -65,7 +65,7 @@
 
 #define AVG_WINDOW_WIDTH 5
 
-#define VOLTAGE_THRESHOLD 0.05
+#define VOLTAGE_THRESHOLD 0.025
 /**
  * This class is used for controlling and accessing data from the Buoyancy Test Unit
  * It includes instances of the classes PwmOut

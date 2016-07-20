@@ -54,6 +54,7 @@ bool missionStarted = false;
 float debriefTime = 0.0;
 bool debriefMode = false;
 FILE *fp;
+bool returnTrip = false;
 
 void terminateMission() {
     Mission.detach();
@@ -67,7 +68,9 @@ void terminateMission() {
     missionStarted = false;
     debriefMode = false;
     debriefTime = 0.0;
-    btu.updateAndRunCycle(POSITION_CTRL_MODE, UNWOUND_POS);
+    returnTrip = false;
+
+    btu.updateAndRunCycle(VELOCITY_CTRL_MODE, UNWOUND_POS);
 }
 
 bool checkThreshold() {
@@ -81,7 +84,7 @@ void runMission() {
 	if(debriefMode) {
 		inMission = 0;
 		missionDepth = 0;
-		btu.updateAndRunCycle(POSITION_CTRL_MODE, UNWOUND_POS);
+		btu.updateAndRunCycle(VELOCITY_CTRL_MODE, UNWOUND_POS);
 		if(debriefTime >= DEBRIEF_TIME_LIMIT) {
 			terminateMission();
 		}
@@ -107,13 +110,22 @@ void runMission() {
     	successTime = 0.0;
     }
     if (successTime >= SUCCESS_TIME) {
-        if(missionDepth == missionFloor) {
+        if((missionDepth <= MIN_MISSION_DEPTH) && (returnTrip == true)) {
             missionSuccess = 1;
             debriefMode = true;
             return;
+        } else if(missionDepth == missionFloor) {
+            returnTrip = true;
+            successTime = 0.0;
+            missionDepth = utility::clip(missionDepth - missionStep, MIN_MISSION_DEPTH, missionFloor);
+            timeout = 0.0;
         } else {
         	successTime = 0.0;
-            missionDepth = utility::clip(missionDepth + missionStep, MIN_MISSION_DEPTH, missionFloor);
+            if(returnTrip) {
+                missionDepth = utility::clip(missionDepth - missionStep, MIN_MISSION_DEPTH, missionFloor);
+            } else {
+                missionDepth = utility::clip(missionDepth + missionStep, MIN_MISSION_DEPTH, missionFloor);
+            }
             timeout = 0.0;
         }
     }
@@ -135,7 +147,8 @@ void startMission(float kc, float taui, float taud, float setDepth, float stepDi
     missionFloor = setDepth;
     missionDepth = utility::clip(stepDist, MIN_MISSION_DEPTH, missionFloor);
     missionStep = stepDist;
-    btu.updateDepthTunings(DEPTH_CTRL_MODE, kc, taui, taud);
+    returnTrip = false;
+    btu.updateDepthTunings(kc, taui, taud);
     btu.updateVelTunings(DEF_V_KC, DEF_V_TAUI, DEF_V_TAUD);
     btu.updatePosTunings(DEF_P_KC, DEF_P_TAUI, DEF_P_TAUD);
     // btu.update(SPEC_POSITION_CTRL_MODE, kc, taui, taud);
@@ -167,10 +180,10 @@ int main() {
       // pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, pos_er:%.4f, th:%d, to:%.2f, st:%.2f\r\n", btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getServoPos(), setVal - btu.getServoPos(), checkThreshold(), timeout, successTime);
       if(inMission || debriefMode) {
           float depth = btu.getDepth();
-          fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f\r\n",
-                  btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, missionDepth - depth, missionTime, timeout);
+          fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f, rt:%d\r\n",
+                  btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, missionDepth - depth, missionTime, timeout, returnTrip);
       } else {
-    	  btu.updateAndRunCycle(POSITION_CTRL_MODE, UNWOUND_POS);
+    	  btu.updateAndRunCycle(VELOCITY_CTRL_MODE, UNWOUND_POS);
       }
       //float depth = btu.getDepth();
       //pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f\r\n",
