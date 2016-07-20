@@ -9,11 +9,4 @@ float clip(float val, float min, float max) {
 	return (newVal < min) ? min : newVal;
 }
 
-float pid_clip(float val, float min, float max) {
-  float newval = val;
-  newval = (newval > max) ? max : newval;
-  newval = (newval < min) ? min : newval;
-  return newval;
-}
-
 }

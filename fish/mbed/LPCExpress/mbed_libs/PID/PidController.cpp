@@ -2,16 +2,14 @@
 #include "utility.h"
 
 PidController::PidController(float Kc, float Ki, float Kd, float interval,
-		float inMin, float inMax, float outMin, float outMax, float b) {
-	setInputLimits(inMin, inMax);
-	setOutputLimits(outMin, outMax);
-
-	sampleTime_ = interval;
-
-	setTunings(Kc, Ki, Kd);
-
+		float inMin, float inMax, float outMin, float outMax, float bias) {
+	// Set Up PID Parameters
+	this->setTunings(Kc, Ki, Kd);
+	this->setInputLimits(inMin, inMax);
+	this->setOutputLimits(outMin, outMax);
+	this->setInterval(interval);
+	this->setBias(bias);
 	reset();
-
 }
 
 void PidController::reset() {
@@ -20,6 +18,9 @@ void PidController::reset() {
 	integral_ = 0.0;
 	errorPrior_ = 0;
 	prevControllerOutput_ = 0.0;
+	error_ = 0.0;
+	derivative_ = 0.0;
+	output_ = 0.0;
 }
 
 void PidController::setInputLimits(float inMin, float inMax) {
@@ -71,29 +72,27 @@ void PidController::setSetPoint(float sp) {
 }
 
 void PidController::setProcessValue(float pv) {
-
 	processVar_ = utility::clip(pv, inMin_, inMax_);
-
 }
 
 void PidController::setBias(float b) {
 	bias_ = b;
-	reset();
 }
 
 float PidController::compute() {
-	float error = setPoint_ - processVar_;
-	// same anti-windup as in the old PID library, but rewritten to handle our bounds
-	if (!(prevControllerOutput_ >= outMax_ && error > 0)
-			&& !(prevControllerOutput_ <= outMin_ && error < 0)) {
-		integral_ += (error * sampleTime_);
-	}
-	float derivative = (error - errorPrior_) / sampleTime_;
-	float output = (Kc_ * error) + (Ki_ * integral_) + (Kd_ * derivative)
-			+ bias_;
-	errorPrior_ = error;
+	// Calculate errotr between the set point and the process variable
+	error_ = setPoint_ - processVar_;
 
-	prevControllerOutput_ = utility::clip(output, outMin_, outMax_);
+	// anti-windup, if at either min or max limit, while error as in the old PID library, but rewritten to handle our bounds
+	if (!(prevControllerOutput_ >= outMax_ && error_ > 0)
+			&& !(prevControllerOutput_ <= outMin_ && error_ < 0)) {
+		integral_ += (error_ * sampleTime_);
+	}
+	derivative_ = (error_ - errorPrior_) / sampleTime_;
+	output_ = (Kc_ * error_) + (Ki_ * integral_) + (Kd_ * derivative_) + bias_;
+	errorPrior_ = error_;
+
+	prevControllerOutput_ = utility::clip(output_, outMin_, outMax_);
 
 	return prevControllerOutput_;
 }
