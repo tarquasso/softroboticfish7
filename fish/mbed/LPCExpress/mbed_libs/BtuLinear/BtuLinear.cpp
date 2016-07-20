@@ -238,6 +238,7 @@ void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
     float pos;
     float deltaVolt;
     float cmdVolt;
+    float absCmdVolt;
     float setVel = setVelocity;
 
     // avoid going past the very edges.  Currently at 0.99 and 0.01 due to some uncertainty in scaling/pot readings
