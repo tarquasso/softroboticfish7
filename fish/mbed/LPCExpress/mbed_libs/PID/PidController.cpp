@@ -17,10 +17,10 @@ void PidController::reset() {
 	processVar_ = 0.0;
 	integral_ = 0.0;
 	errorPrior_ = 0;
-	prevControllerOutput_ = 0.0;
+	prevControlOut_ = 0.0;
 	error_ = 0.0;
 	derivative_ = 0.0;
-	output_ = 0.0;
+	controlOut_ = 0.0;
 }
 
 void PidController::setInputLimits(float inMin, float inMax) {
@@ -44,8 +44,8 @@ void PidController::setOutputLimits(float outMin, float outMax) {
 	}
 
 	//Rescale the working variables to reflect the changes.
-	outMin_ = outMin;
-	outMax_ = outMax;
+	controlOutMin_ = outMin;
+	controlOutMax_ = outMax;
 }
 
 void PidController::setTunings(float Kc, float Ki, float Kd) {
@@ -80,19 +80,25 @@ void PidController::setBias(float b) {
 }
 
 float PidController::compute() {
-	// Calculate errotr between the set point and the process variable
+	// Calculate process error between the set point and the process variable
 	error_ = setPoint_ - processVar_;
 
-	// anti-windup, if at either min or max limit, while error as in the old PID library, but rewritten to handle our bounds
-	if (!(prevControllerOutput_ >= outMax_ && error_ > 0)
-			&& !(prevControllerOutput_ <= outMin_ && error_ < 0)) {
+	// anti-windup, if at either min or max limit, while error is
+	if (!(prevControlOut_ >= controlOutMax_ && error_ > 0)
+			&& !(prevControlOut_ <= controlOutMin_ && error_ < 0)) {
 		integral_ += (error_ * sampleTime_);
 	}
+	// Calculate Derivative of the process error
 	derivative_ = (error_ - errorPrior_) / sampleTime_;
-	output_ = (Kc_ * error_) + (Ki_ * integral_) + (Kd_ * derivative_) + bias_;
+
+	// Store Error Value for Derivative Gain
 	errorPrior_ = error_;
 
-	prevControllerOutput_ = utility::clip(output_, outMin_, outMax_);
+	// Calculate Commanded Output Value from the Controller
+	controlOut_ = (Kc_ * error_) + (Ki_ * integral_) + (Kd_ * derivative_) + bias_;
 
-	return prevControllerOutput_;
+
+	prevControlOut_ = utility::clip(controlOut_, controlOutMin_, controlOutMax_);
+
+	return prevControlOut_;
 }

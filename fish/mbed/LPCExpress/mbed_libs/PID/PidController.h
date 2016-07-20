@@ -20,8 +20,8 @@ private:
 	void setOutputLimits(float outMin, float outMax);
 
 	float Kc_, Ki_, Kd_, sampleTime_, setPoint_, processVar_, integral_,
-			bias_, errorPrior_, inMin_, inMax_, outMin_, outMax_,
-			prevControllerOutput_, error_, derivative_, output_;
+			bias_, errorPrior_, inMin_, inMax_, controlOutMin_, controlOutMax_,
+			prevControlOut_, error_, derivative_, controlOut_;
 
 };
 
