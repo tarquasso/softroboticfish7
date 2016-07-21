@@ -299,13 +299,13 @@ void BtuLinear::positionControlHelper(float setPos, int ctrl) {
     if(ctrl == ACT_A) {
         m_posAPid.setSetPoint(setPos);
         m_posAPid.setProcessValue(getActPosition(ACT_A));
-        float cmdVelA = m_posAPid.compute();
-        velocityControlHelper(cmdVelA, ACT_A);
+        float cmdVoltA = m_posAPid.compute();
+        voltageControlHelper(cmdVoltA, ACT_A);
     } else {
         m_posBPid.setSetPoint(setPos);
         m_posBPid.setProcessValue(getActPosition(ACT_B));
-        float cmdVelB = m_posBPid.compute();
-        velocityControlHelper(cmdVelB, ACT_B);
+        float cmdVoltB = m_posBPid.compute();
+        voltageControlHelper(cmdVoltB, ACT_B);
     }
 
 }
