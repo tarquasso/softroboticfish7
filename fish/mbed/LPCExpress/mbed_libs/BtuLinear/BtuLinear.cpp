@@ -270,9 +270,9 @@ void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
         m_oldPosB = l_actPosVC;
     }
     //add the voltage delta to the current voltage that is the current operating point
-    l_cmdVoltVC = utility::clip(m_currentVoltage + l_deltaVoltVC, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
+    m_currentVoltage = utility::clip(m_currentVoltage + l_deltaVoltVC, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
 
-    voltageControlHelper(l_cmdVoltVC, ctrl);
+    voltageControlHelper(m_currentVoltage, ctrl);
 
 }
 
