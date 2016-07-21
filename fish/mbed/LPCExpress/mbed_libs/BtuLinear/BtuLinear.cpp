@@ -188,21 +188,29 @@ void BtuLinear::depthControlHelper(float cmdVoltage) {
 
 // do depth control
 void BtuLinear::depthControl(float setDepthMeters) {
-    float curDepth = getDepth();
+    // Read Pressure Value and Convert into Depth in Meters
+	float curDepth = getDepth();
 
+	// current depth becomes process variable for PID controller
     m_depthPid.setProcessValue(curDepth);
+
+    // desired depth in meters becomes set point of PID controller
 	m_depthPid.setSetPoint(setDepthMeters);
 
+	// commanded voltage is calculated by PID controller
     float cmdVolt = m_depthPid.compute();
 
     // extending the actuator increases buoyancy -> less depth
     // therefore the axis direction has to be reversed
+    // and commanded voltage with opposite sign is therefore applied
     depthControlHelper( -1 * cmdVolt );
 }
 
 // get a depth reading
 float BtuLinear::getDepth() {
+	// read out pressure in mbar
     float pvDepth = getPressure();
+    // convert pressure to meters
     float pvDepthMeters = (pvDepth - P_ATMOS_MBAR) / P_WATER_SURFACE_MBAR;
     return pvDepthMeters;
 }
