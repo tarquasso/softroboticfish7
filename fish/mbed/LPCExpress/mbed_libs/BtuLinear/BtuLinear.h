@@ -57,9 +57,9 @@ private:
   Actuator m_actB;
   MS5837 m_pressureSensor;
   int m_mode;
-  float m_kc, m_tauI, m_tauD;
-  float m_v_kc, m_v_tauI, m_v_tauD;
-  float m_p_kc, m_p_tauI, m_p_tauD;
+  float m_kc, m_kI, m_kD;
+  float m_v_kc, m_v_kI, m_v_kD;
+  float m_p_kc, m_p_kI, m_p_kD;
 
   /* int m_avg_windowPtr; */
   /* int m_avg_windowSize; */
@@ -85,9 +85,9 @@ public:
   ~BtuLinear();
   void init();
   void stop();
-  void updateDepthTunings(float kc, float tauI, float tauD);
-  void updatePosTunings(float kc, float tauI, float tauD);
-  void updateVelTunings(float kc, float tauI, float tauD);
+  void updateDepthTunings(float kc, float kI, float kD);
+  void updatePosTunings(float kc, float kI, float kD);
+  void updateVelTunings(float kc, float kI, float kD);
   float getActPosition(int act);
   void updateMode(int mode);
   void runCycle(float setVal);
@@ -96,14 +96,14 @@ public:
   float getDepth();
   int getMode() { return m_mode; };
   float getDKc() { return m_kc; };
-  float getDTauI() { return m_tauI; };
-  float getDTauD() { return m_tauD; };
+  float getDkI() { return m_kI; };
+  float getDkD() { return m_kD; };
   float getVKc() {return m_v_kc; };
-  float getVTauI() { return m_v_tauI; };
-  float getVTauD() { return m_v_tauD; };
+  float getVkI() { return m_v_kI; };
+  float getVkD() { return m_v_kD; };
   float getPKc() { return m_p_kc; };
-  float getPTauI() { return m_p_tauI; };
-  float getPTauD() { return m_p_tauD; };
+  float getPkI() { return m_p_kI; };
+  float getPkD() { return m_p_kD; };
 
 };
 
