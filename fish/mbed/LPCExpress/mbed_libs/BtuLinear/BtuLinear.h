@@ -87,7 +87,7 @@ protected:
 
 public:
   BtuLinear();
-  BtuLinear(bool);
+  BtuLinear(bool dryRun);
   ~BtuLinear();
   void init();
   void stop();
