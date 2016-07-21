@@ -149,34 +149,34 @@ void BtuLinear::voltageControlHelper(float setDuty, int ctrl) {
         return;
     }
 
-    float actPos = getActPosition(ctrl);
+    l_actPos = getActPosition(ctrl);
 	//clip commanded voltage to upper and lower limit
-    float cmdVolt = utility::clip(setDuty, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
+	l_cmdVolt = utility::clip(setDuty, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
 
     // arrest any movement at the edges, and reset current voltage, to aid responsiveness at the edges
-    if ((actPos <= POSITION_MIN && cmdVolt <= 0) || (actPos >= POSITION_MAX && cmdVolt >= 0)) {
-    	cmdVolt = 0;
+    if ((l_actPos <= POSITION_MIN && l_cmdVolt <= 0) || (l_actPos >= POSITION_MAX && l_cmdVolt >= 0)) {
+    	l_cmdVolt = 0;
     }
 
 	// have a small dead zone TODO: either better tune or remove,
     // causes small offsets in position sometimes (of about 0.025% at current gain values)
-    cmdVolt = utility::deadzone(cmdVolt,VOLTAGE_THRESHOLD);
+    l_cmdVolt = utility::deadzone(l_cmdVolt,VOLTAGE_THRESHOLD);
 
     if(ctrl == ACT_A) {
-        if(cmdVolt > 0) {       // extending
-            m_actAPwm = cmdVolt;
+        if(l_cmdVolt > 0) {       // extending
+            m_actAPwm = l_cmdVolt;
             m_actADir = 1;
         } else {                // contracting
             m_actADir = 0;
-            m_actAPwm = -cmdVolt;
+            m_actAPwm = -l_cmdVolt;
         }
     } else {
-        if(cmdVolt > 0) {		// extending
-            m_actBPwm = cmdVolt;
+        if(l_cmdVolt > 0) {		// extending
+            m_actBPwm = l_cmdVolt;
             m_actBDir = 1;
         } else {				// contracting
             m_actBDir = 0;
-            m_actBPwm = -cmdVolt;
+            m_actBPwm = -l_cmdVolt;
         }
     }
 }
@@ -224,11 +224,11 @@ float BtuLinear::getActPosition(int act) {
     //     position = m_currentAvgB;
     // }
     if(act == ACT_A) {
-    	position = m_actAPot;
+    	l_position = m_actAPot;
     } else {
-    	position = m_actBPot;
+    	l_position = m_actBPot;
     }
-    return (position - POT_MIN) / (POT_MAX - POT_MIN);
+    return (l_position - POT_MIN) / (POT_MAX - POT_MIN);
 }
 
 // controls velocity on one actuator
@@ -238,12 +238,12 @@ void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
         return;
     }
     // Acquire the actuator position from the potentiometer
-	actPosVC = getActPosition(ctrl);
+	l_actPosVC = getActPosition(ctrl);
 
     // avoid going past the very edges:
 	// Currently at 0.99 and 0.01 due to some uncertainty in scaling/pot readings
     // also to help avoid accumulation of error during such a period
-    if ((actPosVC <= POSITION_MIN && setVelocity < 0) || (actPosVC >= POSITION_MAX && setVelocity > 0)) {
+    if ((l_actPosVC <= POSITION_MIN && setVelocity < 0) || (l_actPosVC >= POSITION_MAX && setVelocity > 0)) {
 		//at an edge, set the setVelocity to 0
         l_setVelVC = 0;
     }
@@ -253,19 +253,19 @@ void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
     }
 
     if(ctrl == ACT_A) {
-        l_actVelVC = (actPosVC - m_oldPosA) / PID_FREQ;
+        l_actVelVC = (l_actPosVC - m_oldPosA) / PID_FREQ;
         // set process value to the derivative of position (velocity)
     	m_velAPid.setProcessValue(l_actVelVC);
         m_velAPid.setSetPoint(l_setVelVC);
         l_deltaVoltVC = m_velAPid.compute();
-        m_oldPosA = actPosVC;        // update old position for so we can keep calculating derivatives
+        m_oldPosA = l_actPosVC;        // update old position for so we can keep calculating derivatives
     }
     else {
-    	l_actVelVC = (actPosVC - m_oldPosB) / PID_FREQ;
+    	l_actVelVC = (l_actPosVC - m_oldPosB) / PID_FREQ;
         m_velBPid.setProcessValue(l_actVelVC);
         m_velBPid.setSetPoint(l_setVelVC);
         l_deltaVoltVC = m_velBPid.compute();
-        m_oldPosB = actPosVC;
+        m_oldPosB = l_actPosVC;
     }
     //add the voltage delta to the current voltage that is the current operating point
     l_cmdVoltVC = utility::clip(m_currentVoltage + l_deltaVoltVC, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
@@ -287,21 +287,21 @@ void BtuLinear::positionControlHelper(float setPos, int ctrl) {
 		return;
 	}
     // Acquire the actuator position from the potentiometer
-	actPos = getActPosition(ctrl);
+	l_actPos = getActPosition(ctrl);
 
 	if(ctrl == ACT_A) {
         m_posAPid.setSetPoint(setPos);
-        m_posAPid.setProcessValue(actPos);
-        cmdVolt = m_posAPid.compute();
+        m_posAPid.setProcessValue(l_actPos);
+        l_cmdVolt = m_posAPid.compute();
         //m_cmdVel = m_posAPid.compute();
     } else {
         m_posBPid.setSetPoint(setPos);
-        m_posBPid.setProcessValue(actPos);
-        cmdVolt = m_posBPid.compute();
+        m_posBPid.setProcessValue(l_actPos);
+        l_cmdVolt = m_posBPid.compute();
         //m_cmdVel = m_posBPid.compute();
     }
 	//velocityControlHelper(m_cmdVel, ctrl);
-    voltageControlHelper(cmdVolt, ctrl);
+    voltageControlHelper(l_cmdVolt, ctrl);
 
 
 }
