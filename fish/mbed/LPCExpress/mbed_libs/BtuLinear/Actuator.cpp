@@ -1,8 +1,8 @@
 #include "Actuator.h"
 
 Actuator::Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float freq):
-    m_posPid(POS_KC, POS_TAUI, POS_TAUD, freq, POS_MIN, POS_MAX, VOLT_MIN, VOLT_MAX, 0),
-    m_velPid(VEL_KC, VEL_TAUI, VEL_TAUD, freq, VEL_MIN, VEL_MAX, VOLT_MIN, VOLT_MAX, 0),
+    m_posPid(POS_KC, POS_KI, POS_KD, freq, POS_MIN, POS_MAX, VOLT_MIN, VOLT_MAX, 0),
+    m_velPid(VEL_KC, VEL_KI, VEL_KD, freq, VEL_MIN, VEL_MAX, VOLT_MIN, VOLT_MAX, 0),
     m_actPwm(pwmPin),
     m_actDir(dirPin),
     m_actPot(potPin)
@@ -24,12 +24,12 @@ float Actuator::getPosition() {
     return scaledPos;
 }
 
-void Actuator::setPosTunings(float kc, float taui, float taud) {
-    m_posPid.setTunings(kc, taui, taud);
+void Actuator::setPosTunings(float kc, float kI, float kD) {
+    m_posPid.setTunings(kc, kI, kD);
 }
 
-void Actuator::setVelTunings(float kc, float taui, float taud) {
-    m_velPid.setTunings(kc, taui, taud);
+void Actuator::setVelTunings(float kc, float kI, float kD) {
+    m_velPid.setTunings(kc, kI, kD);
 }
 
 void Actuator::runVoltControl(float setDuty) {
