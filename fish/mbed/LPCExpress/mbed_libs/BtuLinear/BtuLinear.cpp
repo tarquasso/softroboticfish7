@@ -144,6 +144,10 @@ void BtuLinear::updateAndRunCycle(int mode, float value) {
 
 // sends a duty cycle to one of the actuators, based on the second argument
 void BtuLinear::voltageControlHelper(float setDuty, int ctrl) {
+    // Check if one of the two allowable actuators is called
+	if(ctrl != ACT_A && ctrl != ACT_B) {
+        return;
+    }
 
     l_actPosPC = getActPosition(ctrl);
 	//clip commanded voltage to upper and lower limit
@@ -167,10 +171,10 @@ void BtuLinear::voltageControlHelper(float setDuty, int ctrl) {
             m_actAPwm = -setDuty;
         }
     } else {
-        if(setDuty > 0) {
+        if(setDuty > 0) {		// extending
             m_actBPwm = setDuty;
             m_actBDir = 1;
-        } else {
+        } else {				// contracting
             m_actBDir = 0;
             m_actBPwm = -setDuty;
         }
@@ -306,14 +310,17 @@ void BtuLinear::positionControlHelper(float setPos, int ctrl) {
 
 // control position of both actuators
 void BtuLinear::positionControl(float setPos) {
-    positionControlHelper(setPos, ACT_A);
-    positionControlHelper(setPos, ACT_B);
+	this->positionControlHelper(setPos, ACT_A);
+    this->positionControlHelper(setPos, ACT_B);
 }
 
 // control depth via master-slave
-void BtuLinear::depthControlHelper(float cmdVelocity) {
-    velocityControlHelper(cmdVelocity, ACT_B); // control velocity on one actuator
-    positionControlHelper(getActPosition(ACT_B), ACT_A); // have the other actuator constantly try to mirror the first
+void BtuLinear::depthControlHelper(float cmdVoltage) {
+	// control velocity on one actuator
+	this->voltageControlHelper(cmdVoltage, ACT_B);
+
+	// have the other actuator constantly try to mirror the leading actuator
+	this->positionControlHelper(getActPosition(ACT_B), ACT_A);
 }
 
 // do depth control
@@ -321,13 +328,15 @@ void BtuLinear::depthControl(float setDepthMeters) {
 
 	m_depthPid.setSetPoint(setDepthMeters);
 
-    float curDepth = getDepth();
+    l_curDepth = getDepth();
 
-    m_depthPid.setProcessValue(curDepth);
+    m_depthPid.setProcessValue(l_curDepth);
 
-    float cmdVel = m_depthPid.compute();
-    depthControlHelper(-1*cmdVel);
-    // velocityControl(cmdVel);
+    l_cmdVel = m_depthPid.compute();
+
+    // extending the actuator increases buoyancy -> less depth
+    // therefore the axis direction has to be reversed
+    this->depthControlHelper( -1 * l_cmdVel );
 }
 
 // get a depth reading
