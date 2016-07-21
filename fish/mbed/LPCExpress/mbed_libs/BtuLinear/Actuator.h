@@ -5,7 +5,7 @@
 #include "PidController.h"
 #include "utility.h"
 
-#define VOLTAGE_THRESHOLD 0.025
+#define VOLTAGE_THRESHOLD 0.01
 
 #define POS_KC 16
 #define POS_KI 2

@@ -12,7 +12,7 @@
 #define SERIAL_MESSAGE_NUM_TAUD 3
 #define SERIAL_MESSAGE_NUM_SETVAL 4
 
-#define DRY_RUN 1
+#define DRY_RUN 0
 
 #include "MODSERIAL.h"
 #include "SerialComm.h"

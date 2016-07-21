@@ -73,7 +73,7 @@ void terminateMission() {
     debriefTime = 0.0;
     returnTrip = false;
 
-    btu.updateAndRunCycle(VELOCITY_CTRL_MODE, UNWOUND_POS); // attempt to return to surface
+    btu.updateAndRunCycle(VOLTAGE_CTRL_MODE, UNWOUND_POS); // attempt to return to surface
 }
 
 // returns true if we're close enough to current waypoint
@@ -91,7 +91,7 @@ void runMission() {
 	if(debriefMode) {
 		inMission = 0;
 		missionDepth = 0;
-		btu.updateAndRunCycle(VELOCITY_CTRL_MODE, UNWOUND_POS);
+		btu.updateAndRunCycle(VOLTAGE_CTRL_MODE, UNWOUND_POS);
         // finally tidy up and kill loop if debrief time has completed
 		if(debriefTime >= DEBRIEF_TIME_LIMIT) {
 			terminateMission();
@@ -196,7 +196,7 @@ int main() {
           fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f, rt:%d\r\n",
                   btu.getMode(), btu.getDKc(), btu.getDkI(), btu.getDkD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, missionDepth - depth, missionTime, timeout, returnTrip);
       } else {                  // otherwise just try to surface
-    	  btu.updateAndRunCycle(VELOCITY_CTRL_MODE, UNWOUND_POS);
+    	  btu.updateAndRunCycle(VOLTAGE_CTRL_MODE, UNWOUND_POS);
       }
 
       // take in serial messages to start new missions
