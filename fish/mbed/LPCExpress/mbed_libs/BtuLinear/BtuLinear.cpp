@@ -163,20 +163,20 @@ void BtuLinear::voltageControlHelper(float setDuty, int ctrl) {
     l_cmdVoltPC = utility::deadzone(l_cmdVoltPC,VOLTAGE_THRESHOLD);
 
     if(ctrl == ACT_A) {
-        if(setDuty > 0) {       // extending
-            m_actAPwm = setDuty;
+        if(l_cmdVoltPC > 0) {       // extending
+            m_actAPwm = l_cmdVoltPC;
             m_actADir = 1;
         } else {                // contracting
             m_actADir = 0;
-            m_actAPwm = -setDuty;
+            m_actAPwm = -l_cmdVoltPC;
         }
     } else {
-        if(setDuty > 0) {		// extending
-            m_actBPwm = setDuty;
+        if(l_cmdVoltPC > 0) {		// extending
+            m_actBPwm = l_cmdVoltPC;
             m_actBDir = 1;
         } else {				// contracting
             m_actBDir = 0;
-            m_actBPwm = -setDuty;
+            m_actBPwm = -l_cmdVoltPC;
         }
     }
 }
