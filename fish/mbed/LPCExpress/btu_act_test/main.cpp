@@ -12,6 +12,8 @@
 #define SERIAL_MESSAGE_NUM_TAUD 3
 #define SERIAL_MESSAGE_NUM_SETVAL 4
 
+#define DRY_RUN 1
+
 #include "MODSERIAL.h"
 #include "SerialComm.h"
 
@@ -21,7 +23,7 @@ DigitalOut TestLED(LED1);
 DigitalOut TestLED2(LED2);
 
 // bool clk = true;
-BtuLinear btu = BtuLinear();
+BtuLinear btu = BtuLinear(DRY_RUN);
 int counter = 0;
 int mode = 2;
 float Kc = 1.0;
@@ -74,7 +76,7 @@ int main() {
       depth = btu.getDepth();
 	  if (mode == DEPTH_CTRL_MODE) {
     	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f\r\n",
-                      btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - depth);
+                      btu.getMode(), btu.getDKc(), btu.getDTauI(), btu.getDTauD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - depth);
       } else if (mode == POSITION_CTRL_MODE) {
     	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, pos_er:%.4f %.4f\r\n",
     	                        btu.getMode(), btu.getPKc(), btu.getPTauI(), btu.getPTauD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - btu.getActPosition(ACT_A), setVal - btu.getActPosition(ACT_B));

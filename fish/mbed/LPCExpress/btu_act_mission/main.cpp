@@ -20,6 +20,8 @@
 #define DEF_P_TAUI 0
 #define DEF_P_TAUD 0
 
+#define DRY_RUN 1
+
 
 #include "MODSERIAL/MODSERIAL.h"
 #include "SerialComm/SerialComm.h"
@@ -34,7 +36,7 @@ DigitalOut missionSuccess(LED4);
 LocalFileSystem local("local");
 
 // bool clk = true;
-BtuLinear btu = BtuLinear();
+BtuLinear btu = BtuLinear(DRY_RUN);
 int counter = 0;
 int mode = 2;
 float Kc = 1.0;
@@ -191,7 +193,7 @@ int main() {
       if(inMission || debriefMode) {
           float depth = btu.getDepth();
           fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f, rt:%d\r\n",
-                  btu.getMode(), btu.getKc(), btu.getTauI(), btu.getTauD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, missionDepth - depth, missionTime, timeout, returnTrip);
+                  btu.getMode(), btu.getDKc(), btu.getDTauI(), btu.getDTauD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, missionDepth - depth, missionTime, timeout, returnTrip);
       } else {                  // otherwise just try to surface
     	  btu.updateAndRunCycle(VELOCITY_CTRL_MODE, UNWOUND_POS);
       }

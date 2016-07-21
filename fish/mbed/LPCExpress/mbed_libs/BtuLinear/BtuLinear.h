@@ -18,6 +18,9 @@
 #define POSITION_CTRL_MODE 3
 #define DEFAULT_CTRL_MODE VELOCITY_CTRL_MODE
 
+#define DRY_RUN_POT_PIN p18
+
+
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5
 
@@ -56,7 +59,9 @@ private:
   Actuator m_actA;
   Actuator m_actB;
   MS5837 m_pressureSensor;
+  AnalogIn m_dryRunPot;
   int m_mode;
+  bool m_dryRun;
   float m_kc, m_tauI, m_tauD;
   float m_v_kc, m_v_tauI, m_v_tauD;
   float m_p_kc, m_p_tauI, m_p_tauD;
@@ -82,6 +87,7 @@ protected:
 
 public:
   BtuLinear();
+  BtuLinear(bool);
   ~BtuLinear();
   void init();
   void stop();
