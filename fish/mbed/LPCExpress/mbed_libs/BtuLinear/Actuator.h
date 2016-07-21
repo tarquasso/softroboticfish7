@@ -8,12 +8,12 @@
 #define VOLTAGE_THRESHOLD 0.025
 
 #define POS_KC 1
-#define POS_TAUI 0
-#define POS_TAUD 0
+#define POS_KI 0
+#define POS_KD 0
 
 #define VEL_KC 0.5
-#define VEL_TAUI 0
-#define VEL_TAUD 0
+#define VEL_KI 0
+#define VEL_KD 0
 
 #define POS_MIN 0.0
 #define POS_MAX 1.0
@@ -46,11 +46,11 @@ class Actuator {
     ~Actuator();
     void reset();
     float getPosition();
-    void setPosTunings(float, float, float);
-    void setVelTunings(float, float, float);
-    void runVoltControl(float);
-    void runVelControl(float);
-    void runPosControl(float);
+    void setPosTunings(float kc, float kI, float kD);
+    void setVelTunings(float kc, float kI, float kD);
+    void runVoltControl(float setDuty);
+    void runVelControl(float setVel);
+    void runPosControl(float setPos);
 };
 
 #endif

@@ -23,9 +23,9 @@
 
 /* #define PERIOD_PWM 0.00345 */
 
-#define DEP_K_C 1.0
-#define DEP_TAU_I 0.0
-#define DEP_TAU_D 0.0
+#define DEP_KC 1.0
+#define DEP_KI 0.0
+#define DEP_KD 0.0
 
 #define PID_FREQ 0.05
 
@@ -88,7 +88,7 @@ public:
   void updateDepthTunings(float kc, float kI, float kD);
   void updatePosTunings(float kc, float kI, float kD);
   void updateVelTunings(float kc, float kI, float kD);
-  float getActPosition(int act);
+  float getActPosition(int act = ACT_A);
   void updateMode(int mode);
   void runCycle(float setVal);
   void updateAndRunCycle(int mode, float value);
