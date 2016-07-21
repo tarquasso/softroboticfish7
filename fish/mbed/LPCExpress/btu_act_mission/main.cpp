@@ -193,7 +193,7 @@ int main() {
       if(inMission || debriefMode) {
           float depth = btu.getDepth();
           fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f, rt:%d\r\n",
-                  btu.getMode(), btu.getDKc(), btu.getDTauI(), btu.getDTauD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, missionDepth - depth, missionTime, timeout, returnTrip);
+                  btu.getMode(), btu.getDKc(), btu.getDkI(), btu.getDkD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, missionDepth - depth, missionTime, timeout, returnTrip);
       } else {                  // otherwise just try to surface
     	  btu.updateAndRunCycle(VELOCITY_CTRL_MODE, UNWOUND_POS);
       }

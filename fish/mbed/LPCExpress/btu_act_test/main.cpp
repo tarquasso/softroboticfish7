@@ -76,10 +76,10 @@ int main() {
       depth = btu.getDepth();
 	  if (mode == DEPTH_CTRL_MODE) {
     	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f\r\n",
-                      btu.getMode(), btu.getDKc(), btu.getDTauI(), btu.getDTauD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - depth);
+                      btu.getMode(), btu.getDKc(), btu.getDkI(), btu.getDkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - depth);
       } else if (mode == POSITION_CTRL_MODE) {
     	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, pos_er:%.4f %.4f\r\n",
-    	                        btu.getMode(), btu.getPKc(), btu.getPTauI(), btu.getPTauD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - btu.getActPosition(ACT_A), setVal - btu.getActPosition(ACT_B));
+    	                        btu.getMode(), btu.getPKc(), btu.getPkI(), btu.getPkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - btu.getActPosition(ACT_A), setVal - btu.getActPosition(ACT_B));
       } else {
     	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f\r\n", btu.getMode(), Kc, TauI, TauD, setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth);
       }
