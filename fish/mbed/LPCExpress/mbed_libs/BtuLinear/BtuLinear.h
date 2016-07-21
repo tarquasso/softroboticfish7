@@ -104,8 +104,10 @@ private:
 
   float m_avg_windowB[AVG_WINDOW_WIDTH];
   float m_currentAvgB;
+  // preallocated local Variables for speed, should not occur in more than one function
   float l_actPosVC, l_deltaVoltVC, l_cmdVoltVC, l_setVelVC, l_actVelVC;
   float l_cmdVoltPC, l_actPosPC;
+  float l_curDepth, l_cmdVel;
 
   /* void positionControl(float setPosDeg); */
   void voltageControl(float setDuty);
@@ -115,7 +117,7 @@ private:
   void positionControl(float setPos);
   void positionControlHelper(float setPos, int ctrl);
   void depthControl(float setDepthMeters);
-  void depthControlHelper(float cmdVelocity);
+  void depthControlHelper(float cmdVoltage);
   void updatePositionReadings();
 
 protected:
