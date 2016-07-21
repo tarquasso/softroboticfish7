@@ -33,15 +33,21 @@ void Actuator::setVelTunings(float kc, float kI, float kD) {
 }
 
 void Actuator::runVoltControl(float setDuty) {
-    float pos = getPosition();
-    float cmdVolt = utility::clip(setDuty, VOLT_MIN, VOLT_MAX);
+	// clip commanded duty cycle to VOLT_MIN, VOLT_MAX range
+	float cmdVolt = utility::clip(setDuty, VOLT_MIN, VOLT_MAX);
 
+	// read in potentiometer position within 0.0 -> 1.0 range
+	float pos = getPosition();
+
+	// check if at limit and accordingly do not allow the driving voltage push actuator further than the limit
     if((pos <= POSITION_MIN && cmdVolt <= 0) || (pos >= POSITION_MAX && cmdVolt >= 0)) {
         cmdVolt = 0;
     }
 
+    // check and set to zero if voltage is within deadzone
     cmdVolt = utility::deadzone(cmdVolt, VOLTAGE_THRESHOLD);
 
+    // set pwm values and direction pin for motor driver
     if(cmdVolt > 0) {
         m_actPwm = cmdVolt;
         m_actDir = 1;
@@ -52,27 +58,41 @@ void Actuator::runVoltControl(float setDuty) {
 }
 
 void Actuator::runVelControl(float setVel) {
-    float pos = getPosition();
-    float cmdVel = setVel;
-    if((pos <= POS_MIN && setVel < 0) || (pos >= POS_MAX && setVel > 0)) {
+	// read in potentiometer position within 0.0 -> 1.0 range
+	float pos = getPosition();
+
+	// set velocity is commanded velocity TODO: clipping?
+	float cmdVel = setVel;
+
+	// check if at limit and accordingly do not allow driving velocity further than the limit
+	if((pos <= POS_MIN && setVel < 0) || (pos >= POS_MAX && setVel > 0)) {
         cmdVel = 0;
     }
 
+	// calculate current velocity by backward differentiation
     float currentVel = (pos - m_oldPos) / m_timestep;
+    // current velocity set as process value of PID controller
     m_velPid.setProcessValue(currentVel);
+    // commanded velocity as set point of PID controller
     m_velPid.setSetPoint(cmdVel);
+    // delta in voltage as offset from current operating velocity point computed by PID
     float deltaVolt = m_velPid.compute();
+    // store current pose at old pose for next iteration (needed for differentiation)
     m_oldPos = pos;
-
+    // add delta in voltage to current voltage and clip at min max if necessary
     m_currentVoltage = utility::clip(m_currentVoltage + deltaVolt, VOLT_MIN, VOLT_MAX);
 }
 
 void Actuator::runPosControl(float setPos) {
-    float pos = getPosition();
-
+	// read in potentiometer position within 0.0 -> 1.0 range
+	float pos = getPosition();
+	// current position set as process value of PID controller
     m_posPid.setProcessValue(pos);
+    // commanded position as set point of PID controller
     m_posPid.setSetPoint(setPos);
+    // commanded voltage as output from PID controller
     float cmdVolt = m_posPid.compute();
 
+    // run voltage control with commaned voltage
     runVoltControl(cmdVolt);
 }
