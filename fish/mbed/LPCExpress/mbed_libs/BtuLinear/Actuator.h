@@ -5,6 +5,7 @@
 #include "PidController.h"
 #include "utility.h"
 
+#define VOLTAGE_THRESHOLD 0.025
 
 #define POS_KC 1
 #define POS_TAUI 0
@@ -26,6 +27,9 @@
 #define POSITION_MAX 0.99
 #define POSITION_MIN 0.01
 
+#define POT_MIN 0.01
+#define POT_MAX 0.98
+
 class Actuator {
  private:
     PidController m_posPid;
@@ -38,13 +42,15 @@ class Actuator {
     float m_currentVoltage;
 
  public:
-    Actuator();
+    Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float freq);
     ~Actuator();
     void reset();
     float getPosition();
-    void updatePosTunings(float, float, float);
-    void updateVelTunings(float, float, float);
+    void setPosTunings(float, float, float);
+    void setVelTunings(float, float, float);
     void runVoltControl(float);
     void runVelControl(float);
     void runPosControl(float);
-}
+};
+
+#endif

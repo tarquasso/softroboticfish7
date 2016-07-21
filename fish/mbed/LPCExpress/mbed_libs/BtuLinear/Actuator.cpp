@@ -1,3 +1,5 @@
+#include "Actuator.h"
+
 Actuator::Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float freq):
     m_posPid(POS_KC, POS_TAUI, POS_TAUD, freq, POS_MIN, POS_MAX, VOLT_MIN, VOLT_MAX, 0),
     m_velPid(VEL_KC, VEL_TAUI, VEL_TAUD, freq, VEL_MIN, VEL_MAX, VOLT_MIN, VOLT_MAX, 0),
@@ -18,15 +20,15 @@ void Actuator::reset() {
 
 float Actuator::getPosition() {
     float position = m_actPot;
-    float scaledPos = (position - POT_MIN) / (POT_MAX - POT_MIN)
-    return position;
+    float scaledPos = (position - POT_MIN) / (POT_MAX - POT_MIN);
+    return scaledPos;
 }
 
-void Actuator::updatePosTunings(float kc, float taui, float taud) {
+void Actuator::setPosTunings(float kc, float taui, float taud) {
     m_posPid.setTunings(kc, taui, taud);
 }
 
-void Actuator::updateVelTunings(float kc, float taui, float taud) {
+void Actuator::setVelTunings(float kc, float taui, float taud) {
     m_velPid.setTunings(kc, taui, taud);
 }
 
@@ -62,15 +64,15 @@ void Actuator::runVelControl(float setVel) {
     float deltaVolt = m_velPid.compute();
     m_oldPos = pos;
 
-    m_currentVoltage = utility::clip(m_currentVoltage + deltaVolt, VOLT_MIN, VOLT_MAXe;)
+    m_currentVoltage = utility::clip(m_currentVoltage + deltaVolt, VOLT_MIN, VOLT_MAX);
 }
 
 void Actuator::runPosControl(float setPos) {
     float pos = getPosition();
 
     m_posPid.setProcessValue(pos);
-    m_posPid.setSetValue(setPos);
-    float cmdVolt = posPid.compute();
+    m_posPid.setSetPoint(setPos);
+    float cmdVolt = m_posPid.compute();
 
     runVoltControl(cmdVolt);
 }

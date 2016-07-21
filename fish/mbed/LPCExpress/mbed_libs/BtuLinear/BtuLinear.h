@@ -2,10 +2,10 @@
 #define BTULINEAR_H
 
 #include "mbed.h"
-#include "QEI.h"
 #include "MS5837.h" // pressure sensor
 #include "PidController.h"
 #include "utility.h"
+#include "Actuator.h"
 /* #include "Servo.h" */
 
 
@@ -21,29 +21,13 @@
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5
 
-#define VEL_MIN -1.0          /* servoLen/sec */
-#define VEL_MAX 1.0
-
-#define POS_MIN -1.0
-#define POS_MAX 1.0
-
-#define PERIOD_PWM 0.00345
+/* #define PERIOD_PWM 0.00345 */
 
 #define DEP_K_C 1.0
 #define DEP_TAU_I 0.0
 #define DEP_TAU_D 0.0
+
 #define PID_FREQ 0.05
-
-#define SP_K_C 8.0
-#define SP_TAU_I 0.0
-#define SP_TAU_D 0.0
-
-#define VEL_K_C 1
-#define VEL_TAU_I 0
-#define VEL_TAU_D 0
-
-/* #define SERVO_PWM_WIDTH 0.0006 */
-/* #define SERVO_DEGREE_WIDTH 91.0 */
 
 #define PIN_IMU_SDA p28
 #define PIN_IMU_SCL p27
@@ -60,15 +44,7 @@
 #define ACT_A 1
 #define ACT_B 2
 
-#define POT_MIN 0.01
-#define POT_MAX 0.98
-
 #define AVG_WINDOW_WIDTH 5
-
-#define VOLTAGE_THRESHOLD 0.025
-
-#define POSITION_MAX 0.99
-#define POSITION_MIN 0.01
 
 /**
  * This class is used for controlling and accessing data from the Buoyancy Test Unit
@@ -77,48 +53,29 @@
 class BtuLinear {
 private:
   PidController m_depthPid;
-  PidController m_posAPid;
-  PidController m_posBPid;
-  PidController m_velAPid;
-  PidController m_velBPid;
+  Actuator m_actA;
+  Actuator m_actB;
   MS5837 m_pressureSensor;
   int m_mode;
   float m_kc, m_tauI, m_tauD;
   float m_v_kc, m_v_tauI, m_v_tauD;
   float m_p_kc, m_p_tauI, m_p_tauD;
-  PwmOut m_actAPwm;
-  PwmOut m_actBPwm;
-  AnalogIn m_actAPot;
-  AnalogIn m_actBPot;
-  DigitalOut m_actADir;
-  DigitalOut m_actBDir;
-  float m_oldPosA;
-  float m_oldPosB;
-  float m_currentVoltage;
 
-  int m_avg_windowPtr;
-  int m_avg_windowSize;
+  /* int m_avg_windowPtr; */
+  /* int m_avg_windowSize; */
 
-  float m_avg_windowA[AVG_WINDOW_WIDTH];
-  float m_currentAvgA;
+  /* float m_avg_windowA[AVG_WINDOW_WIDTH]; */
+  /* float m_currentAvgA; */
 
-  float m_avg_windowB[AVG_WINDOW_WIDTH];
-  float m_currentAvgB;
-  // preallocated local Variables for speed, should not occur in more than one function
-  float l_actPosVC, l_deltaVoltVC, l_cmdVoltVC, l_setVelVC, l_actVelVC;
-  float l_cmdVoltPC, l_actPosPC;
-  float l_curDepth, l_cmdVel;
+  /* float m_avg_windowB[AVG_WINDOW_WIDTH]; */
+  /* float m_currentAvgB; */
 
-  /* void positionControl(float setPosDeg); */
   void voltageControl(float setDuty);
-  void voltageControlHelper(float setDuty, int ctrl);
   void velocityControl(float setVel);
-  void velocityControlHelper(float setVelocity, int ctrl);
   void positionControl(float setPos);
-  void positionControlHelper(float setPos, int ctrl);
   void depthControl(float setDepthMeters);
   void depthControlHelper(float cmdVoltage);
-  void updatePositionReadings();
+  /* void updatePositionReadings(); */
 
 protected:
 
@@ -138,9 +95,9 @@ public:
   float getPressure();
   float getDepth();
   int getMode() { return m_mode; };
-  float getKc() { return m_kc; };
-  float getTauI() { return m_tauI; };
-  float getTauD() { return m_tauD; };
+  float getDKc() { return m_kc; };
+  float getDTauI() { return m_tauI; };
+  float getDTauD() { return m_tauD; };
   float getVKc() {return m_v_kc; };
   float getVTauI() { return m_v_tauI; };
   float getVTauD() { return m_v_tauD; };
