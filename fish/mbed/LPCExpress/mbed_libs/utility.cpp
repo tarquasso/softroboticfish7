@@ -9,4 +9,16 @@ float clip(float val, float min, float max) {
 	return (newVal < min) ? min : newVal;
 }
 
+float deadzone(float val, float threshold) {
+	// get absolute value for dead zone
+	float absVal = (val >= 0) ? val : -val;
+	// check if within threshold
+	if (absVal <= threshold) {
+		return 0;
+	} else {
+		return val;
+	}
+
+}
+
 }

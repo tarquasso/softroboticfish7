@@ -105,6 +105,7 @@ private:
   float m_avg_windowB[AVG_WINDOW_WIDTH];
   float m_currentAvgB;
   float m_actPosVC, m_deltaVoltVC, m_cmdVoltVC, m_absCmdVoltVC, m_setVelVC, m_actVelVC;
+  float m_cmdVoltPC, m_actPosPC;
 
   /* void positionControl(float setPosDeg); */
   void voltageControl(float setDuty);

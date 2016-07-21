@@ -213,7 +213,8 @@ void BtuLinear::updatePositionReadings() {
 
 // gets the current Actuator Position.  No SMA, just reads and rescales the potentiometer
 float BtuLinear::getActPosition(int act) {
-    // updatePositionReadings();
+    // Following code is for moving average, TODO: currently uncommented
+	// updatePositionReadings();
     // float position;
     // if(act == ACT_A) {
     //     position = m_currentAvgA;
@@ -276,14 +277,10 @@ void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
 
     m_cmdVoltVC = m_currentVoltage;
 
-    // get absolute value for dead zone
-    m_absCmdVoltVC = (m_cmdVoltVC >= 0) ? m_cmdVoltVC : -m_cmdVoltVC;
-
-    // have a small dead zone TODO: either better tune or remove,
+	// have a small dead zone TODO: either better tune or remove,
     // causes small offsets in position sometimes (of about 0.025% at current gain values)
-    if(m_absCmdVoltVC <= VOLTAGE_THRESHOLD) {
-        m_cmdVoltVC = 0;
-    }
+    m_cmdVoltVC = utility::deadzone(m_cmdVoltVC,VOLTAGE_THRESHOLD);
+
     voltageControlHelper(m_cmdVoltVC, ctrl);
 
 }
@@ -296,17 +293,39 @@ void BtuLinear::velocityControl(float setVel) {
 
 // control position of one actuator
 void BtuLinear::positionControlHelper(float setPos, int ctrl) {
-    if(ctrl == ACT_A) {
+	 // Check if one of the two allowable actuators is called
+	if(ctrl != ACT_A && ctrl != ACT_B) {
+		return;
+	}
+    // Acquire the actuator position from the potentiometer
+	m_actPosPC = getActPosition(ctrl);
+
+	if(ctrl == ACT_A) {
         m_posAPid.setSetPoint(setPos);
-        m_posAPid.setProcessValue(getActPosition(ACT_A));
-        float cmdVelA = m_posAPid.compute();
-        velocityControlHelper(cmdVelA, ACT_A);
+        m_posAPid.setProcessValue(m_actPosPC);
+        m_cmdVoltPC = m_posAPid.compute();
+        //m_cmdVel = m_posAPid.compute();
     } else {
         m_posBPid.setSetPoint(setPos);
-        m_posBPid.setProcessValue(getActPosition(ACT_B));
-        float cmdVelB = m_posBPid.compute();
-        velocityControlHelper(cmdVelB, ACT_B);
+        m_posBPid.setProcessValue(m_actPosPC);
+        m_cmdVoltPC = m_posBPid.compute();
+        //m_cmdVel = m_posBPid.compute();
     }
+	//velocityControlHelper(m_cmdVel, ctrl);
+
+	//clip commanded voltage to upper and lower limit
+	m_cmdVoltPC = utility::clip(m_cmdVoltPC, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
+
+    // arrest any movement at the edges, and reset current voltage, to aid responsiveness at the edges
+    if ((m_actPosPC <= POSITION_MIN && m_cmdVoltPC <= 0) || (m_actPosPC >= POSITION_MAX && m_cmdVoltPC >= 0)) {
+    	m_cmdVoltPC = 0;
+    }
+
+	// have a small dead zone TODO: either better tune or remove,
+    // causes small offsets in position sometimes (of about 0.025% at current gain values)
+    m_cmdVoltPC = utility::deadzone(m_cmdVoltPC,VOLTAGE_THRESHOLD);
+
+    voltageControlHelper(m_cmdVoltPC, ctrl);
 
 }
 
