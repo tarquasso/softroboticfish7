@@ -66,6 +66,10 @@
 #define AVG_WINDOW_WIDTH 5
 
 #define VOLTAGE_THRESHOLD 0.025
+
+#define POSITION_MAX 0.99
+#define POSITION_MIN 0.01
+
 /**
  * This class is used for controlling and accessing data from the Buoyancy Test Unit
  * It includes instances of the classes PwmOut
@@ -100,6 +104,7 @@ private:
 
   float m_avg_windowB[AVG_WINDOW_WIDTH];
   float m_currentAvgB;
+  float m_actPosVC, m_deltaVoltVC, m_cmdVoltVC, m_absCmdVoltVC, m_setVelVC, m_actVelVC;
 
   /* void positionControl(float setPosDeg); */
   void voltageControl(float setDuty);

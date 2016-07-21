@@ -232,47 +232,59 @@ float BtuLinear::getActPosition(int act) {
 
 // controls velocity on one actuator
 void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
-    if(ctrl != ACT_A && ctrl != ACT_B) {
+    // Check if one of the two allowable actuators is called
+	if(ctrl != ACT_A && ctrl != ACT_B) {
         return;
     }
-    float pos;
-    float deltaVolt;
-    float cmdVolt;
-    float absCmdVolt;
-    float setVel = setVelocity;
+    // Acquire the actuator position from the potentiometer
+	m_actPosVC = getActPosition(ctrl);
 
-    // avoid going past the very edges.  Currently at 0.99 and 0.01 due to some uncertainty in scaling/pot readings
+    // avoid going past the very edges:
+	// Currently at 0.99 and 0.01 due to some uncertainty in scaling/pot readings
     // also to help avoid accumulation of error during such a period
-    if ((getActPosition(ctrl) <= 0.01 && setVel < 0) || (getActPosition(ctrl) >= 0.99 && setVel > 0)) {
-        setVel = 0;
+    if ((m_actPosVC <= POSITION_MIN && setVelocity < 0) || (m_actPosVC >= POSITION_MAX && setVelocity > 0)) {
+		//at an edge, set the setVelocity to 0
+        m_setVelVC = 0;
+    }
+    else {
+    	// not at an edge, use setVelocity
+    	m_setVelVC = setVelocity;
     }
 
     if(ctrl == ACT_A) {
-        pos = getActPosition(ACT_A);
-        m_velAPid.setProcessValue((pos - m_oldPosA) / PID_FREQ); // set process value to the derivative of position (velocity)
-        m_velAPid.setSetPoint(setVel);
-        deltaVolt = m_velAPid.compute();
-        m_oldPosA = pos;        // update old position for so we can keep calculating derivatives
-    } else if(ctrl == ACT_B){
-        pos = getActPosition(ACT_B);
-        m_velBPid.setProcessValue((pos - m_oldPosB) / PID_FREQ);
-        m_velBPid.setSetPoint(setVel);
-        deltaVolt = m_velBPid.compute();
-        m_oldPosB = pos;
+        m_actVelVC = (m_actPosVC - m_oldPosA) / PID_FREQ;
+        // set process value to the derivative of position (velocity)
+    	m_velAPid.setProcessValue(m_actVelVC);
+        m_velAPid.setSetPoint(m_setVelVC);
+        m_deltaVoltVC = m_velAPid.compute();
+        m_oldPosA = m_actPosVC;        // update old position for so we can keep calculating derivatives
     }
-    m_currentVoltage = utility::clip(m_currentVoltage + deltaVolt, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
+    else {
+    	m_actVelVC = (m_actPosVC - m_oldPosB) / PID_FREQ;
+        m_velBPid.setProcessValue(m_actVelVC);
+        m_velBPid.setSetPoint(m_setVelVC);
+        m_deltaVoltVC = m_velBPid.compute();
+        m_oldPosB = m_actPosVC;
+    }
+    //add the voltage delta to the current voltage that is the current operating point
+    m_currentVoltage = utility::clip(m_currentVoltage + m_deltaVoltVC, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
 
     // arrest any movement at the edges, and reset accumulated voltage, to aid responsiveness at the edges
-    if ((getActPosition(ctrl) <= 0.01 && setVel <= 0) || (getActPosition(ctrl) >= 0.99 && setVel >= 0)) {
+    if ((m_actPosVC <= POSITION_MIN && m_setVelVC <= 0) || (m_actPosVC >= POSITION_MAX && m_setVelVC >= 0)) {
         m_currentVoltage = 0;
     }
 
-    cmdVolt = m_currentVoltage;
-    absCmdVolt = (cmdVolt >= 0) ? cmdVolt : -cmdVolt; // get absolute value for deadzone
-    if(absCmdVolt <= VOLTAGE_THRESHOLD) {             // have a small deadzone TODO: either better tune or remove, causes small offsets in position sometimes (of about 0.025% at current gain values)
-        cmdVolt = 0;
+    m_cmdVoltVC = m_currentVoltage;
+
+    // get absolute value for dead zone
+    m_absCmdVoltVC = (m_cmdVoltVC >= 0) ? m_cmdVoltVC : -m_cmdVoltVC;
+
+    // have a small dead zone TODO: either better tune or remove,
+    // causes small offsets in position sometimes (of about 0.025% at current gain values)
+    if(m_absCmdVoltVC <= VOLTAGE_THRESHOLD) {
+        m_cmdVoltVC = 0;
     }
-    voltageControlHelper(cmdVolt, ctrl);
+    voltageControlHelper(m_cmdVoltVC, ctrl);
 
 }
 
