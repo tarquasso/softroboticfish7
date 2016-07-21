@@ -225,14 +225,12 @@ float BtuLinear::getActPosition(int act) {
     // } else {
     //     position = m_currentAvgB;
     // }
-    float position;
     if(act == ACT_A) {
-        position = m_actAPot;
+    	l_position = m_actAPot;
     } else {
-        position = m_actBPot;
+    	l_position = m_actBPot;
     }
-    float scaledPos = (position - POT_MIN) / (POT_MAX - POT_MIN);
-    return scaledPos;
+    return (l_position - POT_MIN) / (POT_MAX - POT_MIN);
 }
 
 // controls velocity on one actuator
@@ -370,7 +368,3 @@ float BtuLinear::getDepth() {
     float pvDepthMeters = (pvDepth - P_ATMOS_MBAR) / P_WATER_SURFACE_MBAR;
     return pvDepthMeters;
 }
-
-// float BTU::getServoPos() {
-// 	return m_motorServo.readPosition();
-// }
