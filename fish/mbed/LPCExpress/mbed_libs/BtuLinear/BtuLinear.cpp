@@ -144,22 +144,20 @@ void BtuLinear::updateAndRunCycle(int mode, float value) {
 
 // sends a duty cycle to one of the actuators, based on the second argument
 void BtuLinear::voltageControlHelper(float setDuty, int ctrl) {
-    // PwmOut* actPwm;
-    // DigitalOut* actDir;
-    // if(ctrl == ACT_A) {
-    //     actPwm = &m_actAPwm;
-    //     actDir = &m_actADir;
-    // } else {
-    //     actPwm = &m_actBPwm;
-    //     actDir = &m_actBDir;
-    // }
-    // if(setDuty > 0) {
-    //     *actPwm = setDuty;
-    //     *actDir = 1;
-    // } else {
-    //     *actDir = 0;
-    //     *actPwm = -setDuty;
-    // }
+
+    l_actPosPC = getActPosition(ctrl);
+	//clip commanded voltage to upper and lower limit
+	l_cmdVoltPC = utility::clip(setDuty, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
+
+    // arrest any movement at the edges, and reset current voltage, to aid responsiveness at the edges
+    if ((l_actPosPC <= POSITION_MIN && l_cmdVoltPC <= 0) || (l_actPosPC >= POSITION_MAX && l_cmdVoltPC >= 0)) {
+    	l_cmdVoltPC = 0;
+    }
+
+	// have a small dead zone TODO: either better tune or remove,
+    // causes small offsets in position sometimes (of about 0.025% at current gain values)
+    l_cmdVoltPC = utility::deadzone(l_cmdVoltPC,VOLTAGE_THRESHOLD);
+
     if(ctrl == ACT_A) {
         if(setDuty > 0) {       // extending
             m_actAPwm = setDuty;
@@ -268,18 +266,7 @@ void BtuLinear::velocityControlHelper(float setVelocity, int ctrl) {
         m_oldPosB = l_actPosVC;
     }
     //add the voltage delta to the current voltage that is the current operating point
-    m_currentVoltage = utility::clip(m_currentVoltage + l_deltaVoltVC, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
-
-    // arrest any movement at the edges, and reset accumulated voltage, to aid responsiveness at the edges
-    if ((l_actPosVC <= POSITION_MIN && l_setVelVC <= 0) || (l_actPosVC >= POSITION_MAX && l_setVelVC >= 0)) {
-        m_currentVoltage = 0;
-    }
-
-    l_cmdVoltVC = m_currentVoltage;
-
-	// have a small dead zone TODO: either better tune or remove,
-    // causes small offsets in position sometimes (of about 0.025% at current gain values)
-    l_cmdVoltVC = utility::deadzone(l_cmdVoltVC,VOLTAGE_THRESHOLD);
+    l_cmdVoltVC = utility::clip(m_currentVoltage + l_deltaVoltVC, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
 
     voltageControlHelper(l_cmdVoltVC, ctrl);
 
@@ -312,20 +299,8 @@ void BtuLinear::positionControlHelper(float setPos, int ctrl) {
         //m_cmdVel = m_posBPid.compute();
     }
 	//velocityControlHelper(m_cmdVel, ctrl);
-
-	//clip commanded voltage to upper and lower limit
-	l_cmdVoltPC = utility::clip(l_cmdVoltPC, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
-
-    // arrest any movement at the edges, and reset current voltage, to aid responsiveness at the edges
-    if ((l_actPosPC <= POSITION_MIN && l_cmdVoltPC <= 0) || (l_actPosPC >= POSITION_MAX && l_cmdVoltPC >= 0)) {
-    	l_cmdVoltPC = 0;
-    }
-
-	// have a small dead zone TODO: either better tune or remove,
-    // causes small offsets in position sometimes (of about 0.025% at current gain values)
-    l_cmdVoltPC = utility::deadzone(l_cmdVoltPC,VOLTAGE_THRESHOLD);
-
     voltageControlHelper(l_cmdVoltPC, ctrl);
+
 
 }
 
