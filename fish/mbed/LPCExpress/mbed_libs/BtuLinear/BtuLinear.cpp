@@ -206,7 +206,3 @@ float BtuLinear::getDepth() {
     float pvDepthMeters = (pvDepth - P_ATMOS_MBAR) / P_WATER_SURFACE_MBAR;
     return pvDepthMeters;
 }
-
-// float BTU::getServoPos() {
-// 	return m_motorServo.readPosition();
-// }
