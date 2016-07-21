@@ -149,34 +149,34 @@ void BtuLinear::voltageControlHelper(float setDuty, int ctrl) {
         return;
     }
 
-    l_actPosPC = getActPosition(ctrl);
+    l_actPos = getActPosition(ctrl);
 	//clip commanded voltage to upper and lower limit
-	l_cmdVoltPC = utility::clip(setDuty, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
+	l_cmdVolt = utility::clip(setDuty, -1.0, 1.0); // increase or decrease current voltage to get closer to desired velocity
 
     // arrest any movement at the edges, and reset current voltage, to aid responsiveness at the edges
-    if ((l_actPosPC <= POSITION_MIN && l_cmdVoltPC <= 0) || (l_actPosPC >= POSITION_MAX && l_cmdVoltPC >= 0)) {
-    	l_cmdVoltPC = 0;
+    if ((l_actPos <= POSITION_MIN && l_cmdVolt <= 0) || (l_actPos >= POSITION_MAX && l_cmdVolt >= 0)) {
+    	l_cmdVolt = 0;
     }
 
 	// have a small dead zone TODO: either better tune or remove,
     // causes small offsets in position sometimes (of about 0.025% at current gain values)
-    l_cmdVoltPC = utility::deadzone(l_cmdVoltPC,VOLTAGE_THRESHOLD);
+    l_cmdVolt = utility::deadzone(l_cmdVolt,VOLTAGE_THRESHOLD);
 
     if(ctrl == ACT_A) {
-        if(l_cmdVoltPC > 0) {       // extending
-            m_actAPwm = l_cmdVoltPC;
+        if(l_cmdVolt > 0) {       // extending
+            m_actAPwm = l_cmdVolt;
             m_actADir = 1;
         } else {                // contracting
             m_actADir = 0;
-            m_actAPwm = -l_cmdVoltPC;
+            m_actAPwm = -l_cmdVolt;
         }
     } else {
-        if(l_cmdVoltPC > 0) {		// extending
-            m_actBPwm = l_cmdVoltPC;
+        if(l_cmdVolt > 0) {		// extending
+            m_actBPwm = l_cmdVolt;
             m_actBDir = 1;
         } else {				// contracting
             m_actBDir = 0;
-            m_actBPwm = -l_cmdVoltPC;
+            m_actBPwm = -l_cmdVolt;
         }
     }
 }
@@ -287,21 +287,21 @@ void BtuLinear::positionControlHelper(float setPos, int ctrl) {
 		return;
 	}
     // Acquire the actuator position from the potentiometer
-	l_actPosPC = getActPosition(ctrl);
+	l_actPos = getActPosition(ctrl);
 
 	if(ctrl == ACT_A) {
         m_posAPid.setSetPoint(setPos);
-        m_posAPid.setProcessValue(l_actPosPC);
-        l_cmdVoltPC = m_posAPid.compute();
+        m_posAPid.setProcessValue(l_actPos);
+        l_cmdVolt = m_posAPid.compute();
         //m_cmdVel = m_posAPid.compute();
     } else {
         m_posBPid.setSetPoint(setPos);
-        m_posBPid.setProcessValue(l_actPosPC);
-        l_cmdVoltPC = m_posBPid.compute();
+        m_posBPid.setProcessValue(l_actPos);
+        l_cmdVolt = m_posBPid.compute();
         //m_cmdVel = m_posBPid.compute();
     }
 	//velocityControlHelper(m_cmdVel, ctrl);
-    voltageControlHelper(l_cmdVoltPC, ctrl);
+    voltageControlHelper(l_cmdVolt, ctrl);
 
 
 }

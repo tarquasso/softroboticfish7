@@ -106,8 +106,8 @@ private:
   float m_currentAvgB;
   // preallocated local Variables for speed, should not occur in more than one function
   float l_position;
+  float l_cmdVolt, l_actPos;
   float l_actPosVC, l_deltaVoltVC, l_cmdVoltVC, l_setVelVC, l_actVelVC;
-  float l_cmdVoltPC, l_actPosPC;
   float l_curDepth, l_cmdVel;
 
   /* void positionControl(float setPosDeg); */
