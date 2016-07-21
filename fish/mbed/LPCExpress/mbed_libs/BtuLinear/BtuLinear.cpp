@@ -1,17 +1,7 @@
 #include "BtuLinear.h"
 
-BtuLinear::BtuLinear():
-    m_depthPid(DEP_KC, DEP_KI, DEP_KD, PID_FREQ, DEPTH_MIN, DEPTH_MAX, VEL_MIN, VEL_MAX, 0),
-    m_actA(PIN_ACTA_PWM, PIN_ACTA_DIR, PIN_ACTA_POT, PID_FREQ),
-    m_actB(PIN_ACTB_PWM, PIN_ACTB_DIR, PIN_ACTB_POT, PID_FREQ),
-	m_pressureSensor(PIN_IMU_SDA, PIN_IMU_SCL),
-    m_dryRunPot(DRY_RUN_POT_PIN)
-{
-    m_dryRun = false;
-};
-
 BtuLinear::BtuLinear(bool dryRun):
-    m_depthPid(DEP_K_C, DEP_TAU_I, DEP_TAU_D, PID_FREQ, DEPTH_MIN, DEPTH_MAX, VEL_MIN, VEL_MAX, 0),
+    m_depthPid(DEP_KC, DEP_KI, DEP_KD, PID_FREQ, DEPTH_MIN, DEPTH_MAX, VEL_MIN, VEL_MAX, 0),
     m_actA(PIN_ACTA_PWM, PIN_ACTA_DIR, PIN_ACTA_POT, PID_FREQ),
     m_actB(PIN_ACTB_PWM, PIN_ACTB_DIR, PIN_ACTB_POT, PID_FREQ),
 	m_pressureSensor(PIN_IMU_SDA, PIN_IMU_SCL),
@@ -230,4 +220,8 @@ float BtuLinear::getDepth() {
     // convert pressure to meters
     float pvDepthMeters = (pvDepth - P_ATMOS_MBAR) / P_WATER_SURFACE_MBAR;
     return pvDepthMeters;
+}
+
+void BtuLinear::setDryMode(bool dry) {
+	m_dryRun = dry;
 }

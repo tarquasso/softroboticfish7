@@ -86,8 +86,7 @@ protected:
 
 
 public:
-  BtuLinear();
-  BtuLinear(bool dryRun);
+  BtuLinear(bool dryRun = true);
   ~BtuLinear();
   void init();
   void stop();
@@ -100,6 +99,7 @@ public:
   void updateAndRunCycle(int mode, float value);
   float getPressure();
   float getDepth();
+  void setDryMode(bool);
   int getMode() { return m_mode; };
   float getDKc() { return m_kc; };
   float getDkI() { return m_kI; };
