@@ -4,6 +4,8 @@ MovingAverage::MovingAverage() {
 	this->reset();
 }
 
+MovingAverage::~MovingAverage() {};
+
 void MovingAverage::reset() {
 	// reset all the readings to 0:
 	for (int i = 0; i < s_numReadings; i++) {
