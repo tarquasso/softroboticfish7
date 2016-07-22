@@ -7,9 +7,9 @@
 
 #define VOLTAGE_THRESHOLD 0.025
 
-#define POS_KC 1
-#define POS_KI 0
-#define POS_KD 0
+#define POS_KC 16
+#define POS_KI 2
+#define POS_KD 1
 
 #define VEL_KC 0.5
 #define VEL_KI 0
