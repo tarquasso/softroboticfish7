@@ -1,7 +1,7 @@
 #include "Actuator.h"
 
 Actuator::Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float freq):
-    m_posPid(POS_KC, POS_KI, POS_KD, freq, POS_MIN, POS_MAX, VOLT_MIN, VOLT_MAX, 0),
+    m_posPid(POS_KC, POS_KI, POS_KD, freq, POT_MIN, POT_MAX, VOLT_MIN, VOLT_MAX, 0),
     m_velPid(VEL_KC, VEL_KI, VEL_KD, freq, VEL_MIN, VEL_MAX, VOLT_MIN, VOLT_MAX, 0),
     m_actPwm(pwmPin),
     m_actDir(dirPin),
@@ -15,13 +15,16 @@ Actuator::~Actuator(){}
 void Actuator::reset() {
     m_posPid.reset();
     m_velPid.reset();
+    m_mvgAvg.reset();
     m_oldPos = getPosition();
 }
 
 float Actuator::getPosition() {
-    float position = m_actPot;
-    float scaledPos = (position - POT_MIN) / (POT_MAX - POT_MIN);
-    return scaledPos;
+	float position = m_actPot;
+	float filteredPosition = m_mvgAvg.computeMovingAverage(position);
+    return filteredPosition;
+    //float scaledPos = (filteredPosition - POT_MIN) / (POT_MAX - POT_MIN);
+    //return scaledPos;
 }
 
 void Actuator::setPosTunings(float kc, float kI, float kD) {
@@ -40,7 +43,7 @@ void Actuator::runVoltControl(float setDuty) {
 	float pos = getPosition();
 
 	// check if at limit and accordingly do not allow the driving voltage push actuator further than the limit
-    if((pos <= POSITION_MIN && cmdVolt <= 0) || (pos >= POSITION_MAX && cmdVolt >= 0)) {
+    if((pos <= POT_MIN && cmdVolt <= 0) || (pos >= POT_MAX && cmdVolt >= 0)) {
         cmdVolt = 0;
     }
 
@@ -65,7 +68,7 @@ void Actuator::runVelControl(float setVel) {
 	float cmdVel = setVel;
 
 	// check if at limit and accordingly do not allow driving velocity further than the limit
-	if((pos <= POS_MIN && setVel < 0) || (pos >= POS_MAX && setVel > 0)) {
+	if((pos <= POT_MIN && setVel < 0) || (pos >= POT_MAX && setVel > 0)) {
         cmdVel = 0;
     }
 
@@ -84,6 +87,7 @@ void Actuator::runVelControl(float setVel) {
 }
 
 void Actuator::runPosControl(float setPos) {
+
 	// read in potentiometer position within 0.0 -> 1.0 range
 	float pos = getPosition();
 	// current position set as process value of PID controller
@@ -93,6 +97,6 @@ void Actuator::runPosControl(float setPos) {
     // commanded voltage as output from PID controller
     float cmdVolt = m_posPid.compute();
 
-    // run voltage control with commaned voltage
+    // run voltage control with commanded voltage
     runVoltControl(cmdVolt);
 }
