@@ -27,8 +27,8 @@ BtuLinear btu = BtuLinear(DRY_RUN);
 int counter = 0;
 int mode = 2;
 float Kc = 1.0;
-float TauI = 0.0;
-float TauD = 0.0;
+float kI = 0.0;
+float kD = 0.0;
 float setVal = 0.0;             // meters
 
 void runControl() {
@@ -43,11 +43,11 @@ void runControl() {
 
   // Based on Mode, update Tunings
   if(mode == VELOCITY_CTRL_MODE) {
-      btu.updateVelTunings(Kc, TauI, TauD);
+      btu.updateVelTunings(Kc, kI, kD);
   } else if (mode == POSITION_CTRL_MODE){
-	  btu.updatePosTunings(Kc, TauI, TauD);
+	  btu.updatePosTunings(Kc, kI, kD);
   } else {
-      btu.updateDepthTunings(Kc, TauI, TauD);
+      btu.updateDepthTunings(Kc, kI, kD);
   }
   // Update Mode and Run Cycle
   btu.updateAndRunCycle(mode, setVal);
@@ -75,13 +75,13 @@ int main() {
 	  float depth = 0;
       depth = btu.getDepth();
 	  if (mode == DEPTH_CTRL_MODE) {
-    	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f\r\n",
+    	  pcSerial.printf("m:%d, kc:%f, ki:%f, kd:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f\r\n",
                       btu.getMode(), btu.getDKc(), btu.getDkI(), btu.getDkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - depth);
       } else if (mode == POSITION_CTRL_MODE) {
-    	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, pos_er:%.4f %.4f\r\n",
+    	  pcSerial.printf("m:%d, kc:%f, ki:%f, kd:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, pos_er:%.4f %.4f\r\n",
     	                        btu.getMode(), btu.getPKc(), btu.getPkI(), btu.getPkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - btu.getActPosition(ACT_A), setVal - btu.getActPosition(ACT_B));
       } else {
-    	  pcSerial.printf("m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f\r\n", btu.getMode(), Kc, TauI, TauD, setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth);
+    	  pcSerial.printf("m:%d, kc:%f, ki:%f, kd:%f, s:%.2f, cu:%.2f %.2f, de:%.2f\r\n", btu.getMode(), Kc, kI, kD, setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth);
       }
 
       if(serialComm.checkIfNewMessage()) {
@@ -89,8 +89,8 @@ int main() {
 
           mode = (int) valueFloats[SERIAL_MESSAGE_NUM_MODE];
           Kc = valueFloats[SERIAL_MESSAGE_NUM_KC];
-          TauI = valueFloats[SERIAL_MESSAGE_NUM_TAUI];
-          TauD = valueFloats[SERIAL_MESSAGE_NUM_TAUD];
+          kI = valueFloats[SERIAL_MESSAGE_NUM_TAUI];
+          kD = valueFloats[SERIAL_MESSAGE_NUM_TAUD];
           setVal = valueFloats[SERIAL_MESSAGE_NUM_SETVAL];
       }
       wait_ms(PRINTF_WAIT_MS);
