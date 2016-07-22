@@ -4,6 +4,7 @@
 #include "mbed.h"
 #include "PidController.h"
 #include "utility.h"
+#include "MovingAverage.h"
 
 #define VOLTAGE_THRESHOLD 0.01
 
@@ -15,8 +16,8 @@
 #define VEL_KI 0
 #define VEL_KD 0
 
-#define POS_MIN 0.0
-#define POS_MAX 1.0
+#define POT_MIN 0.01
+#define POT_MAX 0.98
 
 #define VEL_MIN -1.0
 #define VEL_MAX 1.0
@@ -24,11 +25,6 @@
 #define VOLT_MIN -1.0
 #define VOLT_MAX 1.0
 
-#define POSITION_MAX 0.99
-#define POSITION_MIN 0.01
-
-#define POT_MIN 0.01
-#define POT_MAX 0.98
 
 class Actuator {
  private:
@@ -40,6 +36,7 @@ class Actuator {
     float m_timestep;
     float m_oldPos;
     float m_currentVoltage;
+    MovingAverage m_mvgAvg;
 
  public:
     Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float freq);
