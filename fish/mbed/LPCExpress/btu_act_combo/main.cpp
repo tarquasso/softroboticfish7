@@ -296,7 +296,7 @@ int main() {
 	  } else {
 		  testCycle();
 	  }
-      wait_ms(500);
+      wait_ms(1000);
       TestLED2 = !TestLED2;
   }
 }
