@@ -25,11 +25,7 @@ DigitalOut TestLED2(LED2);
 // bool clk = true;
 BtuLinear btu = BtuLinear(DRY_RUN);
 int counter = 0;
-int mode = 2;
-float Kc = 1.0;
-float kI = 0.0;
-float kD = 0.0;
-float setVal = 0.0;             // meters
+float setVal = 0.4;             // meters
 
 void runControl() {
   counter = (counter + 1) % FREQUENCY;
@@ -41,16 +37,8 @@ void runControl() {
   //setVal = pot1;
   //setVal = (b1-a1)*setVal+a1;
 
-  // Based on Mode, update Tunings
-  if(mode == VELOCITY_CTRL_MODE) {
-      btu.updateVelTunings(Kc, kI, kD);
-  } else if (mode == POSITION_CTRL_MODE){
-	  btu.updatePosTunings(Kc, kI, kD);
-  } else {
-      btu.updateDepthTunings(Kc, kI, kD);
-  }
   // Update Mode and Run Cycle
-  btu.updateAndRunCycle(mode, setVal);
+  btu.runCycle(setVal);
 }
 
 int main() {
@@ -59,6 +47,19 @@ int main() {
   SerialComm serialComm(&pcSerial);
 
   btu.init();
+  //float DkC, PkC, VkC;
+  //float DkI, PkI, VkI;
+  //float DkD, PkD, VkD;
+  float kC, kI, kD;
+  int mode = btu.getMode();
+  if(mode == VELOCITY_CTRL_MODE) {
+	  kC = btu.getVkC(); kI = btu.getVkI(); kD = btu.getVkD();
+  } else if (mode == POSITION_CTRL_MODE){
+	  kC = btu.getPkC(); kI = btu.getPkI(); kD = btu.getPkD();
+  } else {
+	  kC = btu.getDkC(); kI = btu.getDkI(); kD = btu.getDkD();
+  }
+
   pcSerial.printf("pressure at start: %.6f\r\n", btu.getPressure());
 
   // start test leds at off
@@ -71,27 +72,41 @@ int main() {
 
   float valueFloats[NUM_FLOATS];
 
+
   while(1) {
 	  float depth = 0;
       depth = btu.getDepth();
 	  if (mode == DEPTH_CTRL_MODE) {
     	  pcSerial.printf("m:%d, kc:%f, ki:%f, kd:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f\r\n",
-                      btu.getMode(), btu.getDKc(), btu.getDkI(), btu.getDkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - depth);
+                      btu.getMode(), btu.getDkC(), btu.getDkI(), btu.getDkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - depth);
       } else if (mode == POSITION_CTRL_MODE) {
     	  pcSerial.printf("m:%d, kc:%f, ki:%f, kd:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, pos_er:%.4f %.4f\r\n",
-    	                        btu.getMode(), btu.getPKc(), btu.getPkI(), btu.getPkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - btu.getActPosition(ACT_A), setVal - btu.getActPosition(ACT_B));
+    	              btu.getMode(), btu.getPkC(), btu.getPkI(), btu.getPkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - btu.getActPosition(ACT_A), setVal - btu.getActPosition(ACT_B));
       } else {
-    	  pcSerial.printf("m:%d, kc:%f, ki:%f, kd:%f, s:%.2f, cu:%.2f %.2f, de:%.2f\r\n", btu.getMode(), Kc, kI, kD, setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth);
+    	  pcSerial.printf("m:%d, kc:%f, ki:%f, kd:%f, s:%.2f, cu:%.2f %.2f, de:%.2f\r\n",
+    			  	  btu.getMode(), btu.getVkC(), btu.getVkI(), btu.getVkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth);
       }
 
       if(serialComm.checkIfNewMessage()) {
           serialComm.getFloats(valueFloats, NUM_FLOATS);
 
           mode = (int) valueFloats[SERIAL_MESSAGE_NUM_MODE];
-          Kc = valueFloats[SERIAL_MESSAGE_NUM_KC];
+          kC = valueFloats[SERIAL_MESSAGE_NUM_KC];
           kI = valueFloats[SERIAL_MESSAGE_NUM_TAUI];
           kD = valueFloats[SERIAL_MESSAGE_NUM_TAUD];
           setVal = valueFloats[SERIAL_MESSAGE_NUM_SETVAL];
+
+          // Based on Mode, update Tunings
+          if(mode == VELOCITY_CTRL_MODE) {
+              btu.updateVelTunings(kC, kI, kD);
+          } else if (mode == POSITION_CTRL_MODE){
+        	  btu.updatePosTunings(kC, kI, kD);
+          } else {
+              btu.updateDepthTunings(kC, kI, kD);
+          }
+
+          btu.updateMode(mode);
+
       }
       wait_ms(PRINTF_WAIT_MS);
       TestLED2 = !TestLED2;

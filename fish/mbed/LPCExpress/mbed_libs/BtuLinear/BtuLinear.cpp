@@ -16,19 +16,13 @@ void BtuLinear::init() {
     m_mode = DEFAULT_CTRL_MODE;
 
     // default gain values for depth controller
-    m_kc = DEP_KC;
-    m_kI = DEP_KI;
-    m_kD = DEP_KD;
+    this->updateDepthTunings(DEP_KC, DEP_KI, DEP_KD);
 
     // default gain values for position controller
-    m_p_kc = POS_KC;
-    m_p_kI = POS_KI;
-    m_p_kD = POS_KD;
+    this->updatePosTunings(POS_KC,POS_KI,POS_KD);
 
     // default gain values for velocity controller
-    m_v_kc = VEL_KC;
-    m_v_kI = VEL_KI;
-    m_v_kD = VEL_KD;
+    this->updateVelTunings(VEL_KC,VEL_KI,VEL_KD);
 
     // initialize Pressure Sensor
     m_pressureSensor.MS5837Init();

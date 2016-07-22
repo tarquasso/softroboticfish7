@@ -39,7 +39,7 @@ LocalFileSystem local("local");
 BtuLinear btu = BtuLinear(DRY_RUN);
 int counter = 0;
 int mode = 2;
-float Kc = 1.0;
+float kC = 1.0;
 float TauI = 0.0;
 float TauD = 0.0;
 float floorVal;                 // temp value for mission parameters
@@ -194,7 +194,7 @@ int main() {
       if(inMission || debriefMode) {
           float depth = btu.getDepth();
           fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f, rt:%d\r\n",
-                  btu.getMode(), btu.getDKc(), btu.getDkI(), btu.getDkD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, missionDepth - depth, missionTime, timeout, returnTrip);
+                  btu.getMode(), btu.getDkC(), btu.getDkI(), btu.getDkD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, missionDepth - depth, missionTime, timeout, returnTrip);
       } else {                  // otherwise just try to surface
     	  btu.updateAndRunCycle(VOLTAGE_CTRL_MODE, UNWOUND_POS);
       }
@@ -204,12 +204,12 @@ int main() {
           serialComm.getFloats(valueFloats, NUM_FLOATS);
 
           // mode = (int) valueFloats[0];
-          Kc = valueFloats[0];
+          kC = valueFloats[0];
           TauI = valueFloats[1];
           TauD = valueFloats[2];
           jumpVal = valueFloats[3];
           floorVal = valueFloats[4];
-          startMission(Kc, TauI, TauD, floorVal, jumpVal);
+          startMission(kC, TauI, TauD, floorVal, jumpVal);
       }
       wait_ms(500);
       TestLED2 = !TestLED2;

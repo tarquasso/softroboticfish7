@@ -16,7 +16,7 @@ DigitalOut TestLED2(LED2);
 BtuRotary btu = BtuRotary();
 int counter = 0;
 int mode = 2;
-float Kc = 1.0;
+float kC = 1.0;
 float TauI = 0.0;
 float TauD = 0.0;
 float setVal = 0.0;             // meters
@@ -43,7 +43,7 @@ void runControl() {
   setVal = (b1-a1)*setVal+a1;
 
 
-  btu.update(mode, Kc, TauI, TauD);
+  btu.update(mode, kC, TauI, TauD);
   btu.updateAndRunCycle(mode, setVal);
 }
 
@@ -68,7 +68,7 @@ int main() {
           serialComm.getFloats(valueFloats, NUM_FLOATS);
 
           mode = (int) valueFloats[0];
-          Kc = valueFloats[1];
+          kC = valueFloats[1];
           TauI = valueFloats[2];
           TauD = valueFloats[3];
           setVal = valueFloats[4];

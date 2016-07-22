@@ -16,7 +16,7 @@
 #define VELOCITY_CTRL_MODE 2
 #define DEPTH_CTRL_MODE 4
 #define POSITION_CTRL_MODE 3
-#define DEFAULT_CTRL_MODE VELOCITY_CTRL_MODE
+#define DEFAULT_CTRL_MODE POSITION_CTRL_MODE
 
 #define DRY_RUN_POT_PIN p18
 
@@ -101,13 +101,13 @@ public:
   float getDepth();
   void setDryMode(bool);
   int getMode() { return m_mode; };
-  float getDKc() { return m_kc; };
+  float getDkC() { return m_kc; };
   float getDkI() { return m_kI; };
   float getDkD() { return m_kD; };
-  float getVKc() {return m_v_kc; };
+  float getVkC() {return m_v_kc; };
   float getVkI() { return m_v_kI; };
   float getVkD() { return m_v_kD; };
-  float getPKc() { return m_p_kc; };
+  float getPkC() { return m_p_kc; };
   float getPkI() { return m_p_kI; };
   float getPkD() { return m_p_kD; };
 
