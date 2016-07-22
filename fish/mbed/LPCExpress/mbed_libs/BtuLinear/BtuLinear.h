@@ -34,7 +34,7 @@
 
 #define PIN_IMU_SDA p28
 #define PIN_IMU_SCL p27
-#define PIN_ACTA_POT p16
+#define PIN_ACTA_POT p19
 #define PIN_ACTB_POT p20
 #define PIN_ACTA_PWM p22
 #define PIN_ACTB_PWM p21

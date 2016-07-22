@@ -170,6 +170,7 @@ void startMission(float kc, float taui, float taud, float setDepth, float stepDi
     missionDepth = utility::clip(stepDist, MIN_MISSION_DEPTH, missionFloor);
     missionStep = stepDist;
     returnTrip = false;
+    btu.updateMode(DEPTH_CTRL_MODE);
     btu.updateDepthTunings(kc, taui, taud);
     btu.updateVelTunings(DEF_V_KC, DEF_V_TAUI, DEF_V_TAUD);
     btu.updatePosTunings(DEF_P_KC, DEF_P_TAUI, DEF_P_TAUD);
