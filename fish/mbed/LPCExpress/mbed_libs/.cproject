@@ -23,6 +23,7 @@
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/BtuRotary"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/BtuLinear"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/CyclicActuator"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/mbed_libs/Debug"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="mbed_libs" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
@@ -87,6 +88,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/PID}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BtuRotary}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BtuLinear}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CyclicActuator}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.compiler.cpp.input.348753377" superClass="com.crt.advproject.compiler.cpp.input"/>
 							</tool>
@@ -133,6 +135,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Servo}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BtuLinear}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BtuRotary}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CyclicActuator}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.compiler.input.452995305" superClass="com.crt.advproject.compiler.input"/>
 							</tool>
@@ -180,6 +183,7 @@
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/mbed"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/BtuRotary"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/BtuLinear"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/mbed_libs/CyclicActuator"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/mbed_libs/Release"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="mbed_libs" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
@@ -245,6 +249,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/PID}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BtuRotary}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BtuLinear}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CyclicActuator}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.compiler.cpp.input.1273357497" superClass="com.crt.advproject.compiler.cpp.input"/>
 							</tool>
@@ -292,6 +297,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BtuLinear}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/PID}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BtuRotary}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CyclicActuator}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.compiler.input.740357833" superClass="com.crt.advproject.compiler.input"/>
 							</tool>

@@ -1,12 +1,11 @@
-
 /*
- * PumpWithValve.h
+ * CyclicActuator.h
  *
- * Author: Cyndia Cao, Robert Katzschmann
+ * Author: Robert Katzschmann, Cyndia Cao
  */
 
-#ifndef PUMPWITHVALVE_H_
-#define PUMPWITHVALVE_H_
+#ifndef CYCLIC_ACTUATOR_H_
+#define CYCLIC_ACTUATOR_H_
 
 #include "mbed.h"
 
@@ -23,11 +22,10 @@
 #define KdFreq	 			0.00
 #define valveOffsetGain 	0.5
 
-class PumpWithValve
-{
+class CyclicActuator {
 public:
 	// Initialization
-	PumpWithValve();
+	CyclicActuator();
 	void start();
 	void stop();
 
@@ -59,12 +57,12 @@ private:
 	volatile float periodSide1;
 	volatile float periodSide2;
 
-	volatile bool 	valveSide;
-	volatile float 	valveV1;
-	volatile float 	valveV2;
-	volatile float 	Vfreq;
-	volatile float 	VfreqAdjusted;
-	volatile float  Vset;
+	volatile bool valveSide;
+	volatile float valveV1;
+	volatile float valveV2;
+	volatile float Vfreq;
+	volatile float VfreqAdjusted;
+	volatile float Vset;
 
 	volatile float freqAct;
 	volatile float freqErr;
@@ -83,6 +81,6 @@ private:
 };
 
 // Create a static instance of PumpWithValve to be used by anyone controlling the pump with valve
-extern PumpWithValve pumpWithValve;
+extern CyclicActuator cyclicActuator;
 
-#endif /* PUMPWITHVALVE_H_ */
+#endif /* CYCLIC_ACTUATOR_H_ */
