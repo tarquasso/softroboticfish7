@@ -4,8 +4,8 @@
 
 #define NUM_FLOATS 6
 #define TIMESTEP 0.05
-#define DEPTH_THRESHOLD 0.3
-#define MIN_MISSION_DEPTH 0.2
+#define DEPTH_THRESHOLD 0.5
+#define MIN_MISSION_DEPTH 0.5
 #define MISSION_TIMEOUT 60.0
 #define ERROR_THRESHOLD 0.125
 #define SUCCESS_TIME 8.0
@@ -16,9 +16,9 @@
 #define DEF_V_TAUI 0
 #define DEF_V_TAUD 0
 
-#define DEF_P_KC 1
-#define DEF_P_TAUI 0
-#define DEF_P_TAUD 0
+#define DEF_P_KC 16
+#define DEF_P_TAUI 2
+#define DEF_P_TAUD 1
 
 #define DRY_RUN 1
 
