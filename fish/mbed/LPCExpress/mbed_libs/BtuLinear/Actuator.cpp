@@ -1,7 +1,7 @@
 #include "Actuator.h"
 
 Actuator::Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float freq):
-    m_posPid(POS_KC, POS_KI, POS_KD, freq, POT_MIN, POT_MAX, VOLT_MIN, VOLT_MAX, 0),
+    m_posPid(POS_KC, POS_KI, POS_KD, freq, POS_MIN, POS_MAX, VOLT_MIN, VOLT_MAX, 0),
     m_velPid(VEL_KC, VEL_KI, VEL_KD, freq, VEL_MIN, VEL_MAX, VOLT_MIN, VOLT_MAX, 0),
     m_actPwm(pwmPin),
     m_actDir(dirPin),
@@ -47,8 +47,8 @@ void Actuator::runVoltControl(float setDuty) {
         cmdVolt = 0;
     }
 
-    // check and set to zero if voltage is within deadzone
-    cmdVolt = utility::deadzone(cmdVolt, VOLTAGE_THRESHOLD);
+    // check and set to zero if voltage is within dead zone
+    //cmdVolt = utility::deadzone(cmdVolt, VOLTAGE_THRESHOLD);
 
     // set pwm values and direction pin for motor driver
     if(cmdVolt > 0) {
@@ -88,12 +88,15 @@ void Actuator::runVelControl(float setVel) {
 
 void Actuator::runPosControl(float setPos) {
 
+	// clip commanded position
+	float setPosClip = utility::clip(setPos, POT_MIN, POT_MAX);
+
 	// read in potentiometer position within 0.0 -> 1.0 range
 	float pos = getPosition();
 	// current position set as process value of PID controller
     m_posPid.setProcessValue(pos);
     // commanded position as set point of PID controller
-    m_posPid.setSetPoint(setPos);
+    m_posPid.setSetPoint(setPosClip);
     // commanded voltage as output from PID controller
     float cmdVolt = m_posPid.compute();
 

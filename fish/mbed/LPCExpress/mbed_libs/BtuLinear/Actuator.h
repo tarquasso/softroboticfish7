@@ -16,8 +16,11 @@
 #define VEL_KI 0
 #define VEL_KD 0
 
-#define POT_MIN 0.03
-#define POT_MAX 0.97
+#define POT_MIN 0.04
+#define POT_MAX 0.96
+
+#define POS_MIN 0.0
+#define POS_MAX 1.0
 
 #define VEL_MIN -1.0
 #define VEL_MAX 1.0
