@@ -83,7 +83,7 @@ void terminateMission() {
     debriefTime = 0.0;
     returnTrip = false;
 
-    btu.updateAndRunCycle(VELOCITY_CTRL_MODE, UNWOUND_POS); // attempt to return to surface
+    btu.updateAndRunCycle(VOLTAGE_CTRL_MODE, UNWOUND_POS); // attempt to return to surface
 }
 
 // returns true if we're close enough to current waypoint
@@ -101,7 +101,7 @@ void runMission() {
 	if(debriefMode) {
 		inMission = 0;
 		missionDepth = 0;
-		btu.updateAndRunCycle(VELOCITY_CTRL_MODE, UNWOUND_POS);
+		btu.updateAndRunCycle(VOLTAGE_CTRL_MODE, UNWOUND_POS);
         // finally tidy up and kill loop if debrief time has completed
 		if(debriefTime >= DEBRIEF_TIME_LIMIT) {
 			terminateMission();
@@ -219,7 +219,7 @@ void missionCycle() {
 		fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f, rt:%d\r\n",
 				btu.getMode(), btu.getDkC(), btu.getDkI(), btu.getDkD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, missionDepth - depth, missionTime, timeout, returnTrip);
 	} else {                  // otherwise just try to surface
-		btu.updateAndRunCycle(VELOCITY_CTRL_MODE, UNWOUND_POS);
+		btu.updateAndRunCycle(VOLTAGE_CTRL_MODE, UNWOUND_POS);
 	}
 
 	// take in serial messages to start new missions
@@ -247,13 +247,14 @@ void testCycle() {
 	float depth = 0;
 	depth = btu.getDepth();
 	if (mode == DEPTH_CTRL_MODE) {
-		pcSerial.printf("m:%d, kc:%.2f, ti:%.2f, td:%.2f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f\r\n",
-				btu.getMode(), btu.getDkC(), btu.getDkI(), btu.getDkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - depth);
+		pcSerial.printf("m:%d, kc:%.2f, ti:%.2f, td:%.2f, s:%.2f, cu:%.2f %.2f, de:%.2f\r\n", // depth_er:%.4f\r\n",
+				btu.getMode(), btu.getDkC(), btu.getDkI(), btu.getDkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth); //, setVal - depth);
 	} else if (mode == POSITION_CTRL_MODE) {
-		pcSerial.printf("m:%d, kc:%.2f, ti:%.2f, td:%.2f, s:%.2f, cu:%.2f %.2f, de:%.2f, pos_er:%.4f %.4f\r\n",
-				btu.getMode(), btu.getPkC(), btu.getPkI(), btu.getPkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, setVal - btu.getActPosition(ACT_A), setVal - btu.getActPosition(ACT_B));
+		pcSerial.printf("m:%d, kc:%.2f, ti:%.2f, td:%.2f, s:%.2f, cu:%.2f %.2f, de:%.2f\r\n", //, pos_er:%.4f %.4f\r\n",
+				btu.getMode(), btu.getPkC(), btu.getPkI(), btu.getPkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth);//, setVal - btu.getActPosition(ACT_A), setVal - btu.getActPosition(ACT_B));
 	} else {
-		pcSerial.printf("m:%d, kc:%.2f, ti:%.2f, td:%.2f, s:%.2f, cu:%.2f %.2f, de:%.2f\r\n", btu.getMode(), Kc, TauI, TauD, setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth);
+		pcSerial.printf("m:%d, kc:%.2f, ti:%.2f, td:%.2f, s:%.2f, cu:%.2f %.2f, de:%.2f\r\n",
+				btu.getMode(), Kc, TauI, TauD, setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth);
 	}
 
 	if(serialComm.checkIfNewMessage()) {
