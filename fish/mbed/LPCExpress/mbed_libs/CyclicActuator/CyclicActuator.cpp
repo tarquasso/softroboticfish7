@@ -39,18 +39,20 @@ CyclicActuator::CyclicActuator() :
 	dVFreq = 0;
 	freqErr = 0;
 	prevFreqErr = 0;
+	setValvePwm = 77;
+	setPumpPwm = 77;
 
 	running = false;
 }
 
 void CyclicActuator::start() {
-	valvePWM.write(0.0); // apply nothing to start
-	pumpPWM.write(0.0);
+	valvePWM.write(0.2); // apply nothing to start
+	pumpPWM.write(0.2);
 	periodSide1 = 0;
 	periodSide2 = 0;
 
 	timer.reset();
-	valveControl.attach(&cyclicActuator, &CyclicActuator::setVoid, 0.08);
+	valveControl.attach(&cyclicActuator, &CyclicActuator::setVoid, 0.2);
 
 	running = true;
 }
@@ -90,58 +92,20 @@ void CyclicActuator::set(float freq_in, float yaw_in, float thrust_in) {
 	thrust = thrust_in;
 	yaw = yaw_in;
 	frequency = freq_in;
+	thrust = 555;
 }
 
 void CyclicActuator::setVoid() {
 	//Centrifugal Pump
 	pumpPWM.write(thrust);
+	setPumpPwm = thrust;
 
-	// set speed of the valve motor through the frequency value
-	if (periodSide1 == 0 || periodSide2 == 0) {
-		Vfreq = frequency * 400000; //just setting directly the voltage, scaled up; need to tune this value
-		this->calculateYawMethod1();
-	} else { // don't be fooled by initialization values
-		// Failure mode - if it has been a full (desired) period since a hall sensor has been read
-		if (timer.read_us() > 1.0 / frequency) {
-			cyclicActuator.stop(); // may have to add a condition that allows for sudden input changes
-		} else {
-			freqErr = frequency - freqAct;
-			dVFreq = KpFreq * freqErr + KdFreq * (freqErr - prevFreqErr);
-			prevFreqErr = freqErr; //reset previous frequency error
-			Vfreq += dVFreq;
-			this->calculateYawMethod1();
-		}
-	}
+	this->calculateYawMethod1();
 }
 
 void CyclicActuator::calculateYawMethod1() {
-	// split tail frequency voltage into voltage on either side of the valve
-	// TODO figure out ideal relationship between yaw and offset between V1 and V2
-	// is it additive or multiplicative? start with super simple math
-
-	valveV1 = (1.0 + valveOffsetGain * yaw) * Vfreq;
-	valveV2 = (1.0 - valveOffsetGain * yaw) * Vfreq;
-
-	// TODO need to decide whether to give up frequency or yaw when we are at input limits
-	if (valveV1 > 1.0) {
-		valveV1 = 1.0;
-	} else if (valveV1 < 0.0) {
-		valveV1 = 0.05;
-	}
-	if (valveV2 > 1.0) {
-		valveV2 = 1.0;
-	} else if (valveV2 < 0.0) {
-		valveV2 = 0.05;
-	}
-
-	// write valve voltage based on which side the hall sensor says we are on
-	if (valveSide) {
-		Vset = valveV1;
-	} else {
-		Vset = valveV2;
-	}
-
-	valvePWM.write(Vset);
+	valvePWM.write(frequency);
+	setValvePwm +=1;
 }
 
 void CyclicActuator::calculateYawMethod2() {
@@ -161,6 +125,7 @@ void CyclicActuator::calculateYawMethod2() {
 		VfreqAdjusted = Vfreq;
 	}
 	valvePWM.write(VfreqAdjusted);
+	setValvePwm = VfreqAdjusted;
 
 }
 
@@ -187,4 +152,10 @@ float CyclicActuator::getCurFreq() {
 }
 float CyclicActuator::getSetFreq() {
 	return frequency * 1000000;
+}
+float CyclicActuator::getValvePwm() {
+	return setValvePwm;
+}
+float CyclicActuator::getPumpPwm() {
+	return thrust;
 }

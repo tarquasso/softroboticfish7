@@ -27,12 +27,13 @@ void run_func() {
 	pc.printf("Valve Vset: %f\t Time since hall sensor: %f\n", cyclicActuator.getVset(), cyclicActuator.getSensorTime());
 	pc.printf("Set Freq: %f\t Cur Freq: %f\n", cyclicActuator.getSetFreq(), cyclicActuator.getCurFreq());
 	pc.printf("Period 1: %d\t Period 2: %d\n\n", cyclicActuator.getPeriod1(), cyclicActuator.getPeriod2());
+	pc.printf("Valve PWM: %f\t Pump PWM: %f\n\n", cyclicActuator.getValvePwm(), cyclicActuator.getPumpPwm());
 	valveSideLED = cyclicActuator.getVside();
 	valveRunningLED = cyclicActuator.getRunState();
 }
 
 int main() {
-	pc.baud(19200);
+	//pc.baud(19200);
 	bcu = 0.0;
 	int input_freq;
 	int input_yaw;
@@ -57,7 +58,7 @@ int main() {
 		} else if(input_freq == 888){
 			pc.printf("\nstarting system\n");
 			cyclicActuator.start();
-			run_timer.attach(&run_func, 0.2);
+			run_timer.attach(&run_func, 1); //prev 0.2
 		} else if(0 <= input_freq && input_freq <= 255){
 			// figure out why these interpolation functions are different in actual FishController
 			freq = (input_freq * (fishMaxFrequency - fishMinFrequency) / 255.0) + fishMinFrequency;

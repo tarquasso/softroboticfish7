@@ -42,6 +42,8 @@ public:
 	int getPeriod2();
 	float getCurFreq();
 	float getSetFreq();
+	float getValvePwm();
+	float getPumpPwm();
 
 protected:
 	void calculateYawMethod1();
@@ -63,6 +65,8 @@ private:
 	volatile float Vfreq;
 	volatile float VfreqAdjusted;
 	volatile float Vset;
+	volatile float setValvePwm;
+	volatile float setPumpPwm;
 
 	volatile float freqAct;
 	volatile float freqErr;
