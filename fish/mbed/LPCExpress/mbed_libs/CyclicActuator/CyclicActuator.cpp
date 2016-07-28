@@ -92,7 +92,6 @@ void CyclicActuator::set(float freq_in, float yaw_in, float thrust_in) {
 	thrust = thrust_in;
 	yaw = yaw_in;
 	frequency = freq_in;
-	thrust = 555;
 }
 
 void CyclicActuator::setVoid() {
@@ -105,7 +104,7 @@ void CyclicActuator::setVoid() {
 
 void CyclicActuator::calculateYawMethod1() {
 	valvePWM.write(frequency);
-	setValvePwm +=1;
+	setValvePwm = frequency;
 }
 
 void CyclicActuator::calculateYawMethod2() {

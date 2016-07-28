@@ -10,8 +10,11 @@
 #define fishMaxThrust    ((float)(2.0))
 #define fishMinFrequency ((float)(0.0000009))
 #define fishMaxFrequency ((float)(0.0000016))
+#define NUM_FLOATS 2
+#include "MODSERIAL.h"
+#include "SerialComm.h"
 
-Serial pc(USBTX, USBRX);
+MODSERIAL pc(USBTX, USBRX);
 DigitalOut valveSideLED(LED2);
 DigitalOut valveRunningLED(LED3);
 Ticker run_timer;
@@ -42,24 +45,32 @@ int main() {
 	freq = fishMinFrequency;
 	yaw = 0;
 
+	pc.printf("Start!\n");
+	SerialComm serialComm(&pc);
+	float valueFloats[NUM_FLOATS];
+
 	pc.printf("starting up cyclic actuator test...\n\n");
 
-	while (1) {
-		pc.scanf("%d %d", &input_valvePwm, &input_pumpPwm);
+	cyclicActuator.start();
+	run_timer.attach(&run_func, 0.2);
 
+	while (1) {
+		if(serialComm.checkIfNewMessage()) {
+			 serialComm.getFloats(valueFloats, NUM_FLOATS);
+			 input_valvePwm = valueFloats[0];
+			 input_pumpPwm = valueFloats[1];
+		}
 		if(input_valvePwm == 999) {
 			pc.printf("\nstopping system\n");
 			cyclicActuator.stop();
 			run_timer.detach();
 			valveRunningLED = cyclicActuator.getRunState();
 		} else {
-			pc.printf("\nstarting system\n");
+			//pc.printf("\nstarting system\n");
 			freq = input_valvePwm;
 			yaw = 1;
 			thrust = input_pumpPwm;
-			//cyclicActuator.start();
-			//run_timer.attach(&run_func, 0.2); //prev 0.2
-			pc.printf("input valve pwm : %f input pump pwm: %f\n\n", input_valvePwm, input_pumpPwm);
+			//pc.printf("input valve pwm : %f input pump pwm: %f\n\n", input_valvePwm, input_pumpPwm);
 		}
 	}
 }
