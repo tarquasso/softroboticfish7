@@ -1,0 +1,11 @@
+set terminal postscript color
+set output '| ps2pdf - output.pdf'
+plot 'plotlog' using 9:6 with lines title 'Actuator 1' lw 3, 'plotlog' using 9:7 with lines title 'Actuator 2' lw 3
+set key outside right top
+set xlabel "Time(s)"
+set ylabel "Act Extension"
+set grid
+set xtics 50
+set ytics 0.25
+set mxtics 5
+set mytics 5
