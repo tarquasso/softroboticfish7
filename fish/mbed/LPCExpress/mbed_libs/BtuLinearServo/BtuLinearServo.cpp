@@ -179,9 +179,9 @@ void BtuLinearServo::positionControl(float setPos) {
 // control depth via master-slave
 void BtuLinearServo::depthControlHelper(float cmdVoltage) {
 	// control velocity on one actuator
-    m_actA.runVoltControl(cmdVoltage);
+    m_actA.runVelControl(cmdVoltage);
     // have the second mirror the first
-    m_actB.runVelControl(m_actA.getPosition());
+    m_actB.runPosControl(m_actA.getPosition());
 }
 
 // do depth control
