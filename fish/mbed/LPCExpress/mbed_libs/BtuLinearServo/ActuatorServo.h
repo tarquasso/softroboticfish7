@@ -1,10 +1,10 @@
-#ifndef ACTUATOR_H
-#define ACTUATOR_H
+#ifndef ACTUATORSERVO_H
+#define ACTUATORSERVO_H
 
 #include "mbed.h"
 #include "PidController.h"
 #include "utility.h"
-#include "MovingAverage.h"
+#include "Servo.h"
 
 #define VOLTAGE_THRESHOLD 0.01
 
@@ -16,8 +16,8 @@
 #define VEL_KI 0
 #define VEL_KD 0
 
-#define POT_MIN 0.04
-#define POT_MAX 0.96
+#define POT_MIN 0.00
+#define POT_MAX 1.00
 
 #define POS_MIN 0.0
 #define POS_MAX 1.0
@@ -29,22 +29,19 @@
 #define VOLT_MAX 1.0
 
 
-class Actuator {
+class ActuatorServo {
  private:
     PidController m_posPid;
     PidController m_velPid;
-    PwmOut m_actPwm;
-    DigitalOut m_actDir;
-    AnalogIn m_actPot;
     float m_timestep;
     float m_oldPos;
     float m_currentVoltage;
-    MovingAverage m_mvgAvg;
+    Servo m_servo;
     float m_currentPosition;
 
  public:
-    Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float freq);
-    ~Actuator();
+    ActuatorServo(PinName servoPin, float freq);
+    ~ActuatorServo();
     void reset();
     float getPosition();
     void setPosTunings(float kc, float kI, float kD);
@@ -52,7 +49,6 @@ class Actuator {
     void runVoltControl(float setDuty);
     void runVelControl(float setVel);
     void runPosControl(float setPos);
-    void updatePosition();
 };
 
 #endif

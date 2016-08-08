@@ -16,13 +16,19 @@ void Actuator::reset() {
     m_posPid.reset();
     m_velPid.reset();
     m_mvgAvg.reset();
+    updatePosition();
     m_oldPos = getPosition();
 }
 
-float Actuator::getPosition() {
+void Actuator::updatePosition() {
 	float position = m_actPot;
 	float filteredPosition = m_mvgAvg.computeMovingAverage(position);
-    return filteredPosition;
+	m_currentPosition = filteredPosition;
+}
+
+float Actuator::getPosition() {
+
+	return m_currentPosition;
     //float scaledPos = (filteredPosition - POT_MIN) / (POT_MAX - POT_MIN);
     //return scaledPos;
 }
@@ -84,6 +90,7 @@ void Actuator::runVelControl(float setVel) {
     m_oldPos = pos;
     // add delta in voltage to current voltage and clip at min max if necessary
     m_currentVoltage = utility::clip(m_currentVoltage + deltaVolt, VOLT_MIN, VOLT_MAX);
+    runVoltControl(m_currentVoltage);
 }
 
 void Actuator::runPosControl(float setPos) {

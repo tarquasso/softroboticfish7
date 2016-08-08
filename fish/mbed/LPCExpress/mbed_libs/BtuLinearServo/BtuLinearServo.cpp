@@ -1,18 +1,18 @@
-#include "BtuLinear.h"
+#include "BtuLinearServo.h"
 
-BtuLinear::BtuLinear(bool dryRun):
+BtuLinearServo::BtuLinearServo(bool dryRun):
     m_depthPid(DEP_KC, DEP_KI, DEP_KD, PID_FREQ, DEPTH_MIN, DEPTH_MAX, VEL_MIN, VEL_MAX, 0),
-    m_actA(PIN_ACTA_PWM, PIN_ACTA_DIR, PIN_ACTA_POT, PID_FREQ),
-    m_actB(PIN_ACTB_PWM, PIN_ACTB_DIR, PIN_ACTB_POT, PID_FREQ),
+    m_actA(PIN_ACTA_SERVO, PID_FREQ),
+    m_actB(PIN_ACTB_SERVO, PID_FREQ),
 	m_pressureSensor(PIN_IMU_SDA, PIN_IMU_SCL),
     m_dryRunPot(DRY_RUN_POT_PIN)
 {
     m_dryRun = dryRun;
 };
 
-BtuLinear::~BtuLinear(){}
+BtuLinearServo::~BtuLinearServo(){}
 
-void BtuLinear::init() {
+void BtuLinearServo::init() {
     m_mode = DEFAULT_CTRL_MODE;
 
     // default gain values for depth controller
@@ -25,8 +25,8 @@ void BtuLinear::init() {
     this->updateVelTunings(VEL_KC,VEL_KI,VEL_KD);
 
     // initialize Pressure Sensor
-    m_pressureSensor.MS5837Init();
-    m_pressureSensor.MS5837Start();
+    //m_pressureSensor.MS5837Init();
+    //m_pressureSensor.MS5837Start();
     wait(0.1);                    // remnant from old BTU class TODO: check if can be removed
 
     // initialize the actuators
@@ -44,12 +44,12 @@ void BtuLinear::init() {
 }
 
 // return a pressure reading
-float BtuLinear::getPressure() {
+float BtuLinearServo::getPressure() {
     return m_pressureSensor.MS5837_Pressure();
 }
 
 // resets values of the controllers
-void BtuLinear::stop() {
+void BtuLinearServo::stop() {
 	m_depthPid.reset();
     m_actA.reset();
     m_actB.reset();
@@ -57,7 +57,7 @@ void BtuLinear::stop() {
 }
 
 // updates depth PID tunings
-void BtuLinear::updateDepthTunings(float kc, float kI, float kD) {
+void BtuLinearServo::updateDepthTunings(float kc, float kI, float kD) {
     m_kc = kc;
     m_kI = kI;
     m_kD = kD;
@@ -65,7 +65,7 @@ void BtuLinear::updateDepthTunings(float kc, float kI, float kD) {
 }
 
 // updates Position PID tunings
-void BtuLinear::updatePosTunings(float kc, float kI, float kD) {
+void BtuLinearServo::updatePosTunings(float kc, float kI, float kD) {
     m_p_kc = kc;
     m_p_kI = kI;
     m_p_kD = kD;
@@ -74,7 +74,7 @@ void BtuLinear::updatePosTunings(float kc, float kI, float kD) {
 }
 
 // updates Velocity PID tunings
-void BtuLinear::updateVelTunings(float kc, float kI, float kD) {
+void BtuLinearServo::updateVelTunings(float kc, float kI, float kD) {
     m_v_kc = kc;
     m_v_kI = kI;
     m_v_kD = kD;
@@ -83,7 +83,7 @@ void BtuLinear::updateVelTunings(float kc, float kI, float kD) {
 }
 
 // updates Mode.  Resets most values if the mode has changed
-void BtuLinear::updateMode(int mode) {
+void BtuLinearServo::updateMode(int mode) {
     if(m_mode != mode) {
         stop();
         m_mode = mode;
@@ -91,10 +91,8 @@ void BtuLinear::updateMode(int mode) {
 }
 
 // runs one cycle of the controller dictated by mode
-void BtuLinear::runCycle(float setVal) {
+void BtuLinearServo::runCycle(float setVal) {
   //m_pressureSensor.Barometer_MS5837();
-	m_actA.updatePosition();
-	m_actB.updatePosition();
     switch (m_mode) {
 
     case VOLTAGE_CTRL_MODE:
@@ -116,21 +114,21 @@ void BtuLinear::runCycle(float setVal) {
 }
 
 // convenience function, updates mode, then runs a cycle in the chosen mode
-void BtuLinear::updateAndRunCycle(int mode, float value) {
+void BtuLinearServo::updateAndRunCycle(int mode, float value) {
     updateMode(mode);
     runCycle(value);
 }
 
 
 // calls voltageControlHelper on both actuators
-void BtuLinear::voltageControl(float setDuty) {
+void BtuLinearServo::voltageControl(float setDuty) {
     m_actA.runVoltControl(setDuty);
     m_actB.runVoltControl(setDuty);
 }
 
 // updates the SMA window with the current position reading
 /*
-void BtuLinear::updatePositionReadings() {
+void BtuLinearServo::updatePositionReadings() {
     float aPosition = m_actAPot;
     float bPosition = m_actBPot;
 
@@ -157,7 +155,7 @@ void BtuLinear::updatePositionReadings() {
 */
 
 // gets the current Actuator Position.  No SMA, just reads and rescales the potentiometer
-float BtuLinear::getActPosition(int act) {
+float BtuLinearServo::getActPosition(int act) {
     if(act == ACT_A) {
         return m_actA.getPosition();
     } else {
@@ -167,27 +165,27 @@ float BtuLinear::getActPosition(int act) {
 
 
 // does velocity control on both actuators
-void BtuLinear::velocityControl(float setVel) {
+void BtuLinearServo::velocityControl(float setVel) {
     m_actA.runVelControl(setVel);
     m_actB.runVelControl(setVel);
 }
 
 // control position of both actuators
-void BtuLinear::positionControl(float setPos) {
+void BtuLinearServo::positionControl(float setPos) {
     m_actA.runPosControl(setPos);
     m_actB.runPosControl(setPos);
 }
 
 // control depth via master-slave
-void BtuLinear::depthControlHelper(float cmdVoltage) {
+void BtuLinearServo::depthControlHelper(float cmdVoltage) {
 	// control velocity on one actuator
     m_actA.runVoltControl(cmdVoltage);
     // have the second mirror the first
-    m_actB.runPosControl(m_actA.getPosition());
+    m_actB.runVelControl(m_actA.getPosition());
 }
 
 // do depth control
-void BtuLinear::depthControl(float setDepthMeters) {
+void BtuLinearServo::depthControl(float setDepthMeters) {
     // Read Pressure Value and Convert into Depth in Meters
 	float curDepth = getDepth();
 
@@ -207,7 +205,7 @@ void BtuLinear::depthControl(float setDepthMeters) {
 }
 
 // get a depth reading
-float BtuLinear::getDepth() {
+float BtuLinearServo::getDepth() {
     if(m_dryRun) {
         float pvDepth = m_dryRunPot * (DEPTH_MAX);
         return pvDepth;
@@ -219,6 +217,6 @@ float BtuLinear::getDepth() {
     return pvDepthMeters;
 }
 
-void BtuLinear::setDryMode(bool dry) {
+void BtuLinearServo::setDryMode(bool dry) {
 	m_dryRun = dry;
 }

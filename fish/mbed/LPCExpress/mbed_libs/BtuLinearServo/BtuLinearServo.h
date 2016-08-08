@@ -1,11 +1,11 @@
-#ifndef BTULINEAR_H
-#define BTULINEAR_H
+#ifndef BTULINEARSERVO_H
+#define BTULINEARSERVO_H
 
 #include "mbed.h"
 #include "MS5837.h" // pressure sensor
 #include "PidController.h"
 #include "utility.h"
-#include "Actuator.h"
+#include "ActuatorServo.h"
 /* #include "Servo.h" */
 
 
@@ -36,8 +36,8 @@
 #define PIN_IMU_SCL p27
 #define PIN_ACTA_POT p19
 #define PIN_ACTB_POT p20
-#define PIN_ACTA_PWM p22
-#define PIN_ACTB_PWM p21
+#define PIN_ACTA_SERVO p22
+#define PIN_ACTB_SERVO p21
 #define PIN_ACTA_DIR p29
 #define PIN_ACTB_DIR p30
 /* #define PIN_PWM_SERVO p23 */
@@ -53,11 +53,11 @@
  * This class is used for controlling and accessing data from the Buoyancy Test Unit
  * It includes instances of the classes PwmOut
  */
-class BtuLinear {
+class BtuLinearServo {
 private:
   PidController m_depthPid;
-  Actuator m_actA;
-  Actuator m_actB;
+  ActuatorServo m_actA;
+  ActuatorServo m_actB;
   MS5837 m_pressureSensor;
   AnalogIn m_dryRunPot;
   int m_mode;
@@ -87,8 +87,8 @@ protected:
 
 public:
 
-  BtuLinear(bool dryRun = true);
-  ~BtuLinear();
+  BtuLinearServo(bool dryRun = true);
+  ~BtuLinearServo();
   void init();
   void stop();
   void updateDepthTunings(float kc, float kI, float kD);
