@@ -1,14 +1,14 @@
 #include <utility.h>
 #include "mbed.h"
-#include "BtuLinear.h"
+#include "BtuLinear/BtuLinear.h"
 
-#define NUM_FLOATS 6
+#define NUM_FLOATS 7
 #define TIMESTEP 0.05
 #define DEPTH_THRESHOLD 0.5
 #define MIN_MISSION_DEPTH 0.5
 #define MISSION_TIMEOUT 60.0
 #define ERROR_THRESHOLD 0.125
-#define SUCCESS_TIME 8.0
+#define SUCCESS_TIME 10.0
 #define DEBRIEF_TIME_LIMIT 20.0
 #define UNWOUND_POS 1.0
 
@@ -16,9 +16,13 @@
 #define DEF_V_TAUI 0
 #define DEF_V_TAUD 0
 
-#define DEF_P_KC 16
-#define DEF_P_TAUI 2
+#define DEF_P_KC 8
+#define DEF_P_TAUI 1
 #define DEF_P_TAUD 1
+
+#define DEF_VV_KC 5
+#define DEF_VV_TAUI 0
+#define DEF_VV_TAUD 0.25
 
 #define DRY_RUN 1
 
@@ -65,6 +69,7 @@ FILE *fp;                       // pointer for writing log
 bool returnTrip = false;        // determines whether the robot is in the descending or ascending part of the mission.  true = ascending
 float valueFloats[NUM_FLOATS];
 bool missionMode = false;
+float missionSuccessTime = SUCCESS_TIME;
 SerialComm serialComm(&pcSerial);
 
 
@@ -107,6 +112,7 @@ void runMission() {
 			terminateMission();
 		}
 		debriefTime += TIMESTEP;
+		missionTime += TIMESTEP;
 		return;                 // start over the mission loop without checking all the later conditions
 	}
     // counter just for flicking the LED every second
@@ -135,7 +141,7 @@ void runMission() {
     }
 
     // if we've been near the waypoint for long enough
-    if (successTime >= SUCCESS_TIME) {
+    if (successTime >= missionSuccessTime) {
         // check if we're completely done.  i.e. done surfacing on our return trip.  If so, report success and begin debriefing
         if((missionDepth <= MIN_MISSION_DEPTH) && (returnTrip == true)) {
             missionSuccess = 1;
@@ -183,6 +189,7 @@ void startMission(float kc, float taui, float taud, float setDepth, float stepDi
     btu.updateDepthTunings(kc, taui, taud);
     btu.updateVelTunings(DEF_V_KC, DEF_V_TAUI, DEF_V_TAUD);
     btu.updatePosTunings(DEF_P_KC, DEF_P_TAUI, DEF_P_TAUD);
+    btu.updateVVTunings(DEF_VV_KC, DEF_VV_TAUI, DEF_VV_TAUD);
     // btu.update(SPEC_POSITION_CTRL_MODE, kc, taui, taud);
     Mission.attach(&runMission, TIMESTEP);
 }
@@ -224,11 +231,16 @@ void missionCycle() {
 
 	// take in serial messages to start new missions
 	if(serialComm.checkIfNewMessage()) {
+      missionSuccess = 1;
 		serialComm.getFloats(valueFloats, NUM_FLOATS);
+        missionSuccess = 0;
 		if(valueFloats[0] == CONTROL_MODE) {
 			switchModes();
 			return;
 		}
+        else if(valueFloats[0] == 0) {
+          return;
+        }
 		// mode = (int) valueFloats[0];
 		Kc = valueFloats[0];
 		TauI = valueFloats[1];
@@ -236,6 +248,7 @@ void missionCycle() {
 		jumpVal = valueFloats[3];
 		floorVal = valueFloats[4];
 		btu.setDryMode(!valueFloats[5]);
+		missionSuccessTime = (valueFloats[6] == 0) ? SUCCESS_TIME : valueFloats[6];
 		startMission(Kc, TauI, TauD, floorVal, jumpVal);
 	}
 }
@@ -245,7 +258,9 @@ void missionCycle() {
 
 void testCycle() {
 	float depth = 0;
+	missionSuccess = 1;
 	depth = btu.getDepth();
+	missionSuccess = 0;
 	if (mode == DEPTH_CTRL_MODE) {
 		pcSerial.printf("m:%d, kc:%.2f, ti:%.2f, td:%.2f, s:%.2f, cu:%.2f %.2f, de:%.2f\r\n", // depth_er:%.4f\r\n",
 				btu.getMode(), btu.getDkC(), btu.getDkI(), btu.getDkD(), setVal, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth); //, setVal - depth);
@@ -258,8 +273,9 @@ void testCycle() {
 	}
 
 	if(serialComm.checkIfNewMessage()) {
+		missionSuccess = 1;
 		serialComm.getFloats(valueFloats, NUM_FLOATS);
-
+        missionSuccess = 0;
 		if(valueFloats[0] == MISSION_MODE) {
 			switchModes();
 			return;
@@ -276,7 +292,9 @@ void testCycle() {
 			btu.updateVelTunings(Kc, TauI, TauD);
 		} else if (mode == POSITION_CTRL_MODE){
 			btu.updatePosTunings(Kc, TauI, TauD);
-		} else {
+		} else if (mode == VV_CTRL_MODE) {
+          btu.updateVVTunings(Kc, TauI, TauD);
+        } else {
 			btu.updateDepthTunings(Kc, TauI, TauD);
 		}
 	}
@@ -285,9 +303,11 @@ void testCycle() {
 
 int main() {
   pcSerial.printf("Start!\n");
-
+  //wait(2);
   btu.init();
+  //wait(2);
   pcSerial.printf("pressure at start: %.6f\r\n", btu.getPressure());
+  //pcSerial.printf("pressure at start: 1000\r\n");
   TestLED = 0;
   Control.attach(&runControl, TIMESTEP);
 

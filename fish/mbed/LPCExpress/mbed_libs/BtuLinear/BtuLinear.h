@@ -16,6 +16,7 @@
 #define VELOCITY_CTRL_MODE 2
 #define DEPTH_CTRL_MODE 4
 #define POSITION_CTRL_MODE 3
+#define VV_CTRL_MODE 5
 #define DEFAULT_CTRL_MODE POSITION_CTRL_MODE
 
 #define DRY_RUN_POT_PIN p18
@@ -24,11 +25,18 @@
 #define DEPTH_MIN 0
 #define DEPTH_MAX 5
 
+#define VV_MIN -0.3
+#define VV_MAX 0.3
+
 /* #define PERIOD_PWM 0.00345 */
 
 #define DEP_KC 16.0
 #define DEP_KI 2.0
 #define DEP_KD 30.0
+
+#define VV_KC 1.0
+#define VV_KI 0.0
+#define VV_KD 0.0
 
 #define PID_FREQ 0.05
 
@@ -56,6 +64,7 @@
 class BtuLinear {
 private:
   PidController m_depthPid;
+  PidController m_vvPid;
   Actuator m_actA;
   Actuator m_actB;
   MS5837 m_pressureSensor;
@@ -65,7 +74,8 @@ private:
   float m_kc, m_kI, m_kD;
   float m_v_kc, m_v_kI, m_v_kD;
   float m_p_kc, m_p_kI, m_p_kD;
-
+  float m_vv_kc, m_vv_kI, m_vv_kD;
+  float m_oldDepth;
   /* int m_avg_windowPtr; */
   /* int m_avg_windowSize; */
 
@@ -80,6 +90,7 @@ private:
   void positionControl(float setPos);
   void depthControl(float setDepthMeters);
   void depthControlHelper(float cmdVoltage);
+  void vvControl(float setVelMeters);
   /* void updatePositionReadings(); */
 
 protected:
@@ -94,6 +105,7 @@ public:
   void updateDepthTunings(float kc, float kI, float kD);
   void updatePosTunings(float kc, float kI, float kD);
   void updateVelTunings(float kc, float kI, float kD);
+  void updateVVTunings(float kc, float kI, float kD);
   float getActPosition(int act = ACT_A);
   void updateMode(int mode);
   void runCycle(float setVal);
@@ -111,6 +123,9 @@ public:
   float getPkC() { return m_p_kc; };
   float getPkI() { return m_p_kI; };
   float getPkD() { return m_p_kD; };
+  float getVVkC() {return m_vv_kc; };
+  float getVVkI() { return m_vv_kI; };
+  float getVVkD() { return m_vv_kD; };
 
 };
 

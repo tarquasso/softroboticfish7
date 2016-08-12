@@ -1,7 +1,8 @@
 #include "BtuLinear.h"
 
 BtuLinear::BtuLinear(bool dryRun):
-    m_depthPid(DEP_KC, DEP_KI, DEP_KD, PID_FREQ, DEPTH_MIN, DEPTH_MAX, VEL_MIN, VEL_MAX, 0),
+    m_depthPid(DEP_KC, DEP_KI, DEP_KD, PID_FREQ, DEPTH_MIN, DEPTH_MAX, VOLT_MIN, VOLT_MAX, 0),
+    m_vvPid(VV_KC, VV_KI, VV_KD, PID_FREQ, VV_MIN, VV_MAX, VOLT_MIN, VOLT_MAX, 0),
     m_actA(PIN_ACTA_PWM, PIN_ACTA_DIR, PIN_ACTA_POT, PID_FREQ),
     m_actB(PIN_ACTB_PWM, PIN_ACTB_DIR, PIN_ACTB_POT, PID_FREQ),
 	m_pressureSensor(PIN_IMU_SDA, PIN_IMU_SCL),
@@ -16,13 +17,15 @@ void BtuLinear::init() {
     m_mode = DEFAULT_CTRL_MODE;
 
     // default gain values for depth controller
-    this->updateDepthTunings(DEP_KC, DEP_KI, DEP_KD);
+    updateDepthTunings(DEP_KC, DEP_KI, DEP_KD);
 
     // default gain values for position controller
-    this->updatePosTunings(POS_KC,POS_KI,POS_KD);
+    updatePosTunings(POS_KC,POS_KI,POS_KD);
 
     // default gain values for velocity controller
-    this->updateVelTunings(VEL_KC,VEL_KI,VEL_KD);
+    updateVelTunings(VEL_KC,VEL_KI,VEL_KD);
+
+    updateVVTunings(VV_KC, VV_KI, VV_KD);
 
     // initialize Pressure Sensor
     m_pressureSensor.MS5837Init();
@@ -82,6 +85,13 @@ void BtuLinear::updateVelTunings(float kc, float kI, float kD) {
     m_actB.setVelTunings(kc, kI, kD);
 }
 
+void BtuLinear::updateVVTunings(float kc, float kI, float kD) {
+  m_vv_kc = kc;
+  m_vv_kI = kI;
+  m_vv_kD = kD;
+  m_vvPid.setTunings(kc, kI, kD);
+}
+
 // updates Mode.  Resets most values if the mode has changed
 void BtuLinear::updateMode(int mode) {
     if(m_mode != mode) {
@@ -112,6 +122,11 @@ void BtuLinear::runCycle(float setVal) {
     case POSITION_CTRL_MODE:
         positionControl(setVal);
         break;
+
+
+    case VV_CTRL_MODE:
+      vvControl(setVal);
+      break;
     }
 }
 
@@ -198,12 +213,22 @@ void BtuLinear::depthControl(float setDepthMeters) {
 	m_depthPid.setSetPoint(setDepthMeters);
 
 	// commanded voltage is calculated by PID controller
-    float cmdVolt = m_depthPid.compute();
+    float cmdVel = m_depthPid.compute();
 
     // extending the actuator increases buoyancy -> less depth
     // therefore the axis direction has to be reversed
     // and commanded voltage with opposite sign is therefore applied
-    depthControlHelper( -1 * cmdVolt );
+    vvControl( cmdVel );
+}
+
+void BtuLinear::vvControl(float setVelMeters) {
+  float curDepth = getDepth();
+  float currentVel = (curDepth - m_oldDepth) / PID_FREQ;
+  m_vvPid.setProcessValue(currentVel);
+  m_vvPid.setSetPoint(setVelMeters);
+  float cmdVolt = m_vvPid.compute();
+  m_oldDepth = curDepth;
+  depthControlHelper(-1 * cmdVolt);
 }
 
 // get a depth reading
