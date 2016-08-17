@@ -103,8 +103,32 @@ void CyclicActuator::setVoid() {
 }
 
 void CyclicActuator::calculateYawMethod1() {
-	valvePWM.write(frequency);
-	setValvePwm = frequency;
+	// valvePWM.write(frequency);
+	// setValvePwm = frequency;
+  float Pset;
+  float PfreqAdjusted;
+  	if (yaw < 0.0 && !valveSide) {
+		Pset = (1.0 + pumpOffsetGain * yaw) * Pfreq; // 0.7 can be adjusted to a power of 2 if needed
+		if (Pset > max_P) {
+			PfreqAdjusted = max_P;
+		}
+        if (Pset < min_P) {
+          PfreqAdjusted = min_P;
+        }
+	} else if (yaw > 0.0 && valveSide) {
+		Pset = (1.0 - pumpOffsetGain * yaw) * Pfreq; // 0.7 can be adjusted to a power of 2 if needed
+        if (Pset > max_P) {
+          PfreqAdjusted = max_P;
+        }
+		if (Pset < 0.05) {
+			PfreqAdjusted = min_P;
+		} // needs to keep turning
+	} else {
+		Pset = Pfreq;
+		PfreqAdjusted = Pfreq;
+	}
+	pumpPWM.write(PfreqAdjusted);
+	setPumpPwm = PfreqAdjusted;
 }
 
 void CyclicActuator::calculateYawMethod2() {
@@ -114,9 +138,15 @@ void CyclicActuator::calculateYawMethod2() {
 		if (Vset > 1.0) {
 			VfreqAdjusted = 1.0;
 		}
+        if (Vset < 0.05) {
+          VfreqAdjusted = 0.05;
+        }
 	} else if (yaw > 0.0 && valveSide) {
 		Vset = (1.0 - valveOffsetGain * yaw) * Vfreq; // 0.7 can be adjusted to a power of 2 if needed
-		if (Vset < 0.0) {
+        if (Vset > 1.0) {
+          VfreqAdjusted = 1.0;
+        }
+		if (Vset < 0.05) {
 			VfreqAdjusted = 0.05;
 		} // needs to keep turning
 	} else {
