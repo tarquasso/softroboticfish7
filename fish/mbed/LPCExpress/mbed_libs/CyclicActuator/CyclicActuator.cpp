@@ -99,7 +99,7 @@ void CyclicActuator::setVoid() {
 	pumpPWM.write(thrust);
 	setPumpPwm = thrust;
 
-	this->calculateYawMethod1();
+	this->calculateYawMethod2();
 }
 
 void CyclicActuator::calculateYawMethod1() {

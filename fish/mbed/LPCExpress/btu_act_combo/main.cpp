@@ -17,12 +17,12 @@
 #define DEF_V_TAUD 0
 
 #define DEF_P_KC 8
-#define DEF_P_TAUI 1
+#define DEF_P_TAUI 2
 #define DEF_P_TAUD 1
 
-#define DEF_VV_KC 5
+#define DEF_VV_KC 80
 #define DEF_VV_TAUI 0
-#define DEF_VV_TAUD 0.25
+#define DEF_VV_TAUD 0
 
 #define DRY_RUN 1
 
@@ -223,8 +223,8 @@ void missionCycle() {
 	// log in either mission or debrief modes
 	if(inMission || debriefMode) {
 		float depth = btu.getDepth();
-		fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f, rt:%d\r\n",
-				btu.getMode(), btu.getDkC(), btu.getDkI(), btu.getDkD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, depth - missionDepth, missionTime, timeout, returnTrip);
+		fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f, rt:%d, vel:%.4f, accel:%.4f\r\n",
+				btu.getMode(), btu.getDkC(), btu.getDkI(), btu.getDkD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, depth - missionDepth, missionTime, timeout, returnTrip, btu.getCurrentVel(),btu.getCurrentAccel());
 	} else {                  // otherwise just try to surface
 		btu.updateAndRunCycle(VOLTAGE_CTRL_MODE, UNWOUND_POS);
 	}

@@ -75,7 +75,8 @@ private:
   float m_v_kc, m_v_kI, m_v_kD;
   float m_p_kc, m_p_kI, m_p_kD;
   float m_vv_kc, m_vv_kI, m_vv_kD;
-  float m_oldDepth;
+  float m_oldDepth, m_oldVel, m_curDepth, m_currentVel, m_currentAccel;
+  MovingAverage m_mvgDepthAvg;
   /* int m_avg_windowPtr; */
   /* int m_avg_windowSize; */
 
@@ -113,6 +114,7 @@ public:
   float getPressure();
   float getDepth();
   void setDryMode(bool);
+  void updateDepth();
   int getMode() { return m_mode; };
   float getDkC() { return m_kc; };
   float getDkI() { return m_kI; };
@@ -126,6 +128,13 @@ public:
   float getVVkC() {return m_vv_kc; };
   float getVVkI() { return m_vv_kI; };
   float getVVkD() { return m_vv_kD; };
+  float getCurrentVel() {
+    	return m_currentVel;
+    };
+
+    float getCurrentAccel() {
+    	return m_currentAccel;
+    };
 
 };
 

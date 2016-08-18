@@ -15,6 +15,8 @@ BtuLinear::~BtuLinear(){}
 
 void BtuLinear::init() {
     m_mode = DEFAULT_CTRL_MODE;
+    m_oldDepth = 0;
+    m_oldVel = 0;
 
     // default gain values for depth controller
     updateDepthTunings(DEP_KC, DEP_KI, DEP_KD);
@@ -105,6 +107,11 @@ void BtuLinear::runCycle(float setVal) {
   //m_pressureSensor.Barometer_MS5837();
 	m_actA.updatePosition();
 	m_actB.updatePosition();
+	updateDepth();
+	m_currentVel = (m_curDepth - m_oldDepth) / PID_FREQ;
+	m_currentAccel = (m_currentVel - m_oldVel) / PID_FREQ;
+	m_oldVel = m_currentVel;
+	m_oldDepth = m_curDepth;
     switch (m_mode) {
 
     case VOLTAGE_CTRL_MODE:
@@ -122,7 +129,6 @@ void BtuLinear::runCycle(float setVal) {
     case POSITION_CTRL_MODE:
         positionControl(setVal);
         break;
-
 
     case VV_CTRL_MODE:
       vvControl(setVal);
@@ -204,10 +210,9 @@ void BtuLinear::depthControlHelper(float cmdVoltage) {
 // do depth control
 void BtuLinear::depthControl(float setDepthMeters) {
     // Read Pressure Value and Convert into Depth in Meters
-	float curDepth = getDepth();
 
 	// current depth becomes process variable for PID controller
-    m_depthPid.setProcessValue(curDepth);
+    m_depthPid.setProcessValue(m_curDepth);
 
     // desired depth in meters becomes set point of PID controller
 	m_depthPid.setSetPoint(setDepthMeters);
@@ -218,16 +223,15 @@ void BtuLinear::depthControl(float setDepthMeters) {
     // extending the actuator increases buoyancy -> less depth
     // therefore the axis direction has to be reversed
     // and commanded voltage with opposite sign is therefore applied
-    vvControl( cmdVel );
+    //vvControl( cmdVel );
+
+    depthControlHelper(-1*cmdVel);
 }
 
 void BtuLinear::vvControl(float setVelMeters) {
-  float curDepth = getDepth();
-  float currentVel = (curDepth - m_oldDepth) / PID_FREQ;
-  m_vvPid.setProcessValue(currentVel);
+  m_vvPid.setProcessValue(m_currentVel);
   m_vvPid.setSetPoint(setVelMeters);
   float cmdVolt = m_vvPid.compute();
-  m_oldDepth = curDepth;
   depthControlHelper(-1 * cmdVolt);
 }
 
@@ -238,10 +242,18 @@ float BtuLinear::getDepth() {
         return pvDepth;
     }
     // read out pressure in mbar
-    float pvDepth = getPressure();
-    // convert pressure to meters
-    float pvDepthMeters = (pvDepth - P_ATMOS_MBAR) / P_WATER_SURFACE_MBAR;
-    return pvDepthMeters;
+
+    return m_curDepth;
+}
+
+void BtuLinear::updateDepth() {
+	if(!m_dryRun) {
+		float pvDepth = getPressure();
+		    // convert pressure to meters
+		float pvDepthMeters = (pvDepth - P_ATMOS_MBAR) / P_WATER_SURFACE_MBAR;
+		//m_curDepth = m_mvgDepthAvg.computeMovingAverage(pvDepthMeters);
+		m_curDepth = pvDepthMeters;
+	}
 }
 
 void BtuLinear::setDryMode(bool dry) {
