@@ -242,19 +242,16 @@ float BtuLinear::getDepth() {
         return pvDepth;
     }
     // read out pressure in mbar
-
-    return m_curDepth;
-}
-
-void BtuLinear::updateDepth() {
-	if(!m_dryRun) {
+    if(!m_dryRun) {
 		float pvDepth = getPressure();
 		    // convert pressure to meters
 		float pvDepthMeters = (pvDepth - P_ATMOS_MBAR) / P_WATER_SURFACE_MBAR;
 		//m_curDepth = m_mvgDepthAvg.computeMovingAverage(pvDepthMeters);
 		m_curDepth = pvDepthMeters;
 	}
+    return m_curDepth;
 }
+
 
 void BtuLinear::setDryMode(bool dry) {
 	m_dryRun = dry;

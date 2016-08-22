@@ -1,8 +1,8 @@
 #include "Actuator.h"
 
-Actuator::Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float freq):
-    m_posPid(POS_KC, POS_KI, POS_KD, freq, POS_MIN, POS_MAX, VOLT_MIN, VOLT_MAX, 0),
-    m_velPid(VEL_KC, VEL_KI, VEL_KD, freq, VEL_MIN, VEL_MAX, VOLT_MIN, VOLT_MAX, 0),
+Actuator::Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float timestep):
+    m_posPid(POS_KC, POS_KI, POS_KD, timestep, POS_MIN, POS_MAX, VOLT_MIN, VOLT_MAX, 0),
+    m_velPid(VEL_KC, VEL_KI, VEL_KD, timestep, VEL_MIN, VEL_MAX, VOLT_MIN, VOLT_MAX, 0),
     m_actPwm(pwmPin),
     m_actDir(dirPin),
     m_actPot(potPin)
