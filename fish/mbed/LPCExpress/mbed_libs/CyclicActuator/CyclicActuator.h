@@ -21,6 +21,9 @@
 #define KpFreq	 			10000.0 // frequency on the order of 10^-7
 #define KdFreq	 			0.00
 #define valveOffsetGain 	0.5
+#define pumpOffsetGain 0.5
+#define min_P 0.0000009
+#define max_P 0.0000016
 
 class CyclicActuator {
 public:
@@ -72,6 +75,7 @@ private:
 	volatile float freqErr;
 	volatile float prevFreqErr;
 	volatile float dVFreq;
+	volatile float Pfreq;
 
 	PwmOut pumpPWM;
 	PwmOut valvePWM;

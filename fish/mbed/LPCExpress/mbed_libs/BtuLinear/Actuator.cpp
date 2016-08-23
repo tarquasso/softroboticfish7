@@ -1,13 +1,13 @@
 #include "Actuator.h"
 
-Actuator::Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float freq):
-    m_posPid(POS_KC, POS_KI, POS_KD, freq, POS_MIN, POS_MAX, VOLT_MIN, VOLT_MAX, 0),
-    m_velPid(VEL_KC, VEL_KI, VEL_KD, freq, VEL_MIN, VEL_MAX, VOLT_MIN, VOLT_MAX, 0),
+Actuator::Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float timestep):
+    m_posPid(POS_KC, POS_KI, POS_KD, timestep, POS_MIN, POS_MAX, VOLT_MIN, VOLT_MAX, 0),
+    m_velPid(VEL_KC, VEL_KI, VEL_KD, timestep, VEL_MIN, VEL_MAX, VOLT_MIN, VOLT_MAX, 0),
     m_actPwm(pwmPin),
     m_actDir(dirPin),
     m_actPot(potPin)
 {
-    m_timestep = freq;
+    m_timestep = timestep;
 };
 
 Actuator::~Actuator(){}
@@ -16,13 +16,19 @@ void Actuator::reset() {
     m_posPid.reset();
     m_velPid.reset();
     m_mvgAvg.reset();
+    updatePosition();
     m_oldPos = getPosition();
 }
 
-float Actuator::getPosition() {
+void Actuator::updatePosition() {
 	float position = m_actPot;
 	float filteredPosition = m_mvgAvg.computeMovingAverage(position);
-    return filteredPosition;
+	m_currentPosition = filteredPosition;
+}
+
+float Actuator::getPosition() {
+
+	return m_currentPosition;
     //float scaledPos = (filteredPosition - POT_MIN) / (POT_MAX - POT_MIN);
     //return scaledPos;
 }
@@ -84,6 +90,7 @@ void Actuator::runVelControl(float setVel) {
     m_oldPos = pos;
     // add delta in voltage to current voltage and clip at min max if necessary
     m_currentVoltage = utility::clip(m_currentVoltage + deltaVolt, VOLT_MIN, VOLT_MAX);
+    runVoltControl(m_currentVoltage);
 }
 
 void Actuator::runPosControl(float setPos) {

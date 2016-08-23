@@ -17,9 +17,10 @@ x_button = 14
 
 l_stick_y_axis = 1
 
-mode0_button = l1_button
-mode1_button = r1_button
-mode2_button = r2_button
+mode1_button = l1_button
+mode2_button = r1_button
+mode3_button = l2_button
+mode4_button = r2_button
 
 tick_up_button = tri_button
 tick_down_button = x_button
@@ -34,21 +35,23 @@ class DepthJoy(object):
 
         self.joy = None
 
-        self.pub = rospy.Publisher("joy_control", DepthTestMsg, queue_size = 1)
+        self.pub = rospy.Publisher("joy_control", DepthTestMsg, queue_size = 100)
 
-        self.sub_joy = rospy.Subscriber("joy", Joy, self.cbJoy, queue_size = 1)
+        self.sub_joy = rospy.Subscriber("joy", Joy, self.cbJoy, queue_size = 100)
 
-        self.sub_mbed = rospy.Subscriber("mbed_stat", mbedStatusMsg, self.cbMbed, queue_size = 1)
-        self.mode_map = {3: "depth", 2: "velocity", 1: "position"}
-        self.desired_number = {"depth": 0, "velocity": 0, "position": 0}
+        self.sub_mbed = rospy.Subscriber("mbed_stat", mbedStatusMsg, self.cbMbed, queue_size = 100)
+        self.mode_map = {4: "depth", 2: "velocity", 3: "position", 1: "voltage"}
+        self.desired_number = {"depth": 0, "velocity": 0, "position": 0, "voltage": 0}
         self.mode = 2
+        self.value = 0
 
-        self.axis_gain_dict = {"depth": -1, "velocity": 1, "position": 1}
-        self.tick_gain_dict = {"depth": -0.05, "velocity": 0.05, "position": 0.05}
+        self.axis_gain_dict = {"depth": -1, "velocity": 1, "position": 1, "voltage": 1}
+        self.tick_gain_dict = {"depth": -0.05, "velocity": 0.05, "position": 0.05, "voltage": 0.05}
 
-        self.minmax_dict = {"depth": (0, 1), "velocity": (-1, 1), "position": (-1,1)}
+        self.minmax_dict = {"depth": (0, 1), "velocity": (-1, 1), "position": (0,1)}
 
         self.bad_axes = [23, 24, 25]
+        self.mbed_msg = DepthTestMsg()
         # Controller:
         # LStick: x0, -y1
         # RStick: x2, -y3
@@ -108,15 +111,18 @@ class DepthJoy(object):
         if self.joy_updated(diff):
             self.joy = joy_msg
             sendMsg = False
-            if diff["buttons"][mode0_button] and joy_msg.buttons[mode0_button]:
+            if diff["buttons"][mode1_button] and joy_msg.buttons[mode1_button]:
                 self.mode = 1
                 sendMsg = True
                 # update msg with new mode
-            if diff["buttons"][mode1_button] and joy_msg.buttons[mode1_button]:
+            if diff["buttons"][mode2_button] and joy_msg.buttons[mode2_button]:
                 self.mode = 2
                 sendMsg = True
-            if diff["buttons"][mode2_button] and joy_msg.buttons[mode2_button]:
+            if diff["buttons"][mode3_button] and joy_msg.buttons[mode3_button]:
                 self.mode = 3
+                sendMsg = True
+            if diff["buttons"][mode4_button] and joy_msg.buttons[mode4_button]:
+                self.mode = 4
                 sendMsg = True
             if diff["buttons"][tick_up_button] and joy_msg.buttons[tick_up_button]:
                 self.do_incr(1)
@@ -129,19 +135,28 @@ class DepthJoy(object):
 
 
             mbed_msg.mode = self.mode
-            mbed_msg.value = self.clip(self.desired_number[self.mode_map[self.mode]] + (self.axis_gain_dict[self.mode_map[self.mode]] * self.normalize_axis(joy_msg.axes[vel_ctrl_axis])),  self.minmax_dict[self.mode_map[self.mode]])
+            self.value = self.clip(self.desired_number[self.mode_map[self.mode]] + (self.axis_gain_dict[self.mode_map[self.mode]] * self.normalize_axis(joy_msg.axes[vel_ctrl_axis])),  self.minmax_dict[self.mode_map[self.mode]])
+            mbed_msg.value = self.value
             if sendMsg:
-                rospy.loginfo("mode: %s, value: %s", self.mode_map[mbed_msg.mode], mbed_msg.value)
-                self.pub.publish(mbed_msg)
+                rospy.loginfo("PI mode: %s, value: %s", self.mode_map[mbed_msg.mode], mbed_msg.value)
+                # self.pub.publish(mbed_msg)
 
     def cbMbed(self, mbed_msg):
-        rospy.loginfo("mode: %s, value: %s", self.mode_map[mbed_msg.mode], mbed_msg.value)
+        rospy.loginfo("MBED mode: %s, value: %s", self.mode_map[mbed_msg.mode], mbed_msg.value)
 
 
+    def sendStat(self):
+        mbed_msg = DepthTestMsg()
+        mbed_msg.mode = self.mode;
+        mbed_msg.value = self.value;
+        self.pub.publish(mbed_msg);
 
 
 
 if __name__ == "__main__":
     rospy.init_node("depth_control_pi", anonymous=False)
     depth_control_pi = DepthJoy()
+    while True:
+        depth_control_pi.sendStat()
+        time.sleep(0.01)
     rospy.spin()

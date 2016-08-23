@@ -1,0 +1,12 @@
+set terminal postscript color
+set output '| ps2pdf - output.pdf'
+plot 'plotlog' using 10:9 with lines title 'Depth Error(m)', 'plotlog' using 10:8 with lines title 'Depth(m)' lw 2, 'plotlog' using 10:7 with lines title 'Actuator 2(ratio)', 'plotlog' using 10:6 with lines title 'Actuator 1(ratio)', 'plotlog' using 10:5 with lines title 'Set Depth(m)' lt 3 lw 2
+set key left top
+set xlabel "Time(s)"
+set ylabel "Data"
+set grid
+set xtics 50
+set ytics 1
+set mxtics 5
+set mytics 5
+set xzeroaxis lt -1 lw 1
