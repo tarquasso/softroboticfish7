@@ -107,7 +107,7 @@ void BtuLinear::runCycle(float setVal) {
   //m_pressureSensor.Barometer_MS5837();
 	m_actA.updatePosition();
 	m_actB.updatePosition();
-	updateDepth();
+	//updateDepth();
 	m_currentVel = (m_curDepth - m_oldDepth) / PID_FREQ;
 	m_currentAccel = (m_currentVel - m_oldVel) / PID_FREQ;
 	m_oldVel = m_currentVel;

@@ -7,7 +7,7 @@ Actuator::Actuator(PinName pwmPin, PinName dirPin, PinName potPin, float timeste
     m_actDir(dirPin),
     m_actPot(potPin)
 {
-    m_timestep = freq;
+    m_timestep = timestep;
 };
 
 Actuator::~Actuator(){}
