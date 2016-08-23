@@ -5,22 +5,19 @@
 #include <string.h>
 #include <stdlib.h>
 #include "ros/msg.h"
-#include "std_msgs/Header.h"
 
 namespace fish_msgs
 {
 
-  class JoystickState : public ros::Msg
+  class joystick_in : public ros::Msg
   {
     public:
-      std_msgs::Header header;
       int8_t freq_ctrl;
       int8_t speed_ctrl;
       int8_t depth_ctrl;
       int8_t yaw_ctrl;
 
-    JoystickState():
-      header(),
+    joystick_in():
       freq_ctrl(0),
       speed_ctrl(0),
       depth_ctrl(0),
@@ -31,7 +28,6 @@ namespace fish_msgs
     virtual int serialize(unsigned char *outbuffer) const
     {
       int offset = 0;
-      offset += this->header.serialize(outbuffer + offset);
       union {
         int8_t real;
         uint8_t base;
@@ -66,7 +62,6 @@ namespace fish_msgs
     virtual int deserialize(unsigned char *inbuffer)
     {
       int offset = 0;
-      offset += this->header.deserialize(inbuffer + offset);
       union {
         int8_t real;
         uint8_t base;
@@ -102,8 +97,8 @@ namespace fish_msgs
      return offset;
     }
 
-    const char * getType(){ return "fish_msgs/JoystickState"; };
-    const char * getMD5(){ return "4129a0c180f571940a0bb7c31e5402a4"; };
+    const char * getType(){ return "fish_msgs/joystick_in"; };
+    const char * getMD5(){ return "0c650c89727301b1e2298a1c19175b51"; };
 
   };
 

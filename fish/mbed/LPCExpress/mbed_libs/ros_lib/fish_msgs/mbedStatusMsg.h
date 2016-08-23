@@ -5,7 +5,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "ros/msg.h"
-#include "std_msgs/Header.h"
 
 namespace fish_msgs
 {
@@ -13,12 +12,10 @@ namespace fish_msgs
   class mbedStatusMsg : public ros::Msg
   {
     public:
-      std_msgs::Header header;
       int8_t mode;
       float value;
 
     mbedStatusMsg():
-      header(),
       mode(0),
       value(0)
     {
@@ -27,7 +24,6 @@ namespace fish_msgs
     virtual int serialize(unsigned char *outbuffer) const
     {
       int offset = 0;
-      offset += this->header.serialize(outbuffer + offset);
       union {
         int8_t real;
         uint8_t base;
@@ -51,7 +47,6 @@ namespace fish_msgs
     virtual int deserialize(unsigned char *inbuffer)
     {
       int offset = 0;
-      offset += this->header.deserialize(inbuffer + offset);
       union {
         int8_t real;
         uint8_t base;
@@ -75,7 +70,7 @@ namespace fish_msgs
     }
 
     const char * getType(){ return "fish_msgs/mbedStatusMsg"; };
-    const char * getMD5(){ return "eb1116355ef9a4ad03d52b9525078a55"; };
+    const char * getMD5(){ return "392256b70b5280d59063ab9c2ddc1efa"; };
 
   };
 
