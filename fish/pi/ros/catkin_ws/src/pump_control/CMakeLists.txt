@@ -1,17 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(fish_msgs)
+project(pump_control)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  fish_msgs
   roscpp
   rospy
-  message_generation
   std_msgs
-  geometry_msgs
-  visualization_msgs
-  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -48,16 +45,11 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  joystick_in.msg
-  DepthTestMsg.msg
-  mbedStatusMsg.msg
-  PumpTestMsg.msg
-  mbedPumpStatusMsg.msg
-  mbedDataMsg.msg
-  FishCtrlMsg.msg
-)
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -75,11 +67,9 @@ add_message_files(
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
-  DEPENDENCIES
-  std_msgs
-# geometry_msgs
-# sensor_msgs
-)
+   DEPENDENCIES
+   fish_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -112,9 +102,8 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES fish_msgs
-   CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs message_runtime visualization_msgs
-
+#  LIBRARIES depthcontrol
+#  CATKIN_DEPENDS Joy fish_msgs roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 
@@ -130,24 +119,24 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(fish_msgs
-#   src/${PROJECT_NAME}/fish_msgs.cpp
+# add_library(depthcontrol
+#   src/${PROJECT_NAME}/depthcontrol.cpp
 # )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(fish_msgs ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(depthcontrol ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(fish_msgs_node src/fish_msgs_node.cpp)
+# add_executable(depthcontrol_node src/depthcontrol_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(fish_msgs_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(depthcontrol_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(fish_msgs_node
+# target_link_libraries(depthcontrol_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -166,7 +155,7 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS fish_msgs fish_msgs_node
+# install(TARGETS depthcontrol depthcontrol_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -191,7 +180,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_fish_msgs.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_depthcontrol.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
