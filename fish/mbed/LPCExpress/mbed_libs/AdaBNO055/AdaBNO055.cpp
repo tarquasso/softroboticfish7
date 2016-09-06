@@ -12,22 +12,22 @@ BNO055::BNO055(PinName SDA, PinName SCL) : _i2c(SDA,SCL){
   temp_scale = 1;
 }
 
-bool BNO055::begin(char mode, Serial &pc)
+bool BNO055::begin(char mode)
 {
   unsigned char systrig = read8(BNO055_SYS_TRIGGER_ADDR);
   systrig = systrig | 0x20;
   write8(BNO055_SYS_TRIGGER_ADDR, (char)systrig);
-  pc.printf("READING ID\r\n");
+  //pc.printf("READING ID\r\n");
   unsigned char id = read8(BNO055_CHIP_ID_ADDR);
-  pc.printf("READ ID\r\n");
+  //pc.printf("READ ID\r\n");
   if(id != BNO055_ID) {
-    pc.printf("BAD ID %d\r\n", id);
+    //pc.printf("BAD ID %d\r\n", id);
     wait_ms(1000);              // hold on for boot
-    pc.printf("CHECKING AGAIN\r\n");
+    //pc.printf("CHECKING AGAIN\r\n");
     id = read8(BNO055_CHIP_ID_ADDR);
-    pc.printf("READ AGAIN\r\n");
+    //pc.printf("READ AGAIN\r\n");
     if(id != BNO055_ID) {
-      pc.printf("STILL BAD.  WE OUT. %d\r\n", id);
+      //pc.printf("STILL BAD.  WE OUT. %d\r\n", id);
       return false;
     }
   }
@@ -229,7 +229,15 @@ Vector BNO055::getVector(char vector_type) {
     xyz[2] = ((double)z)/16.0;
     break;
   case VECTOR_ACCELEROMETER:
+    xyz[0] = x;
+    xyz[1] = y;
+    xyz[2] = z;
+    break;
   case VECTOR_LINEARACCEL:
+    xyz[0] = ((double)x/100.0);
+    xyz[1] = ((double)y/100.0);
+    xyz[2] = ((double)z/100.0);
+    break;
   case VECTOR_GRAVITY:
     xyz[0] = ((double)x)/100.0;
     xyz[1] = ((double)y)/100.0;

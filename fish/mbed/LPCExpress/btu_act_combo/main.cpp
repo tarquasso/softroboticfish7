@@ -2,7 +2,7 @@
 #include "mbed.h"
 #include "BtuLinear/BtuLinear.h"
 
-#define NUM_FLOATS 7
+#define NUM_FLOATS 10
 #define TIMESTEP 0.05
 #define DEPTH_THRESHOLD 0.5
 #define MIN_MISSION_DEPTH 0.5
@@ -223,8 +223,8 @@ void missionCycle() {
 	// log in either mission or debrief modes
 	if(inMission || debriefMode) {
 		float depth = btu.getDepth();
-		fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f, rt:%d, vel:%.4f, accel:%.4f\r\n",
-				btu.getMode(), btu.getDkC(), btu.getDkI(), btu.getDkD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, depth - missionDepth, missionTime, timeout, returnTrip, btu.getCurrentVel(),btu.getCurrentAccel());
+		fprintf(fp, "m:%d, kc:%f, ti:%f, td:%f, s:%.2f, cu:%.2f %.2f, de:%.2f, depth_er:%.4f, time: %.2f, to:%.2f, rt:%d, vel:%.4f, accel:%.4f, akc: %.2f, aki:%.2f, akd:%.2f\r\n",
+				btu.getMode(), btu.getDkC(), btu.getDkI(), btu.getDkD(), missionDepth, btu.getActPosition(ACT_A), btu.getActPosition(ACT_B), depth, depth - missionDepth, missionTime, timeout, returnTrip, btu.getCurrentVel(), btu.getCurrentAccel(), btu.getAccelkC(), btu.getAccelkI(), btu.getAccelkD());
 	} else {                  // otherwise just try to surface
 		btu.updateAndRunCycle(VOLTAGE_CTRL_MODE, UNWOUND_POS);
 	}
@@ -245,10 +245,14 @@ void missionCycle() {
 		Kc = valueFloats[0];
 		TauI = valueFloats[1];
 		TauD = valueFloats[2];
-		jumpVal = valueFloats[3];
-		floorVal = valueFloats[4];
-		btu.setDryMode(!valueFloats[5]);
-		missionSuccessTime = (valueFloats[6] == 0) ? SUCCESS_TIME : valueFloats[6];
+        float aKc = valueFloats[3];
+        float aKI = valueFloats[4];
+        float aKD = valueFloats[5];
+		jumpVal = valueFloats[6];
+		floorVal = valueFloats[7];
+		btu.setDryMode(!valueFloats[8]);
+		missionSuccessTime = (valueFloats[9] == 0) ? SUCCESS_TIME : valueFloats[9];
+        btu.updateAccelTunings(aKc, aKI, aKD);
 		startMission(Kc, TauI, TauD, floorVal, jumpVal);
 	}
 }

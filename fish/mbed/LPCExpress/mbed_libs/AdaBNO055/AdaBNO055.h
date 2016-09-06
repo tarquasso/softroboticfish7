@@ -186,7 +186,7 @@ class BNO055 {
  public:
   BNO055(PinName SDA, PinName SCL);
   /* bool begin(char mode = OPERATION_MODE_NDOF, Serial &pc = NULL); */
-  bool begin(char mode, Serial &pc);
+  bool begin(char mode);
   void setMode(char mode);
   /* void getRevInfo(char*); */
   void displayRevInfo();

@@ -1,12 +1,14 @@
 #include "BtuLinear.h"
 
 BtuLinear::BtuLinear(bool dryRun):
-    m_depthPid(DEP_KC, DEP_KI, DEP_KD, PID_FREQ, DEPTH_MIN, DEPTH_MAX, VOLT_MIN, VOLT_MAX, 0),
-    m_vvPid(VV_KC, VV_KI, VV_KD, PID_FREQ, VV_MIN, VV_MAX, VOLT_MIN, VOLT_MAX, 0),
+    m_depthPid(DEP_KC, DEP_KI, DEP_KD, PID_FREQ, DEPTH_MIN, DEPTH_MAX, ACC_MIN, ACC_MAX, 0),
+    m_vvPid(VV_KC, VV_KI, VV_KD, PID_FREQ, VV_MIN, VV_MAX, ACC_MIN, ACC_MAX, 0),
+    m_accelPid(ACC_KC, ACC_KI, ACC_KD, PID_FREQ, ACC_MIN, ACC_MAX, VOLT_MIN, VOLT_MAX, 0),
     m_actA(PIN_ACTA_PWM, PIN_ACTA_DIR, PIN_ACTA_POT, PID_FREQ),
     m_actB(PIN_ACTB_PWM, PIN_ACTB_DIR, PIN_ACTB_POT, PID_FREQ),
 	m_pressureSensor(PIN_IMU_SDA, PIN_IMU_SCL),
-    m_dryRunPot(DRY_RUN_POT_PIN)
+    m_dryRunPot(DRY_RUN_POT_PIN),
+    m_imu(p28, p27)
 {
     m_dryRun = dryRun;
 };
@@ -28,6 +30,12 @@ void BtuLinear::init() {
     updateVelTunings(VEL_KC,VEL_KI,VEL_KD);
 
     updateVVTunings(VV_KC, VV_KI, VV_KD);
+
+    DigitalOut imuPower = DigitalOut(p5);
+    imuPower = 0;
+    wait(5);
+    imuPower = 1;
+    bool status = m_imu.begin(OPERATION_MODE_NDOF);
 
     // initialize Pressure Sensor
     m_pressureSensor.MS5837Init();
@@ -94,6 +102,20 @@ void BtuLinear::updateVVTunings(float kc, float kI, float kD) {
   m_vvPid.setTunings(kc, kI, kD);
 }
 
+void BtuLinear::updateAccelTunings(float kc, float kI, float kD) {
+  m_acc_kc = kc;
+  m_acc_kI = kI;
+  m_acc_kD = kD;
+  m_accelPid.setTunings(kc, kI, kD);
+}
+
+// void BtuLinear::updatePitchTunings(float kc, float kI, float kD) {
+//   m_pitch_kc = kc;
+//   m_pitch_kI = kI;
+//   m_pitch_kD = kD;
+//   m_pitchPid.setTunings(kc, kI, kD);
+// }
+
 // updates Mode.  Resets most values if the mode has changed
 void BtuLinear::updateMode(int mode) {
     if(m_mode != mode) {
@@ -109,7 +131,8 @@ void BtuLinear::runCycle(float setVal) {
 	m_actB.updatePosition();
 	//updateDepth();
 	m_currentVel = (m_curDepth - m_oldDepth) / PID_FREQ;
-	m_currentAccel = (m_currentVel - m_oldVel) / PID_FREQ;
+	// m_currentAccel = (m_currentVel - m_oldVel) / PID_FREQ;
+    m_currentAccel = getAccel();
 	m_oldVel = m_currentVel;
 	m_oldDepth = m_curDepth;
     switch (m_mode) {
@@ -132,6 +155,10 @@ void BtuLinear::runCycle(float setVal) {
 
     case VV_CTRL_MODE:
       vvControl(setVal);
+      break;
+
+    case ACCELERATION_CTRL_MODE:
+      accelControl(setVal);
       break;
     }
 }
@@ -225,15 +252,35 @@ void BtuLinear::depthControl(float setDepthMeters) {
     // and commanded voltage with opposite sign is therefore applied
     //vvControl( cmdVel );
 
-    depthControlHelper(-1*cmdVel);
+    // depthControlHelper(-1*cmdVel);
+    accelControl(cmdVel);
 }
 
 void BtuLinear::vvControl(float setVelMeters) {
   m_vvPid.setProcessValue(m_currentVel);
   m_vvPid.setSetPoint(setVelMeters);
   float cmdVolt = m_vvPid.compute();
+  // depthControlHelper(-1 * cmdVolt);
+  accelControl(cmdVolt);
+}
+
+float BtuLinear::getAccel() {
+  Vector gravVector = m_imu.getVector(VECTOR_GRAVITY);
+  Vector linAccel = m_imu.getVector(VECTOR_LINEARACCEL);
+  float gMag = (sqrt((gravVector[0]*gravVector[0]) + (gravVector[1]*gravVector[1]) + (gravVector[2]*gravVector[2])));
+  float downAccel = ((linAccel[0] * gravVector[0] / gMag) + (linAccel[1] * gravVector[1] / gMag) + (linAccel[2] * gravVector[2] / gMag));
+  // m_currentAccel = downAccel;
+  return downAccel;
+}
+
+void BtuLinear::accelControl(float setAccMeters) {
+  m_accelPid.setProcessValue(m_currentAccel);
+  m_accelPid.setSetPoint(setAccMeters);
+  float cmdVolt = m_accelPid.compute();
   depthControlHelper(-1 * cmdVolt);
 }
+
+// void BtuLinear::
 
 // get a depth reading
 float BtuLinear::getDepth() {

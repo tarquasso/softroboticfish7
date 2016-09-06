@@ -6,6 +6,8 @@
 #include "PidController.h"
 #include "utility.h"
 #include "Actuator.h"
+#include "math.h"
+#include "AdaBNO055/AdaBNO055.h"
 /* #include "Servo.h" */
 
 
@@ -17,6 +19,7 @@
 #define DEPTH_CTRL_MODE 4
 #define POSITION_CTRL_MODE 3
 #define VV_CTRL_MODE 5
+#define ACCELERATION_CTRL_MODE 6
 #define DEFAULT_CTRL_MODE POSITION_CTRL_MODE
 
 #define DRY_RUN_POT_PIN p18
@@ -28,6 +31,9 @@
 #define VV_MIN -0.3
 #define VV_MAX 0.3
 
+#define ACC_MIN -0.5
+#define ACC_MAX 0.5
+
 /* #define PERIOD_PWM 0.00345 */
 
 #define DEP_KC 16.0
@@ -37,6 +43,10 @@
 #define VV_KC 1.0
 #define VV_KI 0.0
 #define VV_KD 0.0
+
+#define ACC_KC 1.0
+#define ACC_KI 0.0
+#define ACC_KD 0.0
 
 #define PID_FREQ 0.05
 
@@ -64,6 +74,7 @@ class BtuLinear {
 private:
   PidController m_depthPid;
   PidController m_vvPid;
+  PidController m_accelPid;
   Actuator m_actA;
   Actuator m_actB;
   MS5837 m_pressureSensor;
@@ -74,8 +85,10 @@ private:
   float m_v_kc, m_v_kI, m_v_kD;
   float m_p_kc, m_p_kI, m_p_kD;
   float m_vv_kc, m_vv_kI, m_vv_kD;
+  float m_acc_kc, m_acc_kI, m_acc_kD;
   float m_oldDepth, m_oldVel, m_curDepth, m_currentVel, m_currentAccel;
   MovingAverage m_mvgDepthAvg;
+  BNO055 m_imu;
   /* int m_avg_windowPtr; */
   /* int m_avg_windowSize; */
 
@@ -117,6 +130,11 @@ protected:
    * Controls the ascent/descent velocity of the BCU using PID control.
    */
   void vvControl(float setVelMeters);
+
+  float getAccel();
+
+  void accelControl(float setAccMeters);
+
 
 
 public:
@@ -176,6 +194,9 @@ public:
    * @param kD the derivative term gain.
    */
   void updateVVTunings(float kc, float kI, float kD);
+
+  void updateAccelTunings(float kc, float kI, float kD);
+
 
   /**
    * Returns the most recently recorded position from an Actuator.
@@ -317,6 +338,22 @@ public:
    * @return Descent Velocity Derivative Gain
    */
   float getVVkD() { return m_vv_kD; };
+
+  float getAccelkC() { return m_acc_kc; };
+
+  /**
+   * Returns the current Descent Velocity Integral Gain
+   *
+   * @return Descent Velocity Integral Gain
+   */
+  float getAccelkI() { return m_acc_kI; };
+
+  /**
+   * Returns the current Descent Velocity Derivative Gain
+   *
+   * @return Descent Velocity Derivative Gain
+   */
+  float getAccelkD() { return m_acc_kD; };
 
   /**
    * Returns current Descent Velocity
