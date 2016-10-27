@@ -15,7 +15,6 @@
 #include <ros/builtin_message_traits.h>
 #include <ros/message_operations.h>
 
-#include <std_msgs/Header.h>
 
 namespace fish_msgs
 {
@@ -25,24 +24,20 @@ struct joystick_in_
   typedef joystick_in_<ContainerAllocator> Type;
 
   joystick_in_()
-    : header()
-    , freq_ctrl(0)
+    : freq_ctrl(0)
     , speed_ctrl(0)
     , depth_ctrl(0)
     , yaw_ctrl(0)  {
     }
   joystick_in_(const ContainerAllocator& _alloc)
-    : header(_alloc)
-    , freq_ctrl(0)
+    : freq_ctrl(0)
     , speed_ctrl(0)
     , depth_ctrl(0)
     , yaw_ctrl(0)  {
+  (void)_alloc;
     }
 
 
-
-   typedef  ::std_msgs::Header_<ContainerAllocator>  _header_type;
-  _header_type header;
 
    typedef int8_t _freq_ctrl_type;
   _freq_ctrl_type freq_ctrl;
@@ -89,8 +84,8 @@ namespace message_traits
 
 
 
-// BOOLTRAITS {'IsFixedSize': False, 'IsMessage': True, 'HasHeader': True}
-// {'sensor_msgs': ['/opt/ros/indigo/share/sensor_msgs/cmake/../msg'], 'geometry_msgs': ['/opt/ros/indigo/share/geometry_msgs/cmake/../msg'], 'fish_msgs': ['/home/cyndiac/softroboticfish6/catkin_ws/src/fish_msgs/msg'], 'std_msgs': ['/opt/ros/indigo/share/std_msgs/cmake/../msg']}
+// BOOLTRAITS {'IsFixedSize': True, 'IsMessage': True, 'HasHeader': False}
+// {'fish_msgs': ['/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/fish_msgs/msg'], 'std_msgs': ['/opt/ros/kinetic/share/std_msgs/cmake/../msg']}
 
 // !!!!!!!!!!! ['__class__', '__delattr__', '__dict__', '__doc__', '__eq__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_parsed_fields', 'constants', 'fields', 'full_name', 'has_header', 'header_present', 'names', 'package', 'parsed_fields', 'short_name', 'text', 'types']
 
@@ -99,12 +94,12 @@ namespace message_traits
 
 template <class ContainerAllocator>
 struct IsFixedSize< ::fish_msgs::joystick_in_<ContainerAllocator> >
-  : FalseType
+  : TrueType
   { };
 
 template <class ContainerAllocator>
 struct IsFixedSize< ::fish_msgs::joystick_in_<ContainerAllocator> const>
-  : FalseType
+  : TrueType
   { };
 
 template <class ContainerAllocator>
@@ -119,12 +114,12 @@ struct IsMessage< ::fish_msgs::joystick_in_<ContainerAllocator> const>
 
 template <class ContainerAllocator>
 struct HasHeader< ::fish_msgs::joystick_in_<ContainerAllocator> >
-  : TrueType
+  : FalseType
   { };
 
 template <class ContainerAllocator>
 struct HasHeader< ::fish_msgs::joystick_in_<ContainerAllocator> const>
-  : TrueType
+  : FalseType
   { };
 
 
@@ -133,12 +128,12 @@ struct MD5Sum< ::fish_msgs::joystick_in_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "4129a0c180f571940a0bb7c31e5402a4";
+    return "0c650c89727301b1e2298a1c19175b51";
   }
 
   static const char* value(const ::fish_msgs::joystick_in_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x4129a0c180f57194ULL;
-  static const uint64_t static_value2 = 0x0a0bb7c31e5402a4ULL;
+  static const uint64_t static_value1 = 0x0c650c89727301b1ULL;
+  static const uint64_t static_value2 = 0xe2298a1c19175b51ULL;
 };
 
 template<class ContainerAllocator>
@@ -157,29 +152,10 @@ struct Definition< ::fish_msgs::joystick_in_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "Header header\n\
-int8 freq_ctrl\n\
+    return "int8 freq_ctrl\n\
 int8 speed_ctrl\n\
 int8 depth_ctrl\n\
 int8 yaw_ctrl\n\
-\n\
-================================================================================\n\
-MSG: std_msgs/Header\n\
-# Standard metadata for higher-level stamped data types.\n\
-# This is generally used to communicate timestamped data \n\
-# in a particular coordinate frame.\n\
-# \n\
-# sequence ID: consecutively increasing ID \n\
-uint32 seq\n\
-#Two-integer timestamp that is expressed as:\n\
-# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')\n\
-# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')\n\
-# time-handling sugar is provided by the client library\n\
-time stamp\n\
-#Frame this data is associated with\n\
-# 0: no frame\n\
-# 1: global frame\n\
-string frame_id\n\
 ";
   }
 
@@ -198,7 +174,6 @@ namespace serialization
   {
     template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
     {
-      stream.next(m.header);
       stream.next(m.freq_ctrl);
       stream.next(m.speed_ctrl);
       stream.next(m.depth_ctrl);
@@ -221,9 +196,6 @@ struct Printer< ::fish_msgs::joystick_in_<ContainerAllocator> >
 {
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::fish_msgs::joystick_in_<ContainerAllocator>& v)
   {
-    s << indent << "header: ";
-    s << std::endl;
-    Printer< ::std_msgs::Header_<ContainerAllocator> >::stream(s, indent + "  ", v.header);
     s << indent << "freq_ctrl: ";
     Printer<int8_t>::stream(s, indent + "  ", v.freq_ctrl);
     s << indent << "speed_ctrl: ";

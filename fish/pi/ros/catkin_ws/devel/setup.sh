@@ -8,7 +8,7 @@
 
 # since this file is sourced either use the provided _CATKIN_SETUP_DIR
 # or fall back to the destination set at configure time
-: ${_CATKIN_SETUP_DIR:=/home/cyndiac/softroboticfish6/catkin_ws/devel}
+: ${_CATKIN_SETUP_DIR:=/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/devel}
 _SETUP_UTIL="$_CATKIN_SETUP_DIR/_setup_util.py"
 unset _CATKIN_SETUP_DIR
 
@@ -27,7 +27,6 @@ unset _UNAME
 
 # make sure to export all environment variables
 export CMAKE_PREFIX_PATH
-export CPATH
 if [ $_IS_DARWIN -eq 0 ]; then
   export LD_LIBRARY_PATH
 else

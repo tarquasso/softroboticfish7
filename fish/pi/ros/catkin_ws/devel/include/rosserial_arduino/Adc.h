@@ -38,6 +38,7 @@ struct Adc_
     , adc3(0)
     , adc4(0)
     , adc5(0)  {
+  (void)_alloc;
     }
 
 
@@ -94,7 +95,7 @@ namespace message_traits
 
 
 // BOOLTRAITS {'IsFixedSize': True, 'IsMessage': True, 'HasHeader': False}
-// {'rosserial_arduino': ['/home/cyndiac/softroboticfish6/catkin_ws/src/rosserial/rosserial_arduino/msg']}
+// {'rosserial_arduino': ['/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/rosserial/src/rosserial_arduino/msg']}
 
 // !!!!!!!!!!! ['__class__', '__delattr__', '__dict__', '__doc__', '__eq__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_parsed_fields', 'constants', 'fields', 'full_name', 'has_header', 'header_present', 'names', 'package', 'parsed_fields', 'short_name', 'text', 'types']
 

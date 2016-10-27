@@ -2,9 +2,20 @@
 (cl:in-package :asdf)
 
 (defsystem "fish_msgs-msg"
-  :depends-on (:roslisp-msg-protocol :roslisp-utils :std_msgs-msg
-)
+  :depends-on (:roslisp-msg-protocol :roslisp-utils )
   :components ((:file "_package")
+    (:file "DepthTestMsg" :depends-on ("_package_DepthTestMsg"))
+    (:file "_package_DepthTestMsg" :depends-on ("_package"))
+    (:file "FishCtrlMsg" :depends-on ("_package_FishCtrlMsg"))
+    (:file "_package_FishCtrlMsg" :depends-on ("_package"))
+    (:file "MbedDataMsg" :depends-on ("_package_MbedDataMsg"))
+    (:file "_package_MbedDataMsg" :depends-on ("_package"))
+    (:file "PumpTestMsg" :depends-on ("_package_PumpTestMsg"))
+    (:file "_package_PumpTestMsg" :depends-on ("_package"))
     (:file "joystick_in" :depends-on ("_package_joystick_in"))
     (:file "_package_joystick_in" :depends-on ("_package"))
+    (:file "mbedPumpStatusMsg" :depends-on ("_package_mbedPumpStatusMsg"))
+    (:file "_package_mbedPumpStatusMsg" :depends-on ("_package"))
+    (:file "mbedStatusMsg" :depends-on ("_package_mbedStatusMsg"))
+    (:file "_package_mbedStatusMsg" :depends-on ("_package"))
   ))

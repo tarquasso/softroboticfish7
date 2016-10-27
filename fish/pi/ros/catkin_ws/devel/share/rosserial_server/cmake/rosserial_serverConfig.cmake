@@ -67,14 +67,14 @@ set(rosserial_server_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(rosserial_server_SOURCE_PREFIX /home/cyndiac/softroboticfish6/catkin_ws/src/rosserial/rosserial_server)
-  set(rosserial_server_DEVEL_PREFIX /home/cyndiac/softroboticfish6/catkin_ws/devel)
+  set(rosserial_server_SOURCE_PREFIX /home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/rosserial/src/rosserial_server)
+  set(rosserial_server_DEVEL_PREFIX /home/fish/softroboticfish6/fish/pi/ros/catkin_ws/devel)
   set(rosserial_server_INSTALL_PREFIX "")
   set(rosserial_server_PREFIX ${rosserial_server_DEVEL_PREFIX})
 else()
   set(rosserial_server_SOURCE_PREFIX "")
   set(rosserial_server_DEVEL_PREFIX "")
-  set(rosserial_server_INSTALL_PREFIX /home/cyndiac/softroboticfish6/catkin_ws/install)
+  set(rosserial_server_INSTALL_PREFIX /home/fish/softroboticfish6/fish/pi/ros/catkin_ws/install)
   set(rosserial_server_PREFIX ${rosserial_server_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(rosserial_server_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/cyndiac/softroboticfish6/catkin_ws/src/rosserial/rosserial_server/include " STREQUAL " ")
+if(NOT "/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/rosserial/src/rosserial_server/include " STREQUAL " ")
   set(rosserial_server_INCLUDE_DIRS "")
-  set(_include_dirs "/home/cyndiac/softroboticfish6/catkin_ws/src/rosserial/rosserial_server/include")
+  set(_include_dirs "/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/rosserial/src/rosserial_server/include")
   foreach(idir ${_include_dirs})
     if(IS_ABSOLUTE ${idir} AND IS_DIRECTORY ${idir})
       set(include ${idir})
@@ -103,7 +103,7 @@ if(NOT "/home/cyndiac/softroboticfish6/catkin_ws/src/rosserial/rosserial_server/
         message(FATAL_ERROR "Project 'rosserial_server' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  Ask the maintainer 'Mike Purvis <mpurvis@clearpathrobotics.com>' to fix it.")
       endif()
     else()
-      message(FATAL_ERROR "Project 'rosserial_server' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/cyndiac/softroboticfish6/catkin_ws/src/rosserial/rosserial_server/${idir}'.  Ask the maintainer 'Mike Purvis <mpurvis@clearpathrobotics.com>' to fix it.")
+      message(FATAL_ERROR "Project 'rosserial_server' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/rosserial/src/rosserial_server/${idir}'.  Ask the maintainer 'Mike Purvis <mpurvis@clearpathrobotics.com>' to fix it.")
     endif()
     _list_append_unique(rosserial_server_INCLUDE_DIRS ${include})
   endforeach()
@@ -122,7 +122,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/cyndiac/softroboticfish6/catkin_ws/devel/lib;/home/cyndiac/softroboticfish6/catkin_ws/devel/lib;/home/cyndiac/duckietown/catkin_ws/devel/lib;/opt/ros/indigo/lib)
+    foreach(path /home/fish/softroboticfish6/fish/pi/ros/catkin_ws/devel/lib;/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/devel/lib;/home/fish/ROSTutorials/catkin_ws/devel/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -162,12 +162,12 @@ foreach(depend ${depends})
   if(${count} EQUAL 1)
     # simple dependencies must only be find_package()-ed once
     if(NOT ${rosserial_server_dep}_FOUND)
-      find_package(${rosserial_server_dep} REQUIRED)
+      find_package(${rosserial_server_dep} REQUIRED NO_MODULE)
     endif()
   else()
     # dependencies with components must be find_package()-ed again
     list(REMOVE_AT depend_list 0)
-    find_package(${rosserial_server_dep} REQUIRED ${depend_list})
+    find_package(${rosserial_server_dep} REQUIRED NO_MODULE ${depend_list})
   endif()
   _list_append_unique(rosserial_server_INCLUDE_DIRS ${${rosserial_server_dep}_INCLUDE_DIRS})
 

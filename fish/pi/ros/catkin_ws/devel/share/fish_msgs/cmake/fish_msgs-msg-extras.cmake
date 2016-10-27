@@ -1,2 +1,2 @@
-set(fish_msgs_MESSAGE_FILES "/home/cyndiac/softroboticfish6/catkin_ws/src/fish_msgs/msg/joystick_in.msg")
+set(fish_msgs_MESSAGE_FILES "/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/fish_msgs/msg/joystick_in.msg;/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/fish_msgs/msg/DepthTestMsg.msg;/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/fish_msgs/msg/mbedStatusMsg.msg;/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/fish_msgs/msg/PumpTestMsg.msg;/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/fish_msgs/msg/mbedPumpStatusMsg.msg;/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/fish_msgs/msg/MbedDataMsg.msg;/home/fish/softroboticfish6/fish/pi/ros/catkin_ws/src/fish_msgs/msg/FishCtrlMsg.msg")
 set(fish_msgs_SERVICE_FILES "")
