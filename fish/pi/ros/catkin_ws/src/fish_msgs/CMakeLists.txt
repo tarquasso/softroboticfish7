@@ -55,7 +55,7 @@ add_message_files(
   mbedStatusMsg.msg
   PumpTestMsg.msg
   mbedPumpStatusMsg.msg
-  mbedDataMsg.msg
+  MbedDataMsg.msg
   FishCtrlMsg.msg
 )
 
