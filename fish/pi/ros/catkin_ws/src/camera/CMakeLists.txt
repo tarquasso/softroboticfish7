@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
+set(raspicam_DIR "/usr/local/lib/cmake/")
+
 project(camera)
 
 ## Find catkin macros and libraries
@@ -9,8 +11,12 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  image_transport
+  cv_bridge
+  sensor_msgs
 )
 
+find_package(raspicam REQUIRED)
 find_package(OpenCV REQUIRED)
 
 ## System dependencies are found with CMake's conventions
@@ -193,6 +199,10 @@ include_directories(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(camera_input src/camera_input_node.cpp)
-target_link_libraries(camera_input ${catkin_LIBRARIES} ${OpenCV_LIBS})
-add_dependencies(camera_input camera_generate_messages_cpp)
+add_executable(camera_pub src/camera_image_pub.cpp)
+target_link_libraries(camera_pub ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(camera_pub ${raspicam_CV_LIBS})
+target_link_libraries(camera_pub ${raspicam_LIBS})
+
+add_executable(camera_sub src/camera_image_sub.cpp)
+target_link_libraries(camera_sub ${catkin_LIBRARIES})
