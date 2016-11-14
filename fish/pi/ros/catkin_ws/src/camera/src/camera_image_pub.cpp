@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 		header.seq = count;
 		header.stamp = ros::Time::now();
 
-		img_bridge = cv_bridge::CvImage(header, sensor_msgs::image_encodings::TYPE_8UC3, image);
+		img_bridge = cv_bridge::CvImage(header, sensor_msgs::image_encodings::RGB8, image);
 
 		ROS_INFO("Sending image \n");
 		image_pub.publish(img_bridge.toImageMsg());

@@ -206,3 +206,6 @@ target_link_libraries(camera_pub ${raspicam_LIBS})
 
 add_executable(camera_sub src/camera_image_sub.cpp)
 target_link_libraries(camera_sub ${catkin_LIBRARIES})
+
+add_executable(camera_brig src/camera_image_brig.cpp)
+target_link_libraries(camera_brig ${catkin_LIBRARIES})
