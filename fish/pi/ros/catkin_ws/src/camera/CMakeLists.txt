@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   cv_bridge
   sensor_msgs
+  apriltags_ros
 )
 
 find_package(raspicam REQUIRED)
@@ -206,6 +207,3 @@ target_link_libraries(camera_pub ${raspicam_LIBS})
 
 add_executable(camera_sub src/camera_image_sub.cpp)
 target_link_libraries(camera_sub ${catkin_LIBRARIES})
-
-add_executable(camera_brig src/camera_image_brig.cpp)
-target_link_libraries(camera_brig ${catkin_LIBRARIES})

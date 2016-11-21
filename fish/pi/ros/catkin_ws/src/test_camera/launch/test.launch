@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+	<!-- start switch args -->
+	<arg name="camera" default="true"/>
+	<!-- end switch args -->
+	
+	<group if="$(arg camera)">
+		<node name="camera_node" pkg="raspicam" type="raspicam_raw_node" required = "true">
+		</node>
+		<group ns="camera">
+			<node name="image_proc_node" pkg="image_proc" type="image_proc" required = "true" output="screen">
+				<remap from="image_raw" to="image"/>
+			</node>
+		</group>
+	</group>
+
+</launch>

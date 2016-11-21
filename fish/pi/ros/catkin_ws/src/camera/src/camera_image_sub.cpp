@@ -4,9 +4,12 @@
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.h>
 #include <opencv2/opencv.hpp>
+#include <apriltags_ros/apriltag_detector.h>
 #include <vector>
 
 using namespace cv;
+
+apriltags_ros::AprilTagDetector *atDetect;
 
 void imgReceived(const sensor_msgs::ImageConstPtr& msg)
 {
@@ -36,7 +39,6 @@ int main(int argc, char **argv)
   ros::Subscriber sub = n.subscribe("images", 1000, imgReceived);
   image_transport::ImageTransport it(n);
   image_transport::Subscriber image_sub = it.subscribe("raw_images", 1, imgReceived);
-
   ros::spin();
 
   return 0;
