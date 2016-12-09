@@ -1,0 +1,5 @@
+<launch>
+	<node name="camera_node" pkg = "raspicam" type="raspicam_raw_node" output = "screen" required = "true">
+		<!--rosparam command="load" file="$(find test_camera)/config/cam.yaml" /-->
+	</node>
+</launch>

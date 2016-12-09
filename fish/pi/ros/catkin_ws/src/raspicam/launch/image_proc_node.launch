@@ -1,0 +1,4 @@
+<launch>
+	<arg name="pkg_name" value="image proc"/>
+	<arg name="node_name" value="image_proc_node"/>
+</launch>
