@@ -9,7 +9,7 @@
 
 #include "mbed.h"
 
-#define valvePwmPin 		p21
+#define valvePwmPin 		p24 //or p21?
 #define pumpPwmPin 			p23
 #define hallInterruptPin 	p18
 //#define encoderPinA 		p25
