@@ -14,7 +14,6 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   cv_bridge
   sensor_msgs
-  apriltags_ros
 )
 
 find_package(raspicam REQUIRED)

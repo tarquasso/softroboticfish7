@@ -4,12 +4,9 @@
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.h>
 #include <opencv2/opencv.hpp>
-#include <apriltags_ros/apriltag_detector.h>
 #include <vector>
 
 using namespace cv;
-
-apriltags_ros::AprilTagDetector *atDetect;
 
 void imgReceived(const sensor_msgs::ImageConstPtr& msg)
 {
