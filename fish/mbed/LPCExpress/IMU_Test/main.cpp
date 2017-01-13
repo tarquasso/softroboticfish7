@@ -1,15 +1,16 @@
-#include "jtwBNO055/AdaBNO055.h"
 #include "mbed.h"
+#include "SerialComm/SerialComm.h"
+#include "AdaBNO055/AdaBNO055.h"
 #include <cmath>
 
-#define PIN_IMU_TX p28
-#define PIN_IMU_RX p27
+#define PIN_IMU_SDA p28
+#define PIN_IMU_SCL p27
 
 PwmOut calibrationLevel(LED1);
 PwmOut pitch(LED2);
 PwmOut roll(LED3);
 PwmOut yaw(LED4);
-BNO055 imu(PIN_IMU_TX, PIN_IMU_RX);
+BNO055 imu(PIN_IMU_SDA, PIN_IMU_SCL);
 Serial pc(USBTX, USBRX);
 DigitalOut powerIMU(p5);
 LocalFileSystem local("local");
@@ -31,7 +32,7 @@ int main() {
   powerIMU = 1;
   bool needData = true;
   pc.printf("Starting the BNO055.\r\n");
-  bool status = imu.begin(OPERATION_MODE_NDOF, pc);
+  bool status = imu.begin(OPERATION_MODE_NDOF);
   pc.printf("SUCCESSFUL? %d\r\n", status);
   while(1) {
     // pc.printf("TEMP: %d\r\n", imu.getTemp());
