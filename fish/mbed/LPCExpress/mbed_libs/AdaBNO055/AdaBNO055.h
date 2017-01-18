@@ -170,10 +170,10 @@ class Quaternion {
  public:
   double w,x,y,z;
   Quaternion(double win,double xin,double yin,double zin) {
-    w = w;
-    x = x;
-    y = y;
-    z = z;
+    w = win;
+    x = xin;
+    y = yin;
+    z = zin;
   };
 };
 
