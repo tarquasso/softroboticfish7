@@ -1,5 +1,6 @@
 #include <math.h>
 #include <limits.h>
+#include <error.h>
 
 #include "AdaBNO055.h"
 
@@ -12,41 +13,60 @@ BNO055::BNO055(PinName SDA, PinName SCL) : _i2c(SDA,SCL){
   temp_scale = 1;
 }
 
-bool BNO055::begin(char mode)
+int BNO055::begin(char mode)
 {
-  unsigned char systrig = read8(BNO055_SYS_TRIGGER_ADDR);
+  unsigned char systrig;
+  if(read8(BNO055_SYS_TRIGGER_ADDR, &systrig)){
+    return -ERROR_NACK;
+  }
   systrig = systrig | 0x20;
-  write8(BNO055_SYS_TRIGGER_ADDR, (char)systrig);
+  if(write8(BNO055_SYS_TRIGGER_ADDR, (char)systrig)){
+    return -ERROR_NACK;
+  }
   //pc.printf("READING ID\r\n");
-  unsigned char id = read8(BNO055_CHIP_ID_ADDR);
+  unsigned char id;
+  while(read8(BNO055_CHIP_ID_ADDR, &id) < 0){
+    wait_ms(100);
+  }
   //pc.printf("READ ID\r\n");
   if(id != BNO055_ID) {
     //pc.printf("BAD ID %d\r\n", id);
     wait_ms(1000);              // hold on for boot
     //pc.printf("CHECKING AGAIN\r\n");
-    id = read8(BNO055_CHIP_ID_ADDR);
+    read8(BNO055_CHIP_ID_ADDR, &id);
     //pc.printf("READ AGAIN\r\n");
     if(id != BNO055_ID) {
       //pc.printf("STILL BAD.  WE OUT. %d\r\n", id);
-      return false;
+      return -ERROR_BAD_ID;
     }
   }
 
   // Switch to config mod (just in case since this is the default)
-  setMode(OPERATION_MODE_CONFIG);
+  if(!setMode(OPERATION_MODE_CONFIG)){
+    return -ERROR_NACK;
+  }
 
   // Reset
-  write8(BNO055_SYS_TRIGGER_ADDR, 0x20);
-  while(read8(BNO055_CHIP_ID_ADDR) != BNO055_ID) {
-    wait_ms(10);
+  if(write8(BNO055_SYS_TRIGGER_ADDR, 0x20)){
+    return -ERROR_NACK;
   }
+  unsigned char chip_addr;
+  int res;
+  do {
+    wait_ms(100);
+    res = read8(BNO055_CHIP_ID_ADDR, &chip_addr);
+  } while (res < 0 || chip_addr != BNO055_ID);
   wait_ms(50);
 
   // Set to normal power mode
-  write8(BNO055_PWR_MODE_ADDR, POWER_MODE_NORMAL);
+  if(write8(BNO055_PWR_MODE_ADDR, POWER_MODE_NORMAL)){
+    return -ERROR_NACK;
+  }
   wait_ms(10);
 
-  write8(BNO055_PAGE_ID_ADDR, 0);
+  if(write8(BNO055_PAGE_ID_ADDR, 0)){
+    return -ERROR_NACK;
+  }
 
    /* Set the output units */
   /*
@@ -66,40 +86,60 @@ bool BNO055::begin(char mode)
   delay(10);
   */
 
-  write8(BNO055_SYS_TRIGGER_ADDR, 0x0);
-  wait_ms(10);
-  // Set the requested operating mode
-  setMode(mode);
-  wait_ms(20);
-
-  return true;
-}
-
-void BNO055::setMode(char mode) {
-  _mode = mode;
-  write8(BNO055_OPR_MODE_ADDR, _mode);
-  wait_ms(30);
-}
-
-void BNO055::setExtCrystalUse(bool usextal) {
-  char modeback = _mode;
-
-  setMode(OPERATION_MODE_CONFIG);
-  wait_ms(25);
-  write8(BNO055_PAGE_ID_ADDR, 0);
-  if(usextal) {
-    write8(BNO055_SYS_TRIGGER_ADDR, 0x80);
-  } else {
-    write8(BNO055_SYS_TRIGGER_ADDR, 0x00);
+  if(write8(BNO055_SYS_TRIGGER_ADDR, 0x0)){
+    return -ERROR_NACK;
   }
   wait_ms(10);
   // Set the requested operating mode
-  setMode(modeback);
+  if(!setMode(mode)){
+    return -ERROR_NACK;
+  }
   wait_ms(20);
+
+  return 0;
 }
 
-void BNO055::getSystemStatus(unsigned char *system_status, unsigned char *self_test_result, unsigned char *system_error) {
-  write8(BNO055_PAGE_ID_ADDR, 0);
+bool BNO055::setMode(char mode) {
+  _mode = mode;
+  if(write8(BNO055_OPR_MODE_ADDR, _mode)){
+    return false;
+  }
+  wait_ms(30);
+  return true;
+}
+
+int BNO055::setExtCrystalUse(bool usextal) {
+  char modeback = _mode;
+
+  if(!setMode(OPERATION_MODE_CONFIG)){
+    return -ERROR_NACK;
+  }
+  wait_ms(25);
+  if(write8(BNO055_PAGE_ID_ADDR, 0)){
+    return -ERROR_NACK;
+  }
+  if(usextal) {
+    if(write8(BNO055_SYS_TRIGGER_ADDR, 0x80)){
+      return -ERROR_NACK;
+    }
+  } else {
+    if(write8(BNO055_SYS_TRIGGER_ADDR, 0x00)){
+      return -ERROR_NACK;
+    }
+  }
+  wait_ms(10);
+  // Set the requested operating mode
+  if(!setMode(modeback)){
+    return -ERROR_NACK;
+  }
+  wait_ms(20);
+  return 0;
+}
+
+int BNO055::getSystemStatus(unsigned char *system_status, unsigned char *self_test_result, unsigned char *system_error) {
+  if(write8(BNO055_PAGE_ID_ADDR, 0)){
+    return -ERROR_NACK;
+  }
 
   /* System Status (see section 4.3.58)
      ---------------------------------
@@ -112,7 +152,7 @@ void BNO055::getSystemStatus(unsigned char *system_status, unsigned char *self_t
      6 = System running without fusion algorithms */
 
   if(system_status != 0) {
-    *system_status = read8(BNO055_SYS_STAT_ADDR);
+    read8(BNO055_SYS_STAT_ADDR, system_status);
   }
 
     /* Self Test Results (see section )
@@ -127,7 +167,7 @@ void BNO055::getSystemStatus(unsigned char *system_status, unsigned char *self_t
      0x0F = all good! */
 
   if(self_test_result != 0) {
-    *self_test_result = read8(BNO055_SELFTEST_RESULT_ADDR);
+    read8(BNO055_SELFTEST_RESULT_ADDR, self_test_result);
   }
 
     /* System Error (see section 4.3.59)
@@ -145,10 +185,11 @@ void BNO055::getSystemStatus(unsigned char *system_status, unsigned char *self_t
      A = Sensor configuration error */
 
   if(system_error != 0) {
-    *system_error = read8(BNO055_SYS_ERR_ADDR);
+    read8(BNO055_SYS_ERR_ADDR, system_error);
   }
 
   wait_ms(200);
+  return 0;
 }
 
 // void BNO055::getRevInfo(char *info) {
@@ -173,8 +214,11 @@ void BNO055::getSystemStatus(unsigned char *system_status, unsigned char *self_t
 //   info->sw_rev = (((uint16_t)b) << 8) | ((uint16_t)a);
 // }
 
-void BNO055::getCalibration(unsigned char* sys, unsigned char* gyro, unsigned char* accel, unsigned char* mag) {
-  unsigned char calData= read8(BNO055_CALIB_STAT_ADDR);
+int BNO055::getCalibration(unsigned char* sys, unsigned char* gyro, unsigned char* accel, unsigned char* mag) {
+  unsigned char calData;
+  if(read8(BNO055_CALIB_STAT_ADDR, &calData)) {
+    return -ERROR_NACK;
+  }
   if(sys != NULL) {
     *sys = (calData >> 6) & 0x03;
   }
@@ -187,14 +231,20 @@ void BNO055::getCalibration(unsigned char* sys, unsigned char* gyro, unsigned ch
   if(mag != NULL) {
     *mag = calData & 0x03;
   }
+  return 0;
 }
 
-char BNO055::getTemp(void) {
-  char temp = (char)(read8(BNO055_TEMP_ADDR));
-  return temp;
+int BNO055::getTemp(char *t) {
+  if(read8(BNO055_TEMP_ADDR, (unsigned char*)&t)){
+    return -ERROR_NACK;
+  }
+  return 0;
 }
 
-Vector BNO055::getVector(char vector_type) {
+int BNO055::getVector(char vector_type, Vector *vec) {
+  if (vec == NULL) {
+    return -ERROR_NULL_POINTER;
+  }
   Vector xyz;
   char buffer[6];      // TODO: maybe uint8?
   memset(buffer, 0, 6);
@@ -203,7 +253,9 @@ Vector BNO055::getVector(char vector_type) {
   x = y = z = 0;
 
   // Read vector data (6 bytes)
-  readLen(vector_type, buffer, 6);
+  if(readLen(vector_type, buffer, 6)){
+    return -ERROR_NACK;
+  }
 
   x = ((int16_t)buffer[0]) | (((int16_t)buffer[1]) << 8);
   y = ((int16_t)buffer[2]) | (((int16_t)buffer[3]) << 8);
@@ -244,18 +296,24 @@ Vector BNO055::getVector(char vector_type) {
     xyz[2] = ((double)z)/100.0;
     break;
   }
+  *vec = xyz;
 
-  return xyz;
+  return 0;
 }
 
-Quaternion BNO055::getQuat() {
+int BNO055::getQuat(Quaternion *q) {
+  if (q == NULL){
+    return -ERROR_NULL_POINTER;
+  }
   char buffer[8];
   memset(buffer, 0, 8);
 
   int16_t x, y, z, w;
   x = y = z = w = 0;
 
-  readLen(BNO055_QUATERNION_DATA_W_LSB_ADDR, buffer, 8);
+  if(readLen(BNO055_QUATERNION_DATA_W_LSB_ADDR, buffer, 8)){
+    return -ERROR_NACK;
+  }
   w = (((uint16_t)buffer[1]) << 8) | ((uint16_t)buffer[0]);
   x = (((uint16_t)buffer[3]) << 8) | ((uint16_t)buffer[2]);
   y = (((uint16_t)buffer[5]) << 8) | ((uint16_t)buffer[4]);
@@ -264,7 +322,8 @@ Quaternion BNO055::getQuat() {
   // Assign to Quaternion
   const double scale = (1.0 / (1<<14));
   Quaternion quat(scale * w, scale * x, scale * y, scale * z);
-  return quat;
+  *q = quat;
+  return 0;
 }
 
 // BNO055::getSensor(sensor *sensor) {
@@ -299,17 +358,25 @@ Quaternion BNO055::getQuat() {
 //   return true;
 // }
 
-bool BNO055::getSensorOffsets(char *calibData) {
+int BNO055::getSensorOffsets(char *calibData) {
   if(isFullyCalibrated()) {
     char lastMode = _mode;
-    setMode(OPERATION_MODE_CONFIG);
+    if(!setMode(OPERATION_MODE_CONFIG)){
+      return -ERROR_SETMODE;
+    }
     char NUM_BNO055_OFFSET_REGISTERS = 22;
-    readLen(ACCEL_OFFSET_X_LSB_ADDR, calibData, NUM_BNO055_OFFSET_REGISTERS);
-
-    setMode(lastMode);
-    return true;
+    bool success;
+    success = readLen(ACCEL_OFFSET_X_LSB_ADDR, calibData, NUM_BNO055_OFFSET_REGISTERS);
+    if(!setMode(lastMode)){
+      return -ERROR_SETMODE;
+    }
+    if(success){
+      return 0;
+    } else {
+      return -ERROR_NACK;
+    }
   }
-  return false;
+  return -ERROR_CALIBRATION;
 }
 
 // bool BNO055::getSensorOffsets(char &offsets_type) {
@@ -340,40 +407,89 @@ bool BNO055::getSensorOffsets(char *calibData) {
 // }
 
 
-void BNO055::setSensorOffsets(const char* calibData) {
+int BNO055::setSensorOffsets(const char* calibData) {
   char lastMode = _mode;
-  setMode(OPERATION_MODE_CONFIG);
+  if(!setMode(OPERATION_MODE_CONFIG)){
+    return -ERROR_SETMODE;
+  }
   wait_ms(25);
 
   /* A writeLen() would make this much cleaner */
-  write8(ACCEL_OFFSET_X_LSB_ADDR, calibData[0]);
-  write8(ACCEL_OFFSET_X_MSB_ADDR, calibData[1]);
-  write8(ACCEL_OFFSET_Y_LSB_ADDR, calibData[2]);
-  write8(ACCEL_OFFSET_Y_MSB_ADDR, calibData[3]);
-  write8(ACCEL_OFFSET_Z_LSB_ADDR, calibData[4]);
-  write8(ACCEL_OFFSET_Z_MSB_ADDR, calibData[5]);
+  if(write8(ACCEL_OFFSET_X_LSB_ADDR, calibData[0])){
+    return -ERROR_NACK;
+  }
+  if(write8(ACCEL_OFFSET_X_MSB_ADDR, calibData[1])){
+    return -ERROR_NACK;
+  }
+  if(write8(ACCEL_OFFSET_Y_LSB_ADDR, calibData[2])){
+    return -ERROR_NACK;
+  }
+  if(write8(ACCEL_OFFSET_Y_MSB_ADDR, calibData[3])){
+    return -ERROR_NACK;
+  }
+  if(write8(ACCEL_OFFSET_Z_LSB_ADDR, calibData[4])){
+    return -ERROR_NACK;
+  }
+  if(write8(ACCEL_OFFSET_Z_MSB_ADDR, calibData[5])){
+    return -ERROR_NACK;
+  }
 
-  write8(GYRO_OFFSET_X_LSB_ADDR, calibData[6]);
-  write8(GYRO_OFFSET_X_MSB_ADDR, calibData[7]);
-  write8(GYRO_OFFSET_Y_LSB_ADDR, calibData[8]);
-  write8(GYRO_OFFSET_Y_MSB_ADDR, calibData[9]);
-  write8(GYRO_OFFSET_Z_LSB_ADDR, calibData[10]);
-  write8(GYRO_OFFSET_Z_MSB_ADDR, calibData[11]);
+  if(write8(GYRO_OFFSET_X_LSB_ADDR, calibData[6])){
+    return -ERROR_NACK;
+  }
+  if(write8(GYRO_OFFSET_X_MSB_ADDR, calibData[7])){
+    return -ERROR_NACK;
+  }
+  if(write8(GYRO_OFFSET_Y_LSB_ADDR, calibData[8])){
+    return -ERROR_NACK;
+  }
+  if(write8(GYRO_OFFSET_Y_MSB_ADDR, calibData[9])){
+    return -ERROR_NACK;
+  }
+  if(write8(GYRO_OFFSET_Z_LSB_ADDR, calibData[10])){
+    return -ERROR_NACK;
+  }
+  if(write8(GYRO_OFFSET_Z_MSB_ADDR, calibData[11])){
+    return -ERROR_NACK;
+  }
 
-  write8(MAG_OFFSET_X_LSB_ADDR, calibData[12]);
-  write8(MAG_OFFSET_X_MSB_ADDR, calibData[13]);
-  write8(MAG_OFFSET_Y_LSB_ADDR, calibData[14]);
-  write8(MAG_OFFSET_Y_MSB_ADDR, calibData[15]);
-  write8(MAG_OFFSET_Z_LSB_ADDR, calibData[16]);
-  write8(MAG_OFFSET_Z_MSB_ADDR, calibData[17]);
+  if(write8(MAG_OFFSET_X_LSB_ADDR, calibData[12])){
+    return -ERROR_NACK;
+  }
+  if(write8(MAG_OFFSET_X_MSB_ADDR, calibData[13])){
+    return -ERROR_NACK;
+  }
+  if(write8(MAG_OFFSET_Y_LSB_ADDR, calibData[14])){
+    return -ERROR_NACK;
+  }
+  if(write8(MAG_OFFSET_Y_MSB_ADDR, calibData[15])){
+    return -ERROR_NACK;
+  }
+  if(write8(MAG_OFFSET_Z_LSB_ADDR, calibData[16])){
+    return -ERROR_NACK;
+  }
+  if(write8(MAG_OFFSET_Z_MSB_ADDR, calibData[17])){
+    return -ERROR_NACK;
+  }
 
-  write8(ACCEL_RADIUS_LSB_ADDR, calibData[18]);
-  write8(ACCEL_RADIUS_MSB_ADDR, calibData[19]);
+  if(write8(ACCEL_RADIUS_LSB_ADDR, calibData[18])){
+    return -ERROR_NACK;
+  }
+  if(write8(ACCEL_RADIUS_MSB_ADDR, calibData[19])){
+    return -ERROR_NACK;
+  }
 
-  write8(MAG_RADIUS_LSB_ADDR, calibData[20]);
-  write8(MAG_RADIUS_MSB_ADDR, calibData[21]);
+  if(write8(MAG_RADIUS_LSB_ADDR, calibData[20])){
+    return -ERROR_NACK;
+  }
+  if(write8(MAG_RADIUS_MSB_ADDR, calibData[21])){
+    return -ERROR_NACK;
+  }
 
-  setMode(lastMode);
+  if(!setMode(lastMode)){
+    return -ERROR_SETMODE;
+  }
+  return 0;
 }
 
 
@@ -414,7 +530,9 @@ void BNO055::setSensorOffsets(const char* calibData) {
 
 bool BNO055::isFullyCalibrated(void) {
   unsigned char system, gyro, accel, mag;
-  getCalibration(&system, &gyro, &accel, &mag);
+  if(getCalibration(&system, &gyro, &accel, &mag) < 0){
+    return false;
+  }
   // if (system < 3 || gyro < 3 || accel < 3 || mag < 3) {
   if(system<3) {
     return false;
@@ -422,26 +540,26 @@ bool BNO055::isFullyCalibrated(void) {
   return true;
 }
 
-unsigned char BNO055::read8(char loc) {
+bool BNO055::read8(char loc, unsigned char * res) {
   char reg = loc;
-  char res;
-  _i2c.write(address, &reg, 1, true);
-  _i2c.read(address+1, &res, 1, false);
-  return (unsigned char) res;
+  if(_i2c.write(address, &reg, 1, true)){
+    return true;
+  }
+  return _i2c.read(address+1, (char*)res, 1, false);
 }
 
 bool BNO055::write8(char loc, char value) {
   char msg[2];
   msg[0] = loc;
   msg[1] = value;
-  _i2c.write(address, msg, 2);
-  return true;
+  return _i2c.write(address, msg, 2);
 }
 
 
 bool BNO055::readLen(char loc, char * buffer, char len) {
   char reg = loc;
-  _i2c.write(address, &reg, 1, true);
-  _i2c.read(address, buffer, len, false);
-  return true;
+  if(_i2c.write(address, &reg, 1, true)){
+    return true;
+  }
+  return _i2c.read(address, buffer, len, false);
 }

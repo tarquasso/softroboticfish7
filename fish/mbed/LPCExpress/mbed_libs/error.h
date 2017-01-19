@@ -1,0 +1,13 @@
+#ifndef ERROR_H
+#define ERROR_H
+
+enum {
+	ERROR_NACK = 1,
+	ERROR_BAD_ID,
+	ERROR_NULL_POINTER,
+	ERROR_SETMODE,
+	ERROR_CALIBRATION,
+	MAXERROR
+};
+
+#endif

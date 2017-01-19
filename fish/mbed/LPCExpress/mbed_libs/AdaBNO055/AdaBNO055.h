@@ -186,26 +186,25 @@ class BNO055 {
  public:
   BNO055(PinName SDA, PinName SCL);
   /* bool begin(char mode = OPERATION_MODE_NDOF, Serial &pc = NULL); */
-  bool begin(char mode);
-  void setMode(char mode);
+  int begin(char mode);
+  bool setMode(char mode);
   /* void getRevInfo(char*); */
-  void displayRevInfo();
-  void setExtCrystalUse(bool usextal);
-  void getSystemStatus(unsigned char *system_status, unsigned char *self_test_result, unsigned char *system_error);
+  int setExtCrystalUse(bool usextal);
+  int getSystemStatus(unsigned char *system_status, unsigned char *self_test_result, unsigned char *system_error);
 
   void displaySystemStatus();
-  void getCalibration(unsigned char* system, unsigned char* gyro, unsigned char* accel, unsigned char* mag);
+  int getCalibration(unsigned char* system, unsigned char* gyro, unsigned char* accel, unsigned char* mag);
 
-  Vector getVector(char vector_type);
-  Quaternion getQuat();
-  char getTemp();
+  int getVector(char vector_type, Vector* vec);
+  int getQuat(Quaternion *q);
+  int getTemp(char *t);
 
   /* bool  getEvent  ( sensors_event_t* ); */
   /* void  getSensor ( sensor_t* ); */
 
-  bool getSensorOffsets(char* calibData);
+  int getSensorOffsets(char* calibData);
   /* bool getSensorOffsets(char &offsets_type); */
-  void setSensorOffsets(const char* calibData);
+  int setSensorOffsets(const char* calibData);
   /* void setSensorOffsets(const char &offsets_type); */
   bool isFullyCalibrated();
 
@@ -219,7 +218,7 @@ class BNO055 {
 
   int temp_scale;
 
-  unsigned char read8(char loc);
+  bool read8(char loc, unsigned char* res);
   bool readLen(char, char* buffer, char len);
   bool write8(char, char value);
 
