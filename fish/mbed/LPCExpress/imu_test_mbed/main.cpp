@@ -7,10 +7,14 @@
 PwmOut led_imu(LED1);
 PwmOut led_2(LED2);
 PwmOut led_3(LED3);
-BNO055 imu(PIN_SDA, PIN_SCL);
 Serial pc(USBTX, USBRX);
+I2CManager manager(PIN_SDA, PIN_SCL, &pc);
+BNO055 imu(manager);
 
 int main() {
+
+  manager.start_comms();
+
   pc.printf("Starting the BNO055.\r\n");
   int status;
   do {
