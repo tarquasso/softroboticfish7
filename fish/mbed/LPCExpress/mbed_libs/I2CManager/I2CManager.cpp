@@ -1,17 +1,14 @@
 #include "I2CManager.h"
 #include "cmsis_os.h"
 #include "mbed.h"
-#include <SerialComm/SerialComm.h>
 
-// Serial pc(USBTX, USBRX);
 
-I2CManager::I2CManager(PinName SDA, PinName SCL, Serial *pc) : _i2c(SDA,SCL), _pc(pc){
+I2CManager::I2CManager(PinName SDA, PinName SCL) : _i2c(SDA,SCL){
   _i2c.frequency(400000);
 }
 
 void I2CManager::start_comms() {
   runner = new Thread(handler_helper, this, osPriorityHigh);
-  _pc->printf("started comms\r\n");
 }
 
 void I2CManager::queue_handler() {

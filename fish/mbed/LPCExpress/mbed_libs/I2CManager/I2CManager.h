@@ -47,7 +47,7 @@ struct i2creq {
 
 class I2CManager {
   public:
-    I2CManager(PinName SDA, PinName SCL, Serial *pc);
+    I2CManager(PinName SDA, PinName SCL);
     Mail<i2creq, 16> transaction_queue;
     void start_comms(void);
 	private:
