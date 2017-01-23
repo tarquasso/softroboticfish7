@@ -2,7 +2,7 @@
 #define ADABNO055_H
 
 #include "mbed.h"
-
+#include "I2CManager/I2CManager.h"
 
 
 //
@@ -184,7 +184,7 @@ class Quaternion {
 
 class BNO055 {
  public:
-  BNO055(PinName SDA, PinName SCL);
+  BNO055(I2CManager const &manager);
   /* bool begin(char mode = OPERATION_MODE_NDOF, Serial &pc = NULL); */
   int begin(char mode);
   bool setMode(char mode);
@@ -209,7 +209,7 @@ class BNO055 {
   bool isFullyCalibrated();
 
  private:
-  I2C _i2c;
+  I2CManager _manager;
   char address;
   char _mode;
   float accel_scale,rate_scale,angle_scale;

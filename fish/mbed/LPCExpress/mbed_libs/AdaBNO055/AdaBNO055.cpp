@@ -4,8 +4,7 @@
 
 #include "AdaBNO055.h"
 
-BNO055::BNO055(PinName SDA, PinName SCL) : _i2c(SDA,SCL){
-  _i2c.frequency(400000);
+BNO055::BNO055(I2CManager const &managerIn) : _manager(managerIn) {
   address = BNOAddress;
   accel_scale = 0.001f;
   rate_scale = 1.0f/16.0f;
@@ -541,25 +540,45 @@ bool BNO055::isFullyCalibrated(void) {
 }
 
 bool BNO055::read8(char loc, unsigned char * res) {
-  char reg = loc;
-  if(_i2c.write(address, &reg, 1, true)){
-    return true;
-  }
-  return _i2c.read(address+1, (char*)res, 1, false);
+  struct i2creq *req = _manager.transaction_queue.alloc();
+  req->req_type = I2CREQ_READ8;
+  req->req_buf.read8.addr = address;
+  req->req_buf.read8.loc = loc;
+  req->req_buf.read8.res = (char*)res;
+  bool success;
+  req->req_buf.read8.success = &success;
+  req->req_buf.read8.thread_id = Thread::gettid();
+  _manager.transaction_queue.put(req);
+  Thread::signal_wait(0x1);
+  return success;
 }
 
 bool BNO055::write8(char loc, char value) {
-  char msg[2];
-  msg[0] = loc;
-  msg[1] = value;
-  return _i2c.write(address, msg, 2);
+  struct i2creq *req = _manager.transaction_queue.alloc();
+  req->req_type = I2CREQ_WRITE8;
+  req->req_buf.write8.addr = address;
+  req->req_buf.write8.loc = loc;
+  req->req_buf.write8.value = value;
+  bool success;
+  req->req_buf.write8.success = &success;
+  req->req_buf.write8.thread_id = Thread::gettid();
+  _manager.transaction_queue.put(req);
+  Thread::signal_wait(0x1);
+  return success;
 }
 
 
 bool BNO055::readLen(char loc, char * buffer, char len) {
-  char reg = loc;
-  if(_i2c.write(address, &reg, 1, true)){
-    return true;
-  }
-  return _i2c.read(address, buffer, len, false);
+  struct i2creq *req = _manager.transaction_queue.alloc();
+  req->req_type = I2CREQ_READLEN;
+  req->req_buf.readLen.addr = address;
+  req->req_buf.readLen.loc = loc;
+  req->req_buf.readLen.buffer = buffer;
+  req->req_buf.readLen.len = len;
+  bool success;
+  req->req_buf.readLen.success = &success;
+  req->req_buf.readLen.thread_id = Thread::gettid();
+  _manager.transaction_queue.put(req);
+  Thread::signal_wait(0x1);
+  return success;
 }
