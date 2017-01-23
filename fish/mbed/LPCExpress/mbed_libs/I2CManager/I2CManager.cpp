@@ -18,7 +18,6 @@ void I2CManager::queue_handler() {
   while(true) {
     osEvent evt = transaction_queue.get();
     if (evt.status == osEventMail) {
-      _pc->printf("processing \r\n");
       i2creq *req = (i2creq*)evt.value.p;
       switch(req->req_type) {
         case I2CREQ_READ8:
@@ -32,6 +31,10 @@ void I2CManager::queue_handler() {
         case I2CREQ_WRITE8:
           *(req->req_buf.write8.success) = write8(req->req_buf.write8.addr, req->req_buf.write8.loc, req->req_buf.write8.value);
           osSignalSet(req->req_buf.write8.thread_id, 0x1);
+          break;
+        case I2CREQ_COMMAND:
+          *(req->req_buf.command.success) = command(req->req_buf.command.addr, req->req_buf.command.loc);
+          osSignalSet(req->req_buf.command.thread_id, 0x1);
           break;
         default:
           // Bad request type
@@ -59,6 +62,11 @@ bool I2CManager::write8(char address, char loc, char value) {
   msg[0] = loc;
   msg[1] = value;
   return _i2c.write(address, msg, 2);
+}
+
+bool I2CManager::command(char address, char loc) {
+  char reg = loc;
+  return _i2c.write(address, &reg, 1);
 }
 
 

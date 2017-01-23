@@ -8,6 +8,7 @@ enum {
   I2CREQ_READ8,
   I2CREQ_READLEN,
   I2CREQ_WRITE8,
+  I2CREQ_COMMAND,
 };
 
 struct i2creq {
@@ -35,6 +36,12 @@ struct i2creq {
       bool *success;
       osThreadId thread_id;
     } write8;
+    struct i2creq_command {
+      char addr;
+      char loc;
+      bool *success;
+      osThreadId thread_id;
+    } command;
   } req_buf;
 };
 
@@ -43,14 +50,15 @@ class I2CManager {
     I2CManager(PinName SDA, PinName SCL, Serial *pc);
     Mail<i2creq, 16> transaction_queue;
     void start_comms(void);
-    static void handler_helper(void const *args);
 	private:
+    static void handler_helper(void const *args);
   	I2C _i2c;
     Serial *_pc;
     Thread *runner;
     bool read8(char addr, char loc, char* res);
     bool readLen(char addr, char loc, char* buffer, char len);
     bool write8(char addr, char loc, char value);
+    bool command(char addr, char loc);
     void queue_handler(void);
 };
 

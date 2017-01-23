@@ -1,4 +1,5 @@
 #include "mbed.h"
+#include "I2CManager/I2CManager.h"
 
 #ifndef MS5837_H
 #define MS5837_H
@@ -43,44 +44,45 @@
 #define ms5837_PROMread    0xA0 // read PROM command base address
 
 class MS5837{
+
+public:
+    MS5837 (I2CManager const &manager, char ms5837_addr = ms5837_addr_no_CS)
+        : _manager(manager)
+        , device_address(ms5837_addr << 1)
+        , started(false)
+        , m_finishedCalc(false)
+        {}
+    int init(void);
+    int reset(void);
+    void start(void);
+    bool done(void);
+
+    float get_pressure (void);
+    float get_temperature (void);
+protected:
+    void calculate_values(void);
+    int read_prom();
+    int convert_d1(void);
+    int convert_d2(void);
+    int read_adc(int *res);
 private:
+    I2CManager _manager;
+    Thread *runner;
+    char device_address;
     int D1, D2, Temp, C[8];
-    float T_MS5837, P_MS5837;
+    float temperature, pressure;
     int32_t dT, temp;
     int64_t OFF, SENS, press;
     int32_t adc;
-    int step;
     bool started;
     bool m_finishedCalc;
     /* Data buffers */
-    char ms5837_rx_data[MS5837_RX_DEPTH];
-    char ms5837_tx_data[MS5837_TX_DEPTH];
+    char rx_data[MS5837_RX_DEPTH];
     Timeout timeOut1;
 
-public:
-    MS5837 (PinName sda, PinName scl,
-            char ms5837_addr = ms5837_addr_no_CS  )
-            : step(1), started(false), m_finishedCalc(false), i2c( sda, scl ), device_address( ms5837_addr << 1 ) {
-    }
-    void MS5837Init(void);
-    void MS5837Reset(void);
-    void MS5837Start(void);
-    bool MS5837Done(void);
-
-    float MS5837_Pressure (void);
-    float MS5837_Temperature (void);
-protected:
-    void Barometer_MS5837(void);
-    void MS5837ReadProm(void);
-    void MS5837ConvertD1(void);
-    void MS5837ConvertD2(void);
-    int32_t MS5837ReadADC(void);
-
-
-
-private:
-    I2C     i2c;
-    char    device_address;
+    static void calculation_helper(const void *args);
+    bool command(char loc);
+    bool readLen(char loc, char* buffer, char len);
 
 };
 #endif
