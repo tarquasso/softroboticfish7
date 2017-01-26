@@ -39,15 +39,18 @@ namespace AprilTags {
 
     // convert to internal AprilTags image (todo: slow, change internally to OpenCV)
 
-    cv::Mat image_in(image_pre.size(), image_pre.type());
-    cv::flip(image_pre, image_in, 1);
-    int width = image_in.cols;
-    int height = image_in.rows;
+    // cv::Mat image_in(image_pre.size(), image_pre.type());
+    // cv::flip(image_pre, image_in, 1);
+    // int width = image_in.cols;
+    // int height = image_in.rows;
+    int width = image_pre.cols;
+    int height = image_pre.rows;
     AprilTags::FloatImage fimOrig(width, height);
     int i = 0;
     for (int y=0; y<height; y++) {
       for (int x=0; x<width; x++) {
-        fimOrig.set(x, y, image_in.data[i]/255.);
+        // fimOrig.set(x, y, image_in.data[i]/255.);
+        fimOrig.set(x, y, image_pre.data[i]/255.);
         i++;
       }
     }
