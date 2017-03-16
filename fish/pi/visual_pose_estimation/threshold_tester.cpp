@@ -28,7 +28,6 @@ cv::Mat threshold_hsv(cv::Mat im, int* histogram, int n_hbins, int n_sbins, int 
 					cv::Scalar lower, upper;
 					lower = calc_lower(i, j, k, n_hbins, n_sbins, n_vbins);
 					upper = calc_upper(i, j, k, n_hbins, n_sbins, n_vbins);
-					std::cout << "ijk " << std::to_string(i) << std::to_string(j) << std::to_string(k) << " lower " << lower << " upper " << upper << "\n";
 					cv::inRange(im, lower, upper, ret);
 					return ret;
 				}
