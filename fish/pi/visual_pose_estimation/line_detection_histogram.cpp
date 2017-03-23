@@ -33,13 +33,11 @@ cv::Mat threshold_hsv(cv::Mat im, int* histogram, int n_hbins, int n_sbins, int 
 					continue;
 				}
 				if (histogram[index(i, j, k, n_hbins, n_sbins, n_vbins)] > count_thresh) {
-					std::cout << "ijk " << std::to_string(i) << std::to_string(j) << std::to_string(k) << '\n';
 					cv::Scalar lower, upper;
 					lower = calc_lower(i, j, k, n_hbins, n_sbins, n_vbins);
 					upper = calc_upper(i, j, k, n_hbins, n_sbins, n_vbins);
 					cv::Mat mask;
 					cv::inRange(im, lower, upper, mask);
-					std::cout << "im type: " << im.type() << " mask " << mask.type() << "\n";
 					cv::bitwise_or(ret, mask, ret);
 				}
 			}
@@ -71,7 +69,7 @@ void process_image(std::string directory, std::string filename, int* histogram, 
 	bw = threshold_hsv(im_crop, histogram, n_hbins, n_sbins, n_vbins, count_thresh);
 	// bw = threshold_hsv(im, histogram, n_hbins, n_sbins, n_vbins, count_thresh);
 	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_bw.png", bw);
-	cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(10,10));
+	cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(20,20));
 	cv::dilate(bw, smoothed, element);
 	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_smoothed.png", smoothed);
 	cv::Mat extended(smoothed.size()+cv::Size(2,2), smoothed.type());
@@ -104,75 +102,40 @@ void process_image(std::string directory, std::string filename, int* histogram, 
 	cv::drawContours(max_contour_frame, contours, max_contour_idx, cv::Scalar(255,255,255));
 	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_max_contour.png", max_contour_frame);
 	std::vector<cv::Point> polygon;
-	cv::approxPolyDP(contours[max_contour_idx], polygon, 4, true);
-	std::vector<cv::Point> corners;
-	for (int i = 0; i < polygon.size(); i++) {
-		int pre_idx = (i-1+polygon.size())%polygon.size();
-		int post_idx = (i+1)%polygon.size();
-		double theta_pre = atan2(polygon[i].y-polygon[pre_idx].y, polygon[i].x-polygon[pre_idx].x);
-		double theta_post = atan2(polygon[post_idx].y-polygon[i].y, polygon[post_idx].x-polygon[i].x);
-		double diff = fmod(theta_post - theta_pre + 3*M_PI, 2*M_PI) - M_PI;
-		std::cout << polygon[i].x << ", " << polygon[i].y << "\n";
-		std::cout << theta_post << " - " << theta_pre << " = " << diff << "\n";
-		if (std::abs(diff) > M_PI/6) {
-			corners.push_back(polygon[i]);
-		}
-	}
+	cv::approxPolyDP(contours[max_contour_idx], polygon, 6, true);
 	cv::Mat polygon_frame(extended.size(), extended.type(), cv::Scalar(0,0,0));
 	cv::polylines(polygon_frame, polygon, true, cv::Scalar(255,255,255));
 	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_polygon.png", polygon_frame);
-	cv::Mat corners_frame(extended.size(), extended.type(), cv::Scalar(0,0,0));
-	cv::polylines(corners_frame, corners, true, cv::Scalar(255,255,255));
-	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_corners.png", corners_frame);
 
-	int long1_idx = -1, long2_idx = -1;
-	double long1_length = -1, long2_length = -1;
-
-	for (int i = 0; i < corners.size(); i++) {
-		int next_idx = (i+1)%corners.size();
-		cv::Point diff = corners[next_idx] - corners[i];
-		double len = diff.ddot(diff);
-		if (len > long1_length) {
-			long2_idx = long1_idx;
-			long2_length = long1_length;
-			long1_idx = i;
-			long1_length = len;
-		} else if (len > long2_length) {
-			long2_idx = i;
-			long2_length = len;
+	int top_l, top_r, bot_l, bot_r;
+	int init = 3*max_contour_frame.size().height + max_contour_frame.size().width;
+	int top_l_val = init, top_r_val = init, bot_l_val = init, bot_r_val = init;
+	for (int i = 0; i < polygon.size(); i++) {
+		cv::Point p = polygon[i];
+		int top_l_val_this = 3*p.y + p.x;
+		int top_r_val_this = 3*p.y - p.x;
+		int bot_l_val_this = -3*p.y + p.x;
+		int bot_r_val_this = -3*p.y - p.x;
+		std::cout << polygon[i].x << ", " << polygon[i].y << " " << top_l_val_this << " " << top_r_val_this << " " << bot_l_val_this << " " << bot_r_val_this << "\n";
+		if (top_l_val_this < top_l_val) {
+			top_l = i;
+			top_l_val = top_l_val_this;
+		}
+		if (top_r_val_this < top_r_val) {
+			top_r = i;
+			top_r_val = top_r_val_this;
+		}
+		if (bot_l_val_this < bot_l_val) {
+			bot_l = i;
+			bot_l_val = bot_l_val_this;
+		}
+		if (bot_r_val_this < bot_r_val) {
+			bot_r = i;
+			bot_r_val = bot_r_val_this;
 		}
 	}
 
-	int long1_idx_n = (long1_idx+1)%corners.size(), long2_idx_n = (long2_idx+1)%corners.size();
-	int top1, top2, bot1, bot2;
-	if (corners[long1_idx].y < corners[long1_idx_n].y) {
-		top1 = long1_idx;
-		bot1 = long1_idx_n;
-	} else {
-		top1 = long1_idx_n;
-		bot1 = long1_idx;
-	}
-	if (corners[long2_idx].y < corners[long2_idx_n].y) {
-		top2 = long2_idx;
-		bot2 = long2_idx_n;
-	} else {
-		top2 = long2_idx_n;
-		bot2 = long2_idx;
-	}
-	int top_l, top_r, bot_l, bot_r;
-	if (corners[top1].x < corners[top2].x) {
-		top_l = top1;
-		top_r = top2;
-		bot_l = bot1;
-		bot_r = bot2;
-	} else {
-		top_l = top2;
-		top_r = top1;
-		bot_l = bot2;
-		bot_r = bot1;
-	}
-
-	std::cout << "top left bot left top right bot right: " << top_l << " " << bot_l << " " << top_r << " " << bot_r << "\n";
+	std::cout << "top right top left bot left bot right: " << top_r << " " << top_l << " " << bot_l << " " << bot_r << "\n";
 }
 
 
@@ -183,5 +146,5 @@ int main(int argc, char *argv[]) {
 	// int* histogram = (int*)calloc(n_hbins*n_sbins*n_vbins, sizeof(int));
 	std::cout << "processing\n";
 	// histogram[index(6,0,0,n_hbins,n_sbins,n_vbins)] = 100;
-	process_image("/Users/shomberg/Pictures/", file, (int*)HISTOGRAM, N_HBINS, N_SBINS, N_VBINS, 1000);
+	process_image("/Users/shomberg/Pictures/", file, (int*)HISTOGRAM, N_HBINS, N_SBINS, N_VBINS, THRESH);
 }
