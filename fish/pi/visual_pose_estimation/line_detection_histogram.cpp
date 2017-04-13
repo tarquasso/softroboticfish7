@@ -2,9 +2,11 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <string>
 #include "histogram.h"
+#include "image_feature.h"
 
 
 // cv::inRange(im, cv::Scalar(97, 40, 0), cv::Scalar(125, 255, 140), ret);
@@ -25,7 +27,6 @@ cv::Scalar calc_upper(int i, int j, int k, int n_hbins, int n_sbins, int n_vbins
 
 cv::Mat threshold_hsv(cv::Mat im, int* histogram, int n_hbins, int n_sbins, int n_vbins, int count_thresh) {
 	cv::Mat ret(im.size(), CV_8UC1, cv::Scalar(0,0,0));
-	std::cout << "looping\n";
 	for (int i = 0; i < n_hbins; i++) {
 		for (int j = 0; j < n_sbins; j++) {
 			for (int k = 0; k < n_vbins; k++) {
@@ -51,34 +52,30 @@ void find_threshold(std::string directory, std::string filename, int* histogram,
 	im = cv::imread(directory+filename, CV_LOAD_IMAGE_COLOR);
 	cv::cvtColor(im, hsv, CV_BGR2HSV);
 	bw = threshold_hsv(hsv, histogram, n_hbins, n_sbins, n_vbins, count_thresh);
-	cv::imwrite("/Users/shomberg/Pictures/bw_" + std::to_string(i) + "_" + std::to_string(j) + "_" + std::to_string(k) + ".png", bw);
+	cv::imwrite(directory + "bw_" + std::to_string(i) + "_" + std::to_string(j) + "_" + std::to_string(k) + ".png", bw);
 }
 
-void process_image(std::string directory, std::string filename, int* histogram, int n_hbins, int n_sbins, int n_vbins, int count_thresh) {
+image_feature process_image(std::string directory, std::string filename, int* histogram, int n_hbins, int n_sbins, int n_vbins, int count_thresh) {
 	cv::Mat im, im_crop, bw, smoothed, edges;
 	int thresh = 40;
-	std::cout << "reading image\n";
 	im = cv::imread(directory+filename, CV_LOAD_IMAGE_COLOR);
-	std::cout << "cropping\n";
-	cv::Rect roi(0,(int)(.6*im.size().height),im.size().width,(int)(.4*im.size().height));
+	cv::Rect roi(0,(int)(.8*im.size().height),im.size().width,(int)(.2*im.size().height));
 	im_crop = im(roi);
-	std::cout << "converting\n";
 	cv::cvtColor(im_crop, im_crop, CV_BGR2HSV);
 	// cv::cvtColor(im, im, CV_BGR2HSV);
-	std::cout << "thresholding\n";
 	bw = threshold_hsv(im_crop, histogram, n_hbins, n_sbins, n_vbins, count_thresh);
 	// bw = threshold_hsv(im, histogram, n_hbins, n_sbins, n_vbins, count_thresh);
-	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_bw.png", bw);
+	cv::imwrite(directory + "pool_lanes_bw.png", bw);
 	cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(20,20));
 	cv::dilate(bw, smoothed, element);
-	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_smoothed.png", smoothed);
+	cv::imwrite(directory + "pool_lanes_smoothed.png", smoothed);
 	cv::Mat extended(smoothed.size()+cv::Size(2,2), smoothed.type());
 	cv::copyMakeBorder(smoothed, extended, 1, 1, 1, 1, cv::BORDER_CONSTANT, cv::Scalar(0,0,0));
-	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_extended.png", extended);
+	cv::imwrite(directory + "pool_lanes_extended.png", extended);
 	// cv::Canny(im_crop, edges, thresh, thresh*3);
 	// cv::imwrite("/Users/shomberg/Pictures/pool_lanes_edges.png", edges);
 	cv::Canny(extended, edges, thresh, thresh*3);
-	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_bw_edges.png", edges);
+	cv::imwrite(directory + "pool_lanes_bw_edges.png", edges);
 	std::vector<std::vector<cv::Point> > contours;
 	cv::findContours(edges, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
 	int max_contour_idx;
@@ -97,15 +94,15 @@ void process_image(std::string directory, std::string filename, int* histogram, 
 	}
 	cv::Mat contour_frame(extended.size(), extended.type(), cv::Scalar(0,0,0));
 	cv::drawContours(contour_frame, contours, -1, cv::Scalar(255,255,255));
-	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_contours.png", contour_frame);
+	cv::imwrite(directory + "pool_lanes_contours.png", contour_frame);
 	cv::Mat max_contour_frame(extended.size(), extended.type(), cv::Scalar(0,0,0));
 	cv::drawContours(max_contour_frame, contours, max_contour_idx, cv::Scalar(255,255,255));
-	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_max_contour.png", max_contour_frame);
+	cv::imwrite(directory + "pool_lanes_max_contour.png", max_contour_frame);
 	std::vector<cv::Point> polygon;
 	cv::approxPolyDP(contours[max_contour_idx], polygon, 6, true);
 	cv::Mat polygon_frame(extended.size(), extended.type(), cv::Scalar(0,0,0));
 	cv::polylines(polygon_frame, polygon, true, cv::Scalar(255,255,255));
-	cv::imwrite("/Users/shomberg/Pictures/pool_lanes_polygon.png", polygon_frame);
+	cv::imwrite(directory + "pool_lanes_polygon.png", polygon_frame);
 
 	int top_l, top_r, bot_l, bot_r;
 	int init = 3*max_contour_frame.size().height + max_contour_frame.size().width;
@@ -136,15 +133,35 @@ void process_image(std::string directory, std::string filename, int* histogram, 
 	}
 
 	std::cout << "top right top left bot left bot right: " << top_r << " " << top_l << " " << bot_l << " " << bot_r << "\n";
+	image_feature ret;
+	ret.top_r_x = polygon[top_r].x;
+	ret.top_l_x = polygon[top_l].x;
+	ret.bot_l_x = polygon[bot_l].x;
+	ret.bot_r_x = polygon[bot_r].x;
+	return ret;
 }
 
 
 
 int main(int argc, char *argv[]) {
-	std::string file(argv[1]);
-	// int n_hbins = 10, n_sbins = 8, n_vbins = 4;
-	// int* histogram = (int*)calloc(n_hbins*n_sbins*n_vbins, sizeof(int));
-	std::cout << "processing\n";
-	// histogram[index(6,0,0,n_hbins,n_sbins,n_vbins)] = 100;
-	process_image("/Users/shomberg/Pictures/", file, (int*)HISTOGRAM, N_HBINS, N_SBINS, N_VBINS, THRESH);
+	std::string directory(argv[1]);
+	std::string filename(argv[2]);
+	std::string calibration_filename(argv[3]);
+	const char *c_file = file.c_str();
+	char *y_idx = strchr(c_file, 'y');
+	char *x_idx = strchr(c_file, 'x');
+	char *pitch_idx = strchr(c_file, 'p');
+	char *yaw_idx = strchr(x_idx, 'y');
+	long y = strtol(c_file, NULL, 10);
+	long x = strtol(y_idx+1, NULL, 10);
+	long pitch = strtol(x_idx+1, NULL, 10);
+	long yaw = strtol(pitch_idx+1, NULL, 10);
+	std::cout << y << " " << x << " " << pitch << " " << yaw << '\n';
+
+	std::ofstream calibration_file;
+	calibration_file.open(calibration_filename, std::ios::app);
+
+	image_feature feature = process_image(directory, filename, (int*)HISTOGRAM, N_HBINS, N_SBINS, N_VBINS, THRESH);
+	calibration_file << feature.top_r_x << '\t' << feature.top_l_x << '\t' << feature.bot_l_x << '\t' << feature.bot_r_x << '\t' << x << '\t' << y << '\t' << yaw << '\n';
+	calibration_file.close();
 }

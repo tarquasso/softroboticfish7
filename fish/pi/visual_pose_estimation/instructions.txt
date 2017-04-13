@@ -1,0 +1,8 @@
+install opencv 3
+use cmake and make to compile code in this directory
+run line_detection_histogram:
+-- first input is directory of your source image
+-- second input is filename of your source image with real world coordinates encoded in filename, convention is [height in cm]y[horizontal position relative to center of the line in cm]x[pitch in degrees]p[yaw in degrees]y
+-- third input is the full path to the calibration file, i.e. where the result of processing the image will be placed for use as calibration in the estimator
+-- the directory of the source image will be populated with intermediate images from each of the parts of preprocessing
+-- the output describes some of the preprocessing - the final line of output gives the indices of the corners corresponding to top right, top left, bot left, and bot right whose pixel coordinates will be used as features for estimating pose with respect to the line
