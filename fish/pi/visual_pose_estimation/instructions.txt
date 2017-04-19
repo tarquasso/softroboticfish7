@@ -1,3 +1,5 @@
+Running line_detection_histogram:
+
 install opencv 3
 use cmake and make to compile code in this directory
 run line_detection_histogram:
@@ -6,3 +8,17 @@ run line_detection_histogram:
 -- third input is the full path to the calibration file, i.e. where the result of processing the image will be placed for use as calibration in the estimator
 -- the directory of the source image will be populated with intermediate images from each of the parts of preprocessing
 -- the output describes some of the preprocessing - the final line of output gives the indices of the corners corresponding to top right, top left, bot left, and bot right whose pixel coordinates will be used as features for estimating pose with respect to the line
+
+Generating histogram in matlab script (bin_colors.m):
+call function
+-- first input filename
+-- second input number of bins in hue dimension
+-- third input number of bins in saturation dimension
+-- fourth input number of bins in value dimension
+-- returns matlab array with histogram of pixels with specified bins
+
+Writing matlab array as c array constant (print_array.m):
+call function
+-- firsti nput array
+-- second input filename
+-- prints array as c array constant in desired file, for copy-paste to e.g. a header file
