@@ -72,16 +72,16 @@ void SerialController::processSerialWord(uint8_t* word)
 	// Scale the bytes into the desired ranges for each property
 	bool selectButton = (word[0] > 127);
 	float pitch = word[1];
-	pitch = ((pitch-1) * (serialMaxPitch - serialMinPitch) / 254.0) + serialMinPitch;
+	//pitch = ((pitch-1) * (serialMaxPitch - serialMinPitch) / 254.0) + serialMinPitch;
 
 	float yaw = word[2];
-	yaw = ((yaw-1) * (serialMaxYaw - serialMinYaw) / 254.0) + serialMinYaw;
+	//yaw = ((yaw-1) * (serialMaxYaw - serialMinYaw) / 254.0) + serialMinYaw;
 
 	float thrust = word[3];
-	thrust = ((thrust-1) * (serialMaxThrust - serialMinThrust) / 254.0) + serialMinThrust;
+	//thrust = ((thrust-1) * (serialMaxThrust - serialMinThrust) / 254.0) + serialMinThrust;
 
 	float frequency = word[4];
-	frequency = ((frequency-1) * (serialMaxFrequency- serialMinFrequency) / 254.0) + serialMinFrequency;
+	//frequency = ((frequency-1) * (serialMaxFrequency- serialMinFrequency) / 254.0) + serialMinFrequency;
 
 	// Apply the new state to the fish
 	fishController.setSelectButton(selectButton);
@@ -91,7 +91,7 @@ void SerialController::processSerialWord(uint8_t* word)
 	fishController.setFrequency(frequency, 1.0/(2.0*frequency));
 
 	#ifdef printStatusSerialController
-	//usbSerial->printf("Processed <%s>: ", word);
+	//usbSerial->printf("%s", word);
 	usbSerial->printf("Start %d\t Pitch %f\t Yaw %f\t Thrust %f\t Freq %.8f\r\n", selectButton, pitch, yaw, thrust, frequency);
 	#endif
 }
@@ -140,12 +140,19 @@ void SerialController::run()
 		{
 			#ifdef debugLEDsSerial
 			serialLEDs[2]->write(1);
+			
 			#endif
+	
+			//int nextByte = serial->putc('t');
+			//usbSerial->printf("Processed <%s>: ", nextByte);
 			uint8_t nextByte = serial->getc();
 			serialBuffer[serialBufferIndex++] = nextByte;
+			//usbSerial->printf("%c", serialBufferIndex);
 			// If we've received a complete command, process it now
-			if(nextByte == 0)
+			if(nextByte == 8)
 			{
+				//usbSerial->printf("Got zero!\n");
+				//usbSerial->printf((char*) (serialBuffer));
 				processSerialWord(serialBuffer);
 				serialBufferIndex = 0;
 			}
