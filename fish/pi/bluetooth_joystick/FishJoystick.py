@@ -14,7 +14,6 @@ import traceback
 311 RT
 312 back
 313 start
-
 1.1 up
 1.2 down
 0.1 left
@@ -24,7 +23,7 @@ import traceback
 class FishJoystick:
   # joystick can be 'bluetooth' or 'snes'
   # useLJ is whether to alter state using the left joystick (as opposed to just using the D-pad) when using 'bluetooth' as joystick type
-  def __init__(self, device=0, joystick='bluetooth', useLJ=True):
+  def __init__(self, device=0, joystick='snes', useLJ=True):
     self._joystick = joystick
     self.dev = InputDevice(list_devices()[device])
     self._state = {}
@@ -70,11 +69,11 @@ class FishJoystick:
       self._state['frequency'] = 128
       self._state['thrust'] = 1
     elif self._joystick == 'snes':
-      self._state['start'] = 0
+      self._state['start'] = 1
       self._state['pitch'] = 3
       self._state['yaw'] = 3
-      self._state['frequency'] = 0
-      self._state['thrust'] = 0
+      self._state['frequency'] = 1
+      self._state['thrust'] = 1
 
   def scan(self):
     if self._joystick == 'bluetooth':
@@ -202,7 +201,7 @@ class FishJoystick:
             self._state['yaw'] = min(self._state['yaw'], 6)
           # Select
           elif keyname == 'SELECT':
-            self._state['start'] = 1 if keydown else 0
+            self._state['start'] = 255 if keydown else 1
           # Reset
           elif keyname == 'START':
             self._resetState()
@@ -214,7 +213,7 @@ class FishJoystick:
     return self._state.copy()
 
   # resType can be 'bytearray' or 'list' or 'dict'
-  def getStateBytes(self, resType='byteArray', nullTerminate=True):
+  def getStateBytes(self, resType='byteArray', nullTerminate=False):
     stateKeys = ['start', 'pitch', 'yaw', 'thrust', 'frequency']
     if resType == 'dict':
       res = [(key, int(self._state[key])) for key in stateKeys]
@@ -222,7 +221,7 @@ class FishJoystick:
     res = []
     res = [int(self._state[key]) for key in stateKeys]
     if nullTerminate:
-      res.append(0)
+      res.append(8)
     if resType == 'bytearray':
       res = bytearray(res)
     return res
@@ -248,9 +247,4 @@ if __name__ == "__main__":
 
 
 
-
-
-
-
-
-
+​
