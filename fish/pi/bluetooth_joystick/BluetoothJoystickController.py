@@ -7,10 +7,10 @@ class BluetoothJoystickController:
   # @param mbedPort [str] The serial port to use on the mbed
   # @param mbedBaud [int] The baud rate to use with the mbed
   # @param mbedUpdateInterval [float] Time in ms to wait between sending updated state to the mbed
-  def __init__(self, mbedPort='/dev/ttyAMA0', mbedBaud=115200, mbedUpdateInterval=0.05, useLJ = True):
-    self._mbedSerial = serial.Serial(mbedPort, baudrate=mbedBaud, timeout=None) # timeout = None means blocking, timeout = 0 means non-blocking
+  def __init__(self, mbedPort='/dev/ttyAMA0', mbedBaud=115200, mbedUpdateInterval=1.25 , useLJ = True):
+    self._mbedSerial = serial.Serial(mbedPort, baudrate=mbedBaud, timeout=None, bytesize=serial.EIGHTBITS, parity = serial.PARITY_NONE, stopbits = serial.STOPBITS_ONE) # timeout = None means blocking, timeout = 0 means non-blocking
     self._mbedUpdateInterval = mbedUpdateInterval
-    self._joystick = FishJoystick(joystick='bluetooth', useLJ=useLJ)
+    self._joystick = FishJoystick(joystick='snes', useLJ=useLJ)
 
   # The main loop to update state from joystick and send to mbed
   # @param runTime [flaot or None] The time to run for, or None for infinite loop
@@ -26,24 +26,26 @@ class BluetoothJoystickController:
       if time() - lastSendTime > self._mbedUpdateInterval:
         stateBytes = self._joystick.getStateBytes('bytearray')
         self._mbedSerial.write(stateBytes)
-        if stateBytes[-1] != 0:
-          self._mbedSerial.write(bytearray([0]))
+        #self._mbedSerial.write(bytearray([1, 1, 1, 1, 1, 0]))
+        if stateBytes[-1] != 8:
+          self._mbedSerial.write(bytearray([8]))
         self._mbedSerial.flush() # wait until everything is written
         lastSendTime = time()
       if time() - lastPrintTime > 1:
-        print self._joystick.getStateBytes('dict')
-        lastPrintTime = time()
+       print self._joystick.getStateBytes('dict')
+       lastPrintTime = time()
 
 
 if __name__ == '__main__':
   import sys
   
-  try:
-    mbedUpdateInterval = float(sys.argv[1])
-  except:
-    mbedUpdateInterval = 0.01
-  controller = BluetoothJoystickController(mbedUpdateInterval = mbedUpdateInterval, useLJ = False)
+  #try:
+  #  mbedUpdateInterval = float(sys.argv[1])
+  #except:
+  #  mbedUpdateInterval = 0.01
+  
+  controller = BluetoothJoystickController(useLJ = False)
   print '\nStarting controller'
-  print 'using update interval of ', mbedUpdateInterval, 's'
+  print 'using update interval of ', 0.05, 's'
   controller.run()
   print '\nAll done!'
