@@ -72,16 +72,16 @@ void SerialController::processSerialWord(uint8_t* word)
 	// Scale the bytes into the desired ranges for each property
 	bool selectButton = (word[0] > 127);
 	float pitch = word[1];
-	//pitch = ((pitch-1) * (serialMaxPitch - serialMinPitch) / 254.0) + serialMinPitch;
+	pitch = ((pitch) * (serialMaxPitch - serialMinPitch) / 6.0) + serialMinPitch;
 
 	float yaw = word[2];
-	//yaw = ((yaw-1) * (serialMaxYaw - serialMinYaw) / 254.0) + serialMinYaw;
+	yaw = ((yaw) * (serialMaxYaw - serialMinYaw) / 6.0) + serialMinYaw;
 
 	float thrust = word[3];
-	//thrust = ((thrust-1) * (serialMaxThrust - serialMinThrust) / 254.0) + serialMinThrust;
+	thrust = ((thrust) * (serialMaxThrust - serialMinThrust) / 3.0) + serialMinThrust;
 
 	float frequency = word[4];
-	//frequency = ((frequency-1) * (serialMaxFrequency- serialMinFrequency) / 254.0) + serialMinFrequency;
+	frequency = ((frequency) * (serialMaxFrequency- serialMinFrequency) / 3.0) + serialMinFrequency;
 
 	// Apply the new state to the fish
 	fishController.setSelectButton(selectButton);
