@@ -66,7 +66,7 @@ void SerialController::init(Serial* serialObject /* = NULL */, Serial* usbSerial
 // Parse the received word into the desired fish state
 // FORMAT: 5 successive bytes indicating selectButton, Pitch, Yaw, Thrust, Frequency
 //         a null termination character (0) ends the word
-//         each one maps 1-255 to the range specified by the min and max values for that property
+//         each one maps 0-6 or 0-3 to the range specified by the min and max values for that property
 void SerialController::processSerialWord(uint8_t* word)
 {
 	// Scale the bytes into the desired ranges for each property
