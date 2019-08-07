@@ -13,9 +13,9 @@
 #include "QEI/QEI.h"
 
 
-#define bcuPwmPin p22
-#define bcuDirAPin p11
-#define bcuDirBPin p12
+#define bcuPwmPin p25
+#define bcuDirAPin p24 //now serves as bcuPWMAPin
+#define bcuDirBPin p25 //now serves as bcuPWMBPin
 //#define bcuCurrentPin p20
 
 #define encoderPinA p16
@@ -92,8 +92,8 @@ private:
 
 	Timer timer;
 	PwmOut bcuPWM;
-	DigitalOut bcuDirA;
-	DigitalOut bcuDirB;
+	PwmOut bcuDirA;
+	PwmOut bcuDirB;
 //	AnalogIn bcuCurrent; // actually is a voltage value proportional to current
 	QEI bcuEncoder;
 	MS5837 pressureSensor;
