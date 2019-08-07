@@ -73,7 +73,7 @@
 #define FISH_STOP 		{resetPitchValue, resetYawValue	, resetThrustValue						, resetFrequencyValue}
 
 // Pins
-#define lowBatteryVoltagePin p26
+#define lowBatteryVoltagePin p16
 
 #ifdef FISH4
 #define motorPWMPin   p23
@@ -89,6 +89,8 @@
 #define pressureSensorPinSCL p27
 #define imuSensorPinSDA p28
 #define imuSensorPinSCL p27
+#define servoLeftPin  p21
+#define servoRightPin p26
 #endif
 
 
