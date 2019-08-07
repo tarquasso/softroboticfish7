@@ -37,7 +37,8 @@ BuoyancyControlUnit::BuoyancyControlUnit() :
 
 void BuoyancyControlUnit::start()
 {
-	bcuPWM.write(0.0); // apply nothing to start
+	bcuDirA.write(0.0); // apply nothing to start
+	bcuDirB.write(0.0); // apply nothing to start
 	bcuEncoder.reset(); // gives it a reference to return to
 	pressureSensor.MS5837Init();
 	timer.start();
@@ -59,7 +60,8 @@ void BuoyancyControlUnit::stop()
 	depthControl.detach();
 	posControl.detach();
 
-	bcuPWM = 0.0;
+	bcuDirA = 0.0;
+	bcuDirB = 0.0;
 }
 
 void BuoyancyControlUnit::returnToZero()
@@ -156,7 +158,8 @@ void BuoyancyControlUnit::setEncoderPosition(float setPosIn) {
 		if(posErr > 30 || posErr < -30) { // TODO: determine appropriate tolerance
 			this->setV(VRef);
 		} else {
-			bcuPWM = 0;
+			bcuDirA = 0.0;
+			bcuDirB = 0;
 		}
 	}
 }
@@ -172,15 +175,21 @@ void BuoyancyControlUnit::setV(float Vin){
 		setV = -1.0*Vin;
 	}
 
-	bcuDirA = bcuDir;
-	bcuDirB = !bcuDir;
+	//bcuDirA = bcuDir;
+	//bcuDirB = !bcuDir;
 
 	if(setV > 1) {
-		bcuPWM = 1.0;
-	} else if(setV < 0.08) {
-		bcuPWM = 0.08;
-	} else {
-		bcuPWM = setV;
+		setV = 1.0;
+	} else if(setV < 0.08 ) {
+		setV = 0.08;
+	} 
+	
+	if(bcuDir == 1){
+		bcuDirA = setV;
+		bcuDirB = 0.0;
+	} else if(bcuDir == 0){
+		bcuDirA = 0.0;
+		bcuDirB = setV;
 	}
 }
 
