@@ -10,11 +10,11 @@ BuoyancyControlUnit buoyancyControlUnit;
 // Constructor
 BuoyancyControlUnit::BuoyancyControlUnit() :
     				// Initialize variables
-    				bcuPWM(bcuPwmPin),
+    				//bcuPWM(bcuPwmPin),
 					bcuDirA(bcuDirAPin),
 					bcuDirB(bcuDirBPin),
 					//bcuCurrent(bcuCurrentPin),
-					bcuEncoder(encoderPinA, encoderPinB, NC, count2rev*gearRatio, QEI::X4_ENCODING),
+					wiper(wiperPin),
 					pressureSensor(PIN_IMU_TX,PIN_IMU_RX)
 {
 	setDepth = 0; // input command
@@ -39,10 +39,11 @@ void BuoyancyControlUnit::start()
 {
 	bcuDirA.write(0.0); // apply nothing to start
 	bcuDirB.write(0.0); // apply nothing to start
-	bcuEncoder.reset(); // gives it a reference to return to
+	//bcuEncoder.reset(); // gives it a reference to return to
+	
 	pressureSensor.MS5837Init();
 	timer.start();
-
+	
 	// pressure sensor takes just over 0.3 seconds to read
 	depthControl.attach(&buoyancyControlUnit, &BuoyancyControlUnit::setDepthFuncVoid, 0.4);
 	posControl.attach(&buoyancyControlUnit, &BuoyancyControlUnit::setEncoderPosVoid, 0.1);
@@ -92,7 +93,7 @@ void BuoyancyControlUnit::setEncoderPosVoid(){
 		posRef = 0;
 	} else {
 		depthErr = setDepth - curDepth;
-		if(depthErr < 10 && depthErr > -10){
+		if(depthErr < 5 && depthErr > -5){
 			posRef = curPos;
 		}
 	}
@@ -106,7 +107,7 @@ void BuoyancyControlUnit::setDepthFunc(float depthDesIn){
 //	pressureSensor.Barometer_MS5837();
 //	curDepth = pressureSensor.MS5837_Pressure();
 
-	curDepth = (curPos/10000)*(400)+1000; // fake depth readings
+	curDepth = (curPos * 1.25); // fake depth readings
 
 	depthErr = setDepth - curDepth;
 
@@ -118,12 +119,19 @@ void BuoyancyControlUnit::setDepthFunc(float depthDesIn){
 	posRef += KpDepth*depthErr + KiDepth*depthInt + KdDepth*depthDer;
 */
 	posRef += KpDepth * depthErr;
+	
+	if (posRef > 30){
+		posRef = 30;
+	}
+	else if (posRef < 0){
+		posRef = 0;
+	}
 
-	if(posRef < 0){
-		posRef = 0; // limit position to only values greater than 0
+//	if(posRef < 0){
+//		posRef = 0; // limit position to only values greater than 0
 //		depthInt = 0; // reset these values so they don't build while the bcu can't reach this depth value
 //		depthDer = 0;
-	}
+//	}
 
 //	depthLastTime = timer.read();
 //	prevDepthErr = depthErr;
@@ -134,7 +142,7 @@ void BuoyancyControlUnit::setEncoderPosition(float setPosIn) {
 
 	setPos = setPosIn;
 	if(setPos < 0){ setPos = 0; }
-	curPos = bcuEncoder.getPulses();
+	curPos = wiper * (30.0); //map ADC reading to system level voltage, try adjusting pitch max and min values (0 - 30)
 	posErr = setPos - curPos;
 	float posdt = timer.read() - posLastTime;
 
@@ -144,6 +152,24 @@ void BuoyancyControlUnit::setEncoderPosition(float setPosIn) {
 	VRef = KpEnc * posErr + KiEnc * posInt + KdEnc * posDer;
 //	VRef = KpEnc * posErr;
 
+	/* Add constrain + map here */
+	if (VRef > 6.0){
+		VRef = 6.0;
+	}
+	else if (VRef < -6.0){
+		VRef = -6.0;
+	}
+	
+	// Map Vref to 0.7 - 1.0 duty cycle
+	if (VRef < 0){
+		VRef = VRef * (0.3/(-6.0)) + 0.7;
+		bcuDir = 1;
+	}
+	else if (VRef > 0){
+		VRef = VRef * (0.3/(6.0)) + 0.7;
+		bcuDir = 0;
+	}
+	
 	posLastTime = timer.read();
 	prevPosErr = posErr;
 
@@ -155,42 +181,31 @@ void BuoyancyControlUnit::setEncoderPosition(float setPosIn) {
 			this->stop();
 		}
 	} else {
-		if(posErr > 30 || posErr < -30) { // TODO: determine appropriate tolerance
+		if(posErr > 5 || posErr < -5) { // TODO: determine appropriate tolerance (final error from target pos?)
 			this->setV(VRef);
+			DigitalOut test(LED1);
+			test = 0;
 		} else {
 			bcuDirA = 0.0;
 			bcuDirB = 0;
+			//Testing whether fishController is running
+			DigitalOut test(LED1);
+			test = 1;
 		}
 	}
 }
 
 void BuoyancyControlUnit::setV(float Vin){
 	float setV;
-
-	if(Vin > 0) {
-		bcuDir = 0;
-		setV = Vin;
-	} else if(Vin < 0) {
-		bcuDir = 1;
-		setV = -1.0*Vin;
-	}
-
-	//bcuDirA = bcuDir;
-	//bcuDirB = !bcuDir;
-
-	if(setV > 1) {
-		setV = 1.0;
-	} else if(setV < 0.08 ) {
-		setV = 0.08;
-	} 
 	
 	if(bcuDir == 1){
-		bcuDirA = setV;
-		bcuDirB = 0.0;
+		bcuDirA.write(setV);
+		bcuDirB.write(0.0);
 	} else if(bcuDir == 0){
-		bcuDirA = 0.0;
-		bcuDirB = setV;
+		bcuDirA.write(0.0);
+		bcuDirB.write(setV);
 	}
+	
 }
 
 void BuoyancyControlUnit::runBackwards() {
