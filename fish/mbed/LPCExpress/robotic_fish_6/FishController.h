@@ -20,6 +20,7 @@
 #include "esc.h" // brushless motor controller
 #endif
 #ifdef FISH6
+#include "Servo.h"
 #include "PumpWithValve/PumpWithValve.h"
 #include "BuoyancyControlUnit/BuoyancyControlUnit.h"
 #endif
@@ -45,8 +46,8 @@
 #endif
 
 #ifdef FISH6
-#define fishMinPitch     ((float)(-1.0)) // will want to redefine for fish 6 based on depth instead
-#define fishMaxPitch     ((float)(1.0))
+#define fishMinPitch     ((float)(0.0)) // will want to redefine for fish 6 based on depth instead
+#define fishMaxPitch     ((float)(30.0))
 #endif
 
 #define fishMinYaw       ((float)(-1.0))
@@ -80,7 +81,7 @@
 #define motorOutAPin  p11
 #define motorOutBPin  p12
 #define servoLeftPin  p21
-#define servoRightPin p24
+#define servoRightPin p26 //p24
 #endif
 
 #ifdef FISH6
@@ -139,7 +140,7 @@ class FishController
         // LEDs
         void setLEDs(char mask, bool turnOn);
         // Set New State (which will take affect at next appropriate point in control cycle)
-		void setSelectButton(bool newSelectButtonValue, bool master = false);
+		void setSelectButton(bool newSelectButtonValue, bool master= false);
 		void setPitch(float newPitchValue, bool master = false);
 		void setYaw(float newYawValue, bool master = false);
 		void setThrust(float newThrustValue, bool master = false);
@@ -159,6 +160,13 @@ class FishController
 
 		void setIgnoreExternalCommands(bool ignore);
 		bool getIgnoreExternalCommands();
+		
+		// BCU Helper Functions
+        float getBCUVset();
+        float getBCUSetDepth();
+        float getBCUCurDepth();
+        float getBCUSetPos();
+        float getBCUCurPos();
     private:
 		// Misc State
 		volatile bool ignoreExternalCommands;
@@ -181,6 +189,11 @@ class FishController
         volatile float yaw;
         volatile float thrust;
         volatile float frequency;
+        
+        // Servos (Fish 6)
+        Servo servoLeft;
+        Servo servoRight;
+        
 
 #ifdef FISH4
         volatile float thrustCommand;
@@ -191,9 +204,9 @@ class FishController
         volatile bool fullCycle;
         const float raiser;
         // Outputs for motor and servos
-        PwmOut motorPWM;
-        DigitalOut motorOutA;
-        DigitalOut motorOutB;
+        //PwmOut motorPWM;
+        //DigitalOut motorOutA;
+        //DigitalOut motorOutB;
         Servo servoLeft;
         Servo servoRight;
         //PwmOut brushlessMotor;
