@@ -13,9 +13,10 @@
 #include "QEI/QEI.h"
 
 
-#define bcuPwmPin p25
+//#define bcuPwmPin p25
 #define bcuDirAPin p24 //now serves as bcuPWMAPin
 #define bcuDirBPin p25 //now serves as bcuPWMBPin
+#define wiperPin p17   // BCU potentiometer wiper 
 //#define bcuCurrentPin p20
 
 #define encoderPinA p16
@@ -91,11 +92,12 @@ private:
 	volatile float posLastTime;
 
 	Timer timer;
-	PwmOut bcuPWM;
+	//PwmOut bcuPWM;
 	PwmOut bcuDirA;
 	PwmOut bcuDirB;
+	AnalogIn wiper;
 //	AnalogIn bcuCurrent; // actually is a voltage value proportional to current
-	QEI bcuEncoder;
+//	QEI bcuEncoder;
 	MS5837 pressureSensor;
 
 	Ticker depthControl;
