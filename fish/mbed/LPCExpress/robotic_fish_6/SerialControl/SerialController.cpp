@@ -66,7 +66,7 @@ void SerialController::init(Serial* serialObject /* = NULL */, Serial* usbSerial
 // Parse the received word into the desired fish state
 // FORMAT: 5 successive bytes indicating selectButton, Pitch, Yaw, Thrust, Frequency
 //         a null termination character (0) ends the word
-//         each one maps 0-6 or 0-3 to the range specified by the min and max values for that property
+//         each one maps 1-255 to the range specified by the min and max values for that property
 void SerialController::processSerialWord(uint8_t* word)
 {
 	// Scale the bytes into the desired ranges for each property
@@ -107,7 +107,7 @@ void SerialController::stop()
 // This is blocking - will not return until terminated by timeout or by calling stop() in another thread
 void SerialController::run()
 {
-
+	
 	#ifdef serialControllerControlFish
     // Start the fish controller
     fishController.start();
@@ -154,6 +154,7 @@ void SerialController::run()
 				//usbSerial->printf("Got zero!\n");
 				//usbSerial->printf((char*) (serialBuffer));
 				processSerialWord(serialBuffer);
+				
 				serialBufferIndex = 0;
 			}
 		}
@@ -167,6 +168,11 @@ void SerialController::run()
 		if(programTimer.read_ms() > runTimeSerial)
 			stop();
 		#endif
+		
+		#ifdef debugBCUControl 
+		usbSerial->printf("V %f\t SDepth %f\t CDepth %f\t sPos %f\t CPos %f\r\n", fishController.getBCUVset(), fishController.getBCUSetDepth(), fishController.getBCUCurDepth(), fishController.getBCUSetPos(), fishController.getBCUCurPos());
+		wait_ms(250);
+		#endif 
 	}
 	programTimer.stop();
 	#ifdef debugLEDsSerial
