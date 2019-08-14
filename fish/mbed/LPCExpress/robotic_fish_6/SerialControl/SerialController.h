@@ -13,6 +13,8 @@
 
 #include "FishController.h"
 #include "mbed.h"
+#include "string"
+#include "SerialBase.h"
 
 #define serialDefaultBaudUSB 115200
 #define serialDefaultBaud 115200
@@ -20,9 +22,10 @@
 #define serialDefaultRX p14
 // note lowBatteryVoltagePin is defined in FishController
 
-//#define printStatusSerialController // whether to print what's going on (i.e. when it gets commands, etc.)
-#define debugLEDsSerial    // LED1: initialized LED2: running LED3: receiving a character LED4: done (others turn off)
-#define runTimeSerial 10000 	   // how long to run for (in milliseconds) if inifiniteLoopSerial is undefined
+#define debugBCUControl 
+#define printStatusSerialController // whether to print what's going on (i.e. when it gets commands, etc.)
+//#define debugLEDsSerial    // LED1: initialized LED2: running LED3: receiving a character LED4: done (others turn off)
+#define runTimeSerial 10000 	   // how long to run for (in milliseconds) if infiniteLoopSerial is undefined
 #define infiniteLoopSerial // if defined, will run forever (or until stop() is called from another thread)
 
 #define serialControllerControlFish // whether to start fishController to control the servos and motor
