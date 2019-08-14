@@ -23,14 +23,16 @@ FishController::FishController():
 	ignoreExternalCommands(false),
     tickerInterval(fishControllerTickerInterval),
 	inTickerCallback(false),
+	servoLeft(servoLeftPin),
+    servoRight(servoRightPin),
 	#ifdef FISH4
     curTime(0),
     fullCycle(true),
     raiser(3.5),
     // Outputs for motor and servos
-    motorPWM(motorPWMPin),
-    motorOutA(motorOutAPin),
-    motorOutB(motorOutBPin),
+    //motorPWM(motorPWMPin),
+    //motorOutA(motorOutAPin),
+    //motorOutB(motorOutBPin),
     servoLeft(servoLeftPin),
     servoRight(servoRightPin),
     //brushlessMotor(p25),
@@ -129,6 +131,7 @@ float FishController::getPeriodHalf() {return newPeriodHalf;}
 
 void FishController::start()
 {
+
     // Blink button board LEDs to indicate startup
     for(uint8_t i = 0; i < 3; i++)
     {
@@ -137,7 +140,7 @@ void FishController::start()
         buttonBoard.setLEDs(255, false);
         wait_ms(500);
     }
-
+    
 #ifdef FISH6
     buoyancyControlUnit.start();
     pumpWithValve.start();
@@ -240,12 +243,17 @@ void FishController::tickerCallback()
     }
 
     // Update the servos
+    
     pitch = newPitch;
     servoLeft = pitch - 0.05; // The 0.03 calibrates the angles of the servo
     servoRight = (1.0 - pitch) < 0.03 ? 0.03 : (1.0 - pitch);
 
+	//	Testing whether fishController is running
+	//	DigitalOut test(LED1);
+    //	test = 1;
+
     // Update the duty cycle
-    dutyCycle = raiser * sin(PI2 * frequency * curTime); // add factor 4.0 to get a cut off sinus
+    /*dutyCycle = raiser * sin(PI2 * frequency * curTime); // add factor 4.0 to get a cut off sinus
     if(dutyCycle > 1)
         dutyCycle = 1;
     if(dutyCycle < -1)
@@ -267,7 +275,7 @@ void FishController::tickerCallback()
         motorOutA.write(1);
         motorOutB.write(0);
         motorPWM.write(-1 * dutyCycle);
-    }
+    }*/
     // Update the brushless motor
     //brushlessMotor = dutyCycle * !brushlessOff;
     //brushlessMotor.pulsewidth_us(dutyCycle*500+1500);
@@ -295,7 +303,13 @@ void FishController::tickerCallback()
     pitch = newPitch;
 
     pumpWithValve.set(frequency, yaw, thrust);
-    buoyancyControlUnit.set(pitch);
+    buoyancyControlUnit.set(29.0); //1100 - 1180 seems to follow well
+    //buoyancyControlUnit.set(pitch);
+    
+    //Testing whether fishController is running
+	//DigitalOut test(LED1);
+    //test = 1;
+    
 
 #ifdef debugFishState
     printDebugState();
@@ -453,4 +467,31 @@ void FishController::printDebugState()
 void FishController::setLEDs(char mask, bool turnOn)
 {
     buttonBoard.setLEDs(mask, turnOn);
+}
+
+/* BCU Helper Functions */
+
+float FishController::getBCUVset()
+{
+	return buoyancyControlUnit.getVset();
+}
+
+float FishController::getBCUSetDepth()
+{
+	return buoyancyControlUnit.getSetDepth();
+}
+
+float FishController::getBCUCurDepth()
+{
+	return buoyancyControlUnit.getCurDepth();
+}
+
+float FishController::getBCUSetPos()
+{
+	return buoyancyControlUnit.getSetPos();
+}
+
+float FishController::getBCUCurPos()
+{
+	return buoyancyControlUnit.getCurPos();
 }
