@@ -303,7 +303,7 @@ void FishController::tickerCallback()
     pitch = newPitch;
 
     pumpWithValve.set(frequency, yaw, thrust);
-    buoyancyControlUnit.set(29.0); //1100 - 1180 seems to follow well
+    buoyancyControlUnit.set(pitch); //1100 - 1180 seems to follow well
     //buoyancyControlUnit.set(pitch);
     
     //Testing whether fishController is running
