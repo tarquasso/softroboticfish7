@@ -106,7 +106,11 @@ void BuoyancyControlUnit::setDepthFunc(float depthDesIn){
 	setDepth = depthDesIn;
 //	pressureSensor.Barometer_MS5837();
 //	curDepth = pressureSensor.MS5837_Pressure();
-
+/*
+TODO: Map measured depth to 0 - 30 using h = P/rg. 
+#define MIN_DEPTH 1019.0 //mbar
+curDepth = curDepth * (fishMaxPitch - fishMinPitch)/(MAX_DEPTH - MIN_DEPTH)
+*/
 	curDepth = (curPos * 1.25); // fake depth readings
 
 	depthErr = setDepth - curDepth;
@@ -224,4 +228,8 @@ float BuoyancyControlUnit::getSetDepth() { return setDepth; }
 float BuoyancyControlUnit::getCurDepth() { return curDepth; }
 float BuoyancyControlUnit::getSetPos() { return setPos; }
 float BuoyancyControlUnit::getCurPos() { return curPos; }
-
+float BuoyancyControlUnit::readPressure()
+{
+	pressureSensor.Barometer_MS5837();
+	return pressureSensor.MS5837_Pressure();
+}
