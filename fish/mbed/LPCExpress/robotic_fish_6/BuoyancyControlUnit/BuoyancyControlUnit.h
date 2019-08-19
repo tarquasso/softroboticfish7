@@ -64,6 +64,7 @@ public:
 	float getCurPos();
 	float getCurDepth();
 	float getSetDepth();
+	float readPressure();
 
 private:
 	volatile bool resetFlag;
