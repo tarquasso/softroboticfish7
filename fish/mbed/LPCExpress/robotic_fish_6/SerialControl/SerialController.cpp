@@ -173,6 +173,11 @@ void SerialController::run()
 		usbSerial->printf("V %f\t SDepth %f\t CDepth %f\t sPos %f\t CPos %f\r\n", fishController.getBCUVset(), fishController.getBCUSetDepth(), fishController.getBCUCurDepth(), fishController.getBCUSetPos(), fishController.getBCUCurPos());
 		wait_ms(250);
 		#endif 
+		
+		#ifdef debugSensor
+		usbSerial->printf("Pressure: %f\r\n", fishController.getreadPressure());
+		wait_ms(250);
+		#endif 
 	}
 	programTimer.stop();
 	#ifdef debugLEDsSerial
