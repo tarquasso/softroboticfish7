@@ -167,6 +167,8 @@ class FishController
         float getBCUCurDepth();
         float getBCUSetPos();
         float getBCUCurPos();
+        float getreadPressure(); 
+        
     private:
 		// Misc State
 		volatile bool ignoreExternalCommands;
