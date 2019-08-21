@@ -187,14 +187,18 @@ void BuoyancyControlUnit::setEncoderPosition(float setPosIn) {
 	} else {
 		if(posErr > 5 || posErr < -5) { // TODO: determine appropriate tolerance (final error from target pos?)
 			this->setV(VRef);
+			#ifdef debugBCU
 			DigitalOut test(LED1);
 			test = 0;
+			#endif
 		} else {
 			bcuDirA = 0.0;
 			bcuDirB = 0;
+			#ifdef debugBCU
 			//Testing whether fishController is running
 			DigitalOut test(LED1);
 			test = 1;
+			#endif 
 		}
 	}
 }
