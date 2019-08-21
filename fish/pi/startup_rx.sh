@@ -15,7 +15,8 @@ echo  "-- Starting serial monitor to record streaming mbed data"
 echo "-- Starting Joystick Controller"
 sleep 5
 sudo python /home/pi/softroboticfish7/fish/pi/bluetooth_joystick/BluetoothJoystickController.py &
-
+sleep 5
+sudo python /home/pi/softroboticfish/fish/pi/resetMbed.py
 echo "- Startup script complete"
 
 exit 0
