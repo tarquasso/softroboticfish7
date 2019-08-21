@@ -46,8 +46,10 @@
 #endif
 
 #ifdef FISH6
-#define fishMinPitch     ((float)(0.0)) // will want to redefine for fish 6 based on depth instead
-#define fishMaxPitch     ((float)(30.0))
+#define fishMinPitch     ((float)(0.2)) // will want to redefine for fish 6 based on depth instead
+#define fishMaxPitch     ((float)(0.8))
+//#define fishMinPitch     ((float)(0.0)) 
+//#define fishMaxPitch     ((float)(30.0))
 #endif
 
 #define fishMinYaw       ((float)(-1.0))
