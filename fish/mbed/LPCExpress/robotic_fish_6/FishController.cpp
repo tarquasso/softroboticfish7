@@ -301,12 +301,17 @@ void FishController::tickerCallback()
     yaw = newYaw;
     thrust = newThrust;
     pitch = newPitch;
-
-    pumpWithValve.set(frequency, yaw, thrust);
-    buoyancyControlUnit.set(pitch); //1100 - 1180 seems to follow well
-    //buoyancyControlUnit.set(pitch);
     
-    //Testing whether fishController is running
+    // Update dive planes
+    servoLeft = pitch - 0.05; // The 0.03 calibrates the angles of the servo
+    servoRight = (1.0 - pitch) < 0.03 ? 0.03 : (1.0 - pitch);
+    
+    pumpWithValve.set(frequency, yaw, thrust);
+    
+    /* TURNING OFF BCU FOR FIRST OPEN WORLD TEST - AUGUST 21, 2019*/
+    //buoyancyControlUnit.set(pitch); //1100 - 1180 seems to follow well
+    
+    //Testing whether fishController.tickerCallback() is running
 	//DigitalOut test(LED1);
     //test = 1;
     
@@ -469,6 +474,7 @@ void FishController::setLEDs(char mask, bool turnOn)
     buttonBoard.setLEDs(mask, turnOn);
 }
 
+#ifdef debugBCU
 /* BCU + Pressure Sensor Helper Functions */
 
 float FishController::getBCUVset()
@@ -500,3 +506,5 @@ float FishController::getreadPressure()
 {
 	return buoyancyControlUnit.readPressure();
 }
+
+#endif
