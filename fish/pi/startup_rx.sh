@@ -5,7 +5,7 @@ echo "**** Startup script"
 sudo python /home/pi/softroboticfish7/fish/pi/resetMbed.py
 
 echo "-- Starting low battery monitor and possibly video"
-#sudo python /home/pi/gitRepo/fish/pi/rx_controller.py &
+sudo python /home/pi/softroboticfish7/fish/pi/rx_controller.py &
 
 # SERIAL LOGGING (streaming data from mbed)
 echo  "-- Starting serial monitor to record streaming mbed data"
@@ -13,10 +13,10 @@ echo  "-- Starting serial monitor to record streaming mbed data"
 
 # BLUETOOTH JOYSTICK
 echo "-- Starting Joystick Controller"
-sleep 5
-sudo python /home/pi/softroboticfish7/fish/pi/bluetooth_joystick/BluetoothJoystickController.py &
-sleep 5
-sudo python /home/pi/softroboticfish/fish/pi/resetMbed.py
+# sleep 5
+# sudo python /home/pi/softroboticfish7/fish/pi/bluetooth_joystick/BluetoothJoystickController.py &
+# sleep 5
+# sudo python /home/pi/softroboticfish7/fish/pi/resetMbed.py
 echo "- Startup script complete"
 
 exit 0
