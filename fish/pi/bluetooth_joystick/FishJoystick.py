@@ -243,8 +243,3 @@ if __name__ == "__main__":
     if time() - lastSendTime > sendInterval:
       print joystick._state
       lastSendTime = time()
-
-
-
-
-​
