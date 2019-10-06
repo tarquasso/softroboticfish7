@@ -18,12 +18,12 @@ def runMbedProgramWithLogging(argv):
             #time.sleep(1)
             #os.system('sudo cp /home/pi/Downloads/*.bin /media/MBED')
             #time.sleep(1)
-            os.system('sudo /home/pi/fish/mbed/programMbed.sh ' + arg)
+            os.system('sudo /home/pi/softroboticfish7/fish/pi/programMbed.sh ' + arg)
         if 'remount' in arg:
             remount=int(arg.split('=')[1].strip())==1
     # Remount mbed
     if remount:
-        os.system("sudo /home/pi/fish/mbed/remountMbed.sh")
+        os.system("sudo /home/pi/softroboticfish7/fish/pi/remountMbed.sh")
     # Start mbed program and serial monitor
     print 'Resetting mbed and starting serial monitor'
     print ''
