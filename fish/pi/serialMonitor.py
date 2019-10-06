@@ -16,11 +16,11 @@ import time
 
 def run(argv):
     # Get the COM port of the mbed
-    p = os.popen('ls /dev/ttyACM*', "r")
+    p = os.popen('ls /dev/ttyAMA0', "r")
     port = p.readline().strip()
 
     print 'Connecting to ' + port
-    ser = serial.Serial(port, 921600, timeout=1)
+    ser = serial.Serial(port, 115200, timeout=1)
     #while ser.inWaiting() > 0:
     #    ser.read()
     print '\tconnected to', ser.name
@@ -31,12 +31,12 @@ def run(argv):
     printData = True
     filenameBase = ''
     filenameEnd = ''
-    if not os.path.exists('/home/pi/fish/data'):
-        os.mkdir('/home/pi/fish/data')
-    outDir = '/home/pi/fish/data/' + str(time.time()).replace('.','_')
+    if not os.path.exists('/home/pi/fish_data'):
+        os.mkdir('/home/pi/fish_data')
+    outDir = '/home/pi/fish_data' + str(time.time()).replace('.','_')
     os.mkdir(outDir)
     fout = None
-    fileNum = 0
+    fileNum = 0     
     # get options from command line
     for arg in argv:
         if 'print' in arg:
