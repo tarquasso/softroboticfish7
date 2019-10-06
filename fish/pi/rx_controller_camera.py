@@ -5,7 +5,7 @@ import os
 from camera import FishCamera
 
 # Set up camera
-outputDir = '/home/pi/fish/recordings'
+outputDir = '/home/pi/fish_recordings'
 if not os.path.exists(outputDir):
     os.mkdir(outputDir)
 fishCam = FishCamera(outputDir=outputDir)
@@ -16,6 +16,7 @@ batteryPin = 5 # BCM pin 5, actually pin 29
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(batteryPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 batteryDied = False
+print 'Test!'
 
 def lowBatteryCallback(channel):
     print 'LOW BATTERY DETECTED'
@@ -26,7 +27,7 @@ def lowBatteryCallback(channel):
 # Start new video every few minutes
 try:
     fishCam.take_picture('_STARTING')
-    while not batteryDied and GPIO.input(batteryPin):
+    while not batteryDied:
         print 'start video...'
         fishCam.take_video()
         time.sleep(videoLength)
@@ -48,7 +49,7 @@ finally:
         GPIO.cleanup()
     except:
         pass
-    os.system('sudo /home/pi/fish/shutdown.sh')
+    os.system('sudo /home/pi/softroboticfish7/fish/pi/shutdown.sh')
     os.system('sudo shutdown -h now')
     
     
