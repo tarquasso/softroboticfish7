@@ -33,7 +33,7 @@ def run(argv):
     filenameEnd = ''
     if not os.path.exists('/home/pi/fish_data'):
         os.mkdir('/home/pi/fish_data')
-    outDir = '/home/pi/fish_data' + str(time.time()).replace('.','_')
+    outDir = '/home/pi/fish_data/data_' + str(time.time()).replace('.','_')
     os.mkdir(outDir)
     fout = None
     fileNum = 0     
