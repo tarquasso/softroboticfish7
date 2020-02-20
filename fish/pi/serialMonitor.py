@@ -20,7 +20,7 @@ def run(argv):
     port = p.readline().strip()
 
     print 'Connecting to ' + port
-    ser = serial.Serial(port, 115200, timeout=1)
+    ser = serial.Serial(port, 115200, timeout=1, bytesize=serial.EIGHTBITS, parity = serial.PARITY_NONE, stopbits = serial.STOPBITS_ONE)
     #while ser.inWaiting() > 0:
     #    ser.read()
     print '\tconnected to', ser.name
@@ -55,7 +55,7 @@ def run(argv):
     fileWriteTime = time.time()
     try:
         while(not terminate):
-            nextData = ser.read(size=1500)
+            nextData = ser.read(size=1500)  #1500
             if printData:
                 print nextData
             if fout is not None:

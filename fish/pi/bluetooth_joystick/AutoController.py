@@ -1,7 +1,28 @@
 import serial # see http://pyserial.readthedocs.org/en/latest/pyserial_api.html
 from time import time, sleep
 from FishJoystick import FishJoystick
+import sys
 
+class AutoController:
+  def __init__(self, mbedPort='/dev/ttyAMA0', mbedBaud=115200, mbedUpdateInterval=1.25):
+     self._mbedSerial = serial.Serial(mbedPort, baudrate=mbedBaud, timeout=None, bytesize=serial.EIGHTBITS, parity = serial.PARITY_NONE, stopbits = serial.STOPBITS_ONE)
+
+  def getStateBytes(self):
+     #states = ['start', 'pitch', 'yaw', 'thrust', 'frequency']
+     states = [1, 3, 6, 2, 1]
+     return bytearray(states)
+
+  def run(self):
+     self._mbedSerial.flushInput()
+     self._mbedSerial.flushOutput()
+
+     while(True):
+       state_bytes = self.getStateBytes()
+       self._mbedSerial.write(state_bytes)
+       self._mbedSerial.write(bytearray([8]))
+       self._mbedSerial.flush()
+       sleep(0.02)
+     
 
 class BluetoothJoystickController:
   # @param mbedPort [str] The serial port to use on the mbed
@@ -44,7 +65,7 @@ if __name__ == '__main__':
   #except:
   #  mbedUpdateInterval = 0.01
   
-  controller = BluetoothJoystickController(useLJ = False)
+  controller = AutoController()
   print '\nStarting controller'
   print 'using update interval of ', 0.05, 's'
   controller.run()
