@@ -3,13 +3,15 @@ from time import time, sleep
 from FishJoystick import FishJoystick
 import sys
 
+
 class AutoController:
   def __init__(self, mbedPort='/dev/ttyAMA0', mbedBaud=115200, mbedUpdateInterval=1.25):
      self._mbedSerial = serial.Serial(mbedPort, baudrate=mbedBaud, timeout=None, bytesize=serial.EIGHTBITS, parity = serial.PARITY_NONE, stopbits = serial.STOPBITS_ONE)
 
   def getStateBytes(self):
      #states = ['start', 'pitch', 'yaw', 'thrust', 'frequency']
-     states = [1, 3, 6, 2, 1]
+     #states = [1, 3, 6, 3, 1]
+     states = [1, 3, 6, 0, 0]
      return bytearray(states)
 
   def run(self):
