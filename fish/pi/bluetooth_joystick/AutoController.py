@@ -6,6 +6,7 @@ from FishJoystick import FishJoystick
 import cv2
 
 CAM_OUTPUT_DIR="/home/pi/fish_recordings"
+DISPLAY_IMAGES = False
 
 class NaiveColorTargetTracker():
   def __init__(self, camera, target_color):
@@ -14,8 +15,8 @@ class NaiveColorTargetTracker():
 
     # red stretches 2 bands in hsv
     # these values are for yellow, keeping the 2 bands for red in the future
-    self.hsv_lower_lower = (11,45,45)
-    self.hsv_lower_upper = (30,255,255)
+    self.hsv_lower_lower = (14,55,55)
+    self.hsv_lower_upper = (30,255,235)
     self.hsv_upper_lower = self.hsv_lower_lower
     self.hsv_upper_upper = self.hsv_lower_upper
 
@@ -61,11 +62,13 @@ class NaiveColorTargetTracker():
     cnt = max(cnts, key=cv2.contourArea)
     ((x,y),radius) = cv2.minEnclosingCircle(cnt)
 
-    #cv2.imshow('Mask',mask)
-    #cv2.waitKey(1)
+    if DISPLAY_IMAGES:
+      mask = cv2.circle(mask,(int(x),int(y)), int(radius), (255,0,0))
+      cv2.imshow('Mask',mask)
+      cv2.waitKey(1)
     #print(img_small.shape)
     #print("%d, %d, %d"%(hsv_small[60,80,0],hsv_small[60,80,1],hsv_small[60,80,2]))
-    print(radius)
+    #print(radius)
     if radius < 5:
       return (False, None)
 
@@ -130,8 +133,8 @@ class FishStateController():
 
     #['start', 'pitch', 'yaw', 'thrust', 'frequency']
     #[pitch: 0-6, yaw:0-6, thrust: 0-3, frequency: 0-3]
-    self.HARD_LEFT = [1,3,6,3,3]
-    self.HARD_RIGHT = [1,3,0,3,3]
+    self.HARD_LEFT = [1,3,6,3,2]
+    self.HARD_RIGHT = [1,3,0,3,2]
     self.SOFT_LEFT = [1,3,5,3,2]
     self.SOFT_RIGHT = [1,3,1,3,2]
     self.DO_NOTHING = [1,3,3,0,1]
@@ -163,13 +166,13 @@ class FishStateController():
 
   def runOnce(self):
     # Mbed command order: ['start', 'pitch', 'yaw', 'thrust', 'frequency']
+    target_found, target_centroid = self.tracker.find_target()
 
     if self.state == "INIT":
       self.mbed.writeCmdArray(self.DO_NOTHING)
       self.transitionTo("SEARCH")
 
     elif self.state == "SEARCH":
-      target_found, target_centroid = self.tracker.find_target()
 
       if target_found:
         self.transitionTo("ADJUST")
@@ -179,11 +182,13 @@ class FishStateController():
 
     elif self.state == "ADJUST":
       # higher yaw is right, lower is left
-      target_found, target_centroid = self.tracker.find_target()
+      #target_found, target_centroid = self.tracker.find_target()
       
-      if target_found and target_centroid[0] >= self.image_size[1]*(2./3.):
+      if target_found and target_centroid[0][0] >= self.image_size[1]*(2./3.):
+        print("SOFT RIGHT: %d, %d"%(target_centroid[0][0], self.image_size[1]*(2./3.)))
         self.mbed.writeCmdArray(self.SOFT_RIGHT)
-      elif target_found and target_centroid[0] <= self.image_size[1]*(1./3.):
+      elif target_found and target_centroid[0][0] <= self.image_size[1]*(1./3.):
+        print("SOFT LEFT: %d, %d"%(target_centroid[0][0], self.image_size[1]*(1./3.)))
         self.mbed.writeCmdArray(self.SOFT_LEFT)
       elif target_found:
         self.transitionTo("FOLLOW")
@@ -191,6 +196,7 @@ class FishStateController():
         self.transitionTo("SEARCH")
 
     elif self.state == "FOLLOW":
+
       if time() - self.state_init_time > self.follow_timeout:
         self.transitionTo("SEARCH")
         return
